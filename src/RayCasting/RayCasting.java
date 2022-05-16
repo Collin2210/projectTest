@@ -202,17 +202,25 @@ public class RayCasting {
         System.out.println("vision polygon size = " + visionPolygonPoints.size());
         System.out.println("edges = "+edges.size());
 
+        for(int i = 0; i < visionPolygonPoints.size(); i++){
+            System.out.println("point " + i + ": " + "x = " + visionPolygonPoints.get(i).getEndX() + ", y = " + visionPolygonPoints.get(i).getEndY());
+        }
+
         double[][] polPoints = getPolygonCoords(agent.getPosition());
 
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();
 
         // for every tile that can possibly be seen by agent with respect to its vision range
         // if tile is in its vision polygon, add to list of visible tiles
+        int counter = 0;
         for(int x = (int) (agentX-(visionRange+1)); x < agentX+visionRange+1; x++){
             for(int y = (int) (agentY - (visionRange + 1)); y < agentY + visionRange + 1; y++ ){
                 if(Map.inMap(x,y)){
+                    counter++;
+                    System.out.println(counter);
                     Tile tile = map.getTile(x,y);
-                    if(pnpoly(polPoints[0], polPoints[1], tile.getPosition()[0]+0.5, tile.getPosition()[1]+0.5)){
+
+                    if(pnpoly2(polPoints[0], polPoints[1], tile.getPosition()[0]+0.5, tile.getPosition()[1]+0.5)){
                         listOfVisibleTiles.add(new int[]{tile.getPosition()[0], tile.getPosition()[1]});
                     }
                 }
@@ -239,13 +247,18 @@ public class RayCasting {
         double[] polX = new double[visionPolygonPoints.size()+1];
         double[] polY = new double[visionPolygonPoints.size()+1];
 
-        polX[0] = agentPosition[0];
-        polY[0] = agentPosition[1];
-
         for (int i = 0; i < visionPolygonPoints.size(); i++) {
             polX[i+1] = visionPolygonPoints.get(i).getEndX();
             polY[i+1] = visionPolygonPoints.get(i).getEndY();
         }
+
+        System.out.println("POLYGON POINTSSSSS");
+
+        for (int x = 0; x < polX.length; x++) {
+            for (int y = 0; y < polY.length; y++) {
+                System.out.println(polX[x] + "  " + polY[y]);
+            }
+        };
 
         return new double[][]{polX, polY};
 

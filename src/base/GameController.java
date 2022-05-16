@@ -63,6 +63,8 @@ public class GameController {
         }
     }
 
+    int counter = 0;
+
     public void addVision(){
         for(Agent a : agents){
             ArrayList<int[]> visionT = rayCaster.getVisibleTiles(a);
@@ -81,6 +83,9 @@ public class GameController {
     }
 
     public void print(){
+
+        System.out.println("num of seen tiles: " + visionOfAgents.get(0).size());
+        int counter = 1;
 
         String
                 ANSI_RESET = "\u001B[0m",
@@ -113,14 +118,18 @@ public class GameController {
                                 isSeen = true;
                         }
                     }
-                    if(isSeen)
+                    if(isSeen) {
                         System.out.print(ANSI_PURPLE + " O " + ANSI_RESET);
+                        counter++;
+                    }
                     else System.out.print(" O ");
                 }
             }
             System.out.println();
         }
         System.out.println();
+
+        System.out.println("counter = " + counter);
     }
 
 }
