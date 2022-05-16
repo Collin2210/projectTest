@@ -199,6 +199,8 @@ public class RayCasting {
         calculateVision( agentX, agentY, visionRange, limits); // creates endpoints of vision polygon
 
         printPolygon();
+        System.out.println("vision polygon size = " + visionPolygonPoints.size());
+        System.out.println("edges = "+edges.size());
 
         double[][] polPoints = getPolygonCoords(agent.getPosition());
 
@@ -267,12 +269,14 @@ public class RayCasting {
                 rayVectorY = (i == 0 ? edge1.getStartY() : edge1.getEndY()) - originY;
 
                 float baseAngle = (float) atan2(rayVectorY, rayVectorX);
+                baseAngle = (float) normalizeAngle(baseAngle);
+                System.out.println(toDegrees(baseAngle));
                 float angle = 0;
 
                 for (int j = 0; j < 2; j++) {
                     float limit1 = limits[0], limit2 = limits[1];
 
-                    if(limit1 <= baseAngle && baseAngle <= limit2){
+                    //if(limit1 <= baseAngle && baseAngle <= limit2){
                         if (j == 0) {
                             angle = baseAngle - 0.0001f;
                         }
@@ -321,11 +325,10 @@ public class RayCasting {
                             closestIntersectAng = angle;
                         }
                         visionPolygonPoints.add(new Ray(closestIntersectAng, closestIntersectX, closestIntersectY));
-                    }
+                    //}
                 }
             }
         }
-
         visionPolygonPoints.sort(Comparator.comparing(Ray::getAngle));
         visionPolygonPoints = removeDuplicates(visionPolygonPoints);
     }
@@ -342,11 +345,16 @@ public class RayCasting {
     }
 
     private float[] getViewingLimits(float angle){
-        float limit1, limit2;
-        limit1 = (float) (toRadians(angle) - Variables.FIELD_OF_VIEW/2);
-        limit2 = (float) (toRadians(angle) + Variables.FIELD_OF_VIEW/2);
+        float
+                limit1InDegrees,
+                limit2InDegrees,
+                angleInDegrees = (float) toDegrees(angle),
+                fieldOfViewInDegrees = (float) toDegrees(Variables.FIELD_OF_VIEW);
 
-        return new float[]{limit1,limit2};
+        limit1InDegrees = (angleInDegrees - fieldOfViewInDegrees/2);
+        limit2InDegrees = (angleInDegrees + fieldOfViewInDegrees/2);
+
+        return new float[]{(float) toRadians(limit1InDegrees), (float) toRadians(limit2InDegrees)};
     }
 
     private boolean isInMap(int currentIndex, int directionOfNeighbour){
@@ -401,6 +409,14 @@ public class RayCasting {
 
     }
 
+    private double normalizeAngle(float angleInRadians){
+        float angleInDegrees = (float) toDegrees(angleInRadians);
+        if(angleInDegrees < 0){
+            angleInDegrees += 360;
+        }
+        return toRadians(angleInDegrees);
+    }
+
     private float crossProduct(float[] vect1, float[] vect2){
         return vect1[0]*vect2[1] - vect1[1]*vect2[0];
     }
@@ -413,7 +429,7 @@ public class RayCasting {
             s+="("+x+","+y+"),";
         }
 
-        s += "O)";
+        s += ")";
 
         System.out.println(s);
     }

@@ -5,7 +5,7 @@ public class Tester {
 
         GameController g = new GameController();
 
-        int[][] agents = {{5,3}};
+        int[][] agents = {{8,8}};
         g.addAgents(agents);
 
         int[][] goalPos = {{0,8}, {0,9}};

@@ -7,7 +7,7 @@ public class Agent {
 
     public Agent(int[] position) {
         this.position = position;
-        this.angle = 0;
+        this.angle = (float) Math.toRadians(270);
     }
 
     public void moveRight(){
