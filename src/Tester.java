@@ -6,8 +6,10 @@ public class Tester {
         GameController g = new GameController();
 
         int[][] goalPos = {{0,3}, {0,4}};
-
         g.addGoalTiles(goalPos);
+
+        int[][] wallPos = { {2,0}, {2,1}, {2,2} };
+        g.addWalls(wallPos);
 
         int[][] intruders = {{4,0}};
         g.addIntruder(intruders);

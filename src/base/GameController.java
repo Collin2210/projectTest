@@ -58,6 +58,13 @@ public class GameController {
         }
     }
 
+    public void addWalls(int[][] wallPos){
+        for(int[] wall : wallPos){
+            Tile wallTile = map.getTile(wall[0], wall[1]);
+            wallTile.setWall();
+        }
+    }
+
     public void addAgents(ArrayList<int[]> agentPositions){
         for(int[] position : agentPositions){
             agents.add(new Agent(position));
