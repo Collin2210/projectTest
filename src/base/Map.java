@@ -20,6 +20,7 @@ public class Map {
                 && 0 <= y && y < Variables.MAP_WIDTH;
     }
 
+
     public Tile getTile(int x, int y){
         return this.map[x][y];
     }

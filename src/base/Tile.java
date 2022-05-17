@@ -5,7 +5,9 @@ public class Tile{
     private int[] position;
     private boolean
             isWall,
-            isGoal;
+            isGoal,
+            isYell,
+            isFootsteps;
 
     public Tile(int x, int y) {
         this.position = new int[]{x, y};
@@ -34,6 +36,16 @@ public class Tile{
         isGoal = true;
     }
 
+    public boolean setYell(){
+        isYell=true;
+        return isYell;
+    }
+
+    public boolean setFootsteps(){
+        isFootsteps=true;
+        return isFootsteps;
+    }
+
     public boolean isAtPosition(int[] position){
         return ( this.position[0] == position[0]
                 && this.position[1] == position[1] );
@@ -45,5 +57,15 @@ public class Tile{
 
     public boolean isGoal() {
         return isGoal;
+    }
+
+
+
+    public boolean isYell(){
+        return isYell;
+    }
+
+    public boolean isFootsteps(){
+        return isFootsteps;
     }
 }
