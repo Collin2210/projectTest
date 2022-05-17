@@ -1,7 +1,7 @@
 package base;
 
 import java.util.ArrayList;
-
+import java.awt.Rectangle;
 public class Teleport {
 
     public Teleport(int x1, int y1, int x2, int y2, int x3, int y3, double degree){

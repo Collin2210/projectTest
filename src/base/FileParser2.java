@@ -53,9 +53,11 @@ public class FileParser2 {
                         v.setWalkingSpeedGuard((float) Double.parseDouble(value));
                         break;
                     case "wall":
-                        v.setNumberWalls(Integer.parseInt(value));
+                        v.setWalls();
                     case "teleport":
                         v.setTeleport(Integer.parseInt(value));
+                    case "spawnAreaGuards":
+                        v.setSpawnAreaGuards();
 
                 }
             }
