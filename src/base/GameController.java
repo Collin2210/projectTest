@@ -14,16 +14,26 @@ import java.util.ArrayList;
 public class GameController {
 
     public static final Map map = new Map();
-    public RayCasting rayCaster = new RayCasting();
-    private final ArrayList<Agent> agents;
-    private final ArrayList<Tile> goalTiles;
+    public static final ArrayList<Agent> agents = new ArrayList<>();
+    public static final ArrayList<Tile> goalTiles = new ArrayList<>();
 
-    private ArrayList<ArrayList<int[]>> visionOfAgents;
+    public static int clock = 0;
 
     public GameController(){
-        agents = new ArrayList<>();
-        goalTiles = new ArrayList<>();
-        visionOfAgents = new ArrayList<>();
+    }
+
+    public void makeAgentsLearn(){
+        for(Agent a : agents) {
+            if(a.getClass().getSuperclass() == LearnerAgent.class)
+                ((LearnerAgent) a).learn();
+        }
+    }
+
+    public void makeAgentsMoveSmartly(){
+        for(Agent a : agents) {
+            if(a.getClass()==LearnerAgent.class)
+                ((LearnerAgent) a).moveSmartly();
+        }
     }
 
     public void addGoalTiles(ArrayList<int[]> goalPosition){
@@ -32,7 +42,7 @@ public class GameController {
                 for(int[] goal : goalPosition){
                     if(tile.isAtPosition(goal)) {
                         tile.setGoal();
-                        goalPosition.remove(goal);
+                        goalTiles.add(tile);
                     }
                 }
             }
@@ -45,6 +55,7 @@ public class GameController {
                 for(int[] goal : goalPosition){
                     if(tile.isAtPosition(goal)) {
                         tile.setGoal();
+                        goalTiles.add(tile);
                     }
                 }
             }
@@ -63,13 +74,15 @@ public class GameController {
         }
     }
 
-    int counter = 0;
+    public void addIntruder(int[][] intruderPositions){
+        for(int[] position : intruderPositions){
+            agents.add(new Intruder(position));
+        }
+    }
 
-    public void addVision(){
-        for(Agent a : agents){
-            ArrayList<int[]> visionT = rayCaster.getVisibleTiles(a);
-            visionOfAgents.add(rayCaster.getVisibleTiles(a));
-            printVisionT(visionT);
+    public void addGuards(int[][] guardPositions){
+        for(int[] position : guardPositions){
+            agents.add(new Guard(position));
         }
     }
 
@@ -82,54 +95,47 @@ public class GameController {
         System.out.println(s);
     }
 
-    public void print(){
-
-        System.out.println("num of seen tiles: " + visionOfAgents.get(0).size());
-        int counter = 1;
+    public static void print(){
 
         String
                 ANSI_RESET = "\u001B[0m",
                 ANSI_YELLOW = "\u001B[33m",
                 ANSI_RED = "\u001B[31m",
-                ANSI_PURPLE = "\u001B[35m";
+                ANSI_PURPLE = "\u001B[35m",
+                ANSI_BLUE = "\u001B[34m";
 
         for(Tile[] row : map.getMap()){
             for(Tile tile : row){
-                boolean hasAgent = false;
+                boolean hasIntruder = false, hasGuard = false;
                 for(Agent agent  : agents){
                     if(agent.getX() == tile.getPosition()[0]
-                            && agent.getY() == tile.getPosition()[1])
-                        hasAgent = true;
+                            && agent.getY() == tile.getPosition()[1]) {
+                        if(agent.getClass() == Guard.class)
+                            hasGuard = true;
+                        else if (agent.getClass() == Intruder.class)
+                            hasIntruder = true;
+                    }
                 }
-                if(hasAgent && tile.isGoal())
-                    System.out.print(ANSI_PURPLE + " Y " + ANSI_RESET);
-                else if(hasAgent)
-                    System.out.print(ANSI_RED + " A " + ANSI_RESET);
+                if((hasGuard || hasIntruder) && tile.isGoal()) {
+                    if(hasGuard)
+                        System.out.print(ANSI_BLUE + " Y " + ANSI_RESET);
+                    else System.out.print(ANSI_PURPLE + " Y " + ANSI_RESET);
+                }
+                else if(hasGuard || hasIntruder) {
+                    if(hasGuard)
+                        System.out.print(ANSI_BLUE + " A " + ANSI_RESET);
+                    else System.out.print(ANSI_RED + " A " + ANSI_RESET);
+                }
                 else if (tile.isGoal())
                     System.out.print(ANSI_YELLOW + " G " + ANSI_RESET);
                 else if(tile.isWall())
                     System.out.print(" L ");
-                else {
-                    boolean isSeen = false;
-                    for(ArrayList<int[]> agentVis : visionOfAgents){
-                        for(int[] tilePos : agentVis){
-                            if(tilePos[0] == tile.getPosition()[0]
-                            && tilePos[1] == tile.getPosition()[1])
-                                isSeen = true;
-                        }
-                    }
-                    if(isSeen) {
-                        System.out.print(ANSI_PURPLE + " O " + ANSI_RESET);
-                        counter++;
-                    }
-                    else System.out.print(" O ");
-                }
+                else
+                    System.out.print(" O ");
             }
             System.out.println();
         }
         System.out.println();
-
-        System.out.println("counter = " + counter);
     }
 
 }

@@ -5,15 +5,21 @@ public class Tester {
 
         GameController g = new GameController();
 
-        int[][] agents = {{8,8}};
-        g.addAgents(agents);
+        int[][] intruders = {{4,0}};
+        g.addIntruder(intruders);
 
-        int[][] goalPos = {{0,8}, {0,9}};
+        int[][] guards = { {1,4} };
+        g.addGuards(guards);
+
+        int[][] goalPos = {{0,3}, {0,4}};
+
         g.addGoalTiles(goalPos);
 
-        g.addVision();
+        GameController.print();
 
-        g.print();
+        g.makeAgentsLearn();
+
+        g.makeAgentsMoveSmartly();
 
     }
 }
