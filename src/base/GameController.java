@@ -22,6 +22,16 @@ public class GameController {
     public GameController(){
     }
 
+    public static boolean isNotInTerminalState(){
+        for(Agent a : GameController.agents){
+            if(a.getClass() == Intruder.class){
+                if(GameController.goalTiles.contains(map.getTile(a.getX(),a.getY())))
+                    return false;
+            }
+        }
+        return true;
+    }
+
     public void makeAgentsLearn(){
         for(Agent a : agents) {
             if(a.getClass().getSuperclass() == LearnerAgent.class)
@@ -30,10 +40,13 @@ public class GameController {
     }
 
     public void makeAgentsMoveSmartly(){
-        for(Agent a : agents) {
-            if(a.getClass().getSuperclass()==LearnerAgent.class) {
-                ((LearnerAgent) a).moveSmartly();
+        while(isNotInTerminalState()){
+            for(Agent a : agents){
+                if(a.getClass().getSuperclass()==LearnerAgent.class) {
+                    ((LearnerAgent) a).moveSmartly();
+                }
             }
+            GameController.print();
         }
     }
 
@@ -87,15 +100,6 @@ public class GameController {
         for(int[] position : guardPositions){
             agents.add(new Guard(position));
         }
-    }
-
-    public void printVisionT(ArrayList<int[]> viT){
-        StringBuilder s = new StringBuilder();
-        for(int[] t : viT) {
-            int x = t[0], y = t[1];
-            s.append("(").append(x+0.5).append(",").append(y+0.5).append("),");
-        }
-        System.out.println(s);
     }
 
     public static void print(){

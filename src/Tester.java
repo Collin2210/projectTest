@@ -8,10 +8,10 @@ public class Tester {
         int[][] goalPos = {{0,3}, {0,4}};
         g.addGoalTiles(goalPos);
 
-        int[][] wallPos = { {2,0}, {2,1}, {2,2} };
+        int[][] wallPos = { {2,0}, {2,1}, {2,2}, {3,4}};
         g.addWalls(wallPos);
 
-        int[][] intruders = {{4,0}};
+        int[][] intruders = {{4,0}, {4,4}};
         g.addIntruder(intruders);
 
 //        int[][] guards = { {1,4} };

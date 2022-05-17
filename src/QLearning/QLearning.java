@@ -2,6 +2,8 @@ package QLearning;
 
 import base.*;
 
+import static base.GameController.isNotInTerminalState;
+
 public class QLearning {
 
     static final double
@@ -52,20 +54,8 @@ public class QLearning {
     }
 
     public void moveSmartly(){
-
-        putAgentBackOnSpawn();
-
-        GameController.print();
-
-        System.out.println(qTable);
-
-        int limiter = 20;
-        while(isNotInTerminalState() && limiter > 0){
-            byte action = getActionWithHighestQ();
-            tryPerformingAction(action);
-            GameController.print();
-            limiter--;
-        }
+        byte action = getActionWithHighestQ();
+        tryPerformingAction(action);
     }
 
     /** performs random action x% of the time, and performs action with highest Q all other times
@@ -142,15 +132,6 @@ public class QLearning {
         currentState = newState;
     }
 
-    private boolean isNotInTerminalState(){
-        for(Agent a : GameController.agents){
-            if(a.getClass() == Intruder.class){
-                if(GameController.goalTiles.contains(map.getTile(a.getX(),a.getY())))
-                    return false;
-            }
-        }
-        return true;
-    }
 
     private void putAgentBackOnSpawn(){
         agent.setPosition(spawnPosition[0], spawnPosition[1]);
