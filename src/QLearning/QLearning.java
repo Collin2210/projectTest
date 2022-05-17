@@ -1,13 +1,22 @@
 package QLearning;
 
 import base.*;
+
 public class QLearning {
 
-    static final double LEARNING_RATE = 0.5,DISCOUNT_FACTOR = 0.9;
-    static final double RANDOMNESS_LEVEL = 0.5;
-    static final int LEARNING_CYCLES = 10;
-    static final byte NUMBER_OF_POSSIBLE_ACTIONS = 4;
-    static final byte MOVE_UP = 0, MOVE_RIGHT = 1, MOVE_DOWN = 2, MOVE_LEFT = 3;
+    static final double
+            LEARNING_RATE = 0.5,
+            DISCOUNT_FACTOR = 0.9,
+            RANDOMNESS_LEVEL = 0.5;
+    static final int
+            LEARNING_CYCLES = 10000;
+    static final byte
+            NUMBER_OF_POSSIBLE_ACTIONS = 4;
+    static final byte
+            MOVE_UP = 0,
+            MOVE_RIGHT = 1,
+            MOVE_DOWN = 2,
+            MOVE_LEFT = 3;
 
     final Map map;
     final Agent agent;
@@ -26,45 +35,36 @@ public class QLearning {
         this.agent = agent;
         currentState = agent.getPosition(); previousState = new int[]{-1, -1};
         qTable = new QTable(map);
-        rewardTable = new RewardTable(agent);
+        rewardTable = new RewardTable();
         spawnPosition = new int[]{agent.getX(), agent.getY()};
     }
 
     public void learn(){
         qTable.initialize();
-
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             while(isNotInTerminalState()){
                 byte action = getNextAction();
                 tryPerformingAction(action);
                 updateQValue();
-                rewardTable.update(); // after each move, we update
             }
             putAgentBackOnSpawn();
         }
-        putAgentBackOnSpawn();
-
-//        System.out.println(qTable);
-
     }
 
     public void moveSmartly(){
-
-        System.out.println();
-        System.out.println("start of move smartly");
-        System.out.println();
 
         putAgentBackOnSpawn();
 
         GameController.print();
 
-        int limiter = 20;
+        System.out.println(qTable);
 
-        while(isNotInTerminalState() && limiter != 0){
+        int limiter = 20;
+        while(isNotInTerminalState() && limiter > 0){
             byte action = getActionWithHighestQ();
             tryPerformingAction(action);
-            limiter--;
             GameController.print();
+            limiter--;
         }
     }
 
@@ -82,7 +82,7 @@ public class QLearning {
     }
 
     private byte getActionWithHighestQ(){
-        return qTable.getActionWithHighestQAtState(currentState, previousState);
+        return qTable.getActionWithHighestQAtState(currentState);
     }
 
     private byte getRandomAction(){
@@ -94,8 +94,19 @@ public class QLearning {
      * */
     private void updateQValue(){
         double oldQ = qTable.getQ(previousState,actionPerformed);
+
+//        System.out.println("current state = " + Arrays.toString(currentState));
+//        System.out.println("previous state = " + Arrays.toString(previousState));
+//        System.out.println("action performed = " + actionPerformed);
+//
+//        System.out.println("oldQ = " + oldQ);
+
         double TD = temporalDifference();
         double newQ = oldQ + LEARNING_RATE * TD; // as per the Bellman Equation
+
+//        System.out.println("newQ = " + newQ);
+//        System.out.println();
+
         qTable.setQ(previousState, actionPerformed, newQ);
     }
 
@@ -105,6 +116,10 @@ public class QLearning {
         double reward = rewardTable.getReward(currentState[0],currentState[1]);
         double maxQ = qTable.getHighestQAvailableAtPosition(currentState[0], currentState[1]);
         double oldQ = qTable.getQ(previousState,actionPerformed);
+
+//        System.out.println("reward = " + reward);
+//        System.out.println("maxQ = " + maxQ);
+
         return (reward + DISCOUNT_FACTOR * maxQ - oldQ);
     }
 
@@ -122,9 +137,8 @@ public class QLearning {
         int[] newPosition = getValidPositionFromAction(action);
         int[] newState = new int[]{newPosition[0], newPosition[1]};
 
-        agent.setPosition(newState[0], newState[1]);
-
         previousState = new int[]{currentState[0],currentState[1]};
+        agent.setPosition(newState[0], newState[1]);
         currentState = newState;
     }
 

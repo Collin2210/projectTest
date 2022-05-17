@@ -5,15 +5,15 @@ public class Tester {
 
         GameController g = new GameController();
 
-        int[][] intruders = {{4,0}};
-        g.addIntruder(intruders);
-
-        int[][] guards = { {1,4} };
-        g.addGuards(guards);
-
         int[][] goalPos = {{0,3}, {0,4}};
 
         g.addGoalTiles(goalPos);
+
+        int[][] intruders = {{4,0}};
+        g.addIntruder(intruders);
+
+//        int[][] guards = { {1,4} };
+//        g.addGuards(guards);
 
         GameController.print();
 

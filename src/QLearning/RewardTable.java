@@ -2,34 +2,24 @@ package QLearning;
 
 import base.*;
 
+import java.util.Arrays;
+
 public class RewardTable {
 
-    private double[][] table;
-    private Map map;
-    private Agent agent;
-
+    private final double[][] table;
+    private final Map map;
     private static final int
             WALL_REWARD = -1000,
             GOAL_REWARD = 1000,
             STEP_COST = -1;
 
-    public RewardTable(Agent agent) {
+    public RewardTable() {
         this.map = GameController.map;
         this.table = new double[Variables.MAP_HEIGHT][Variables.MAP_WIDTH];
-        this.agent = agent;
 
         initialize(); // basically sets rewards for walls and goal
 
-        if(agent.getClass() == Guard.class){
-            setDistanceToIntruderReward();
-        }
-        else if(agent.getClass() == Intruder.class) {
-            setDistanceToGoalReward();
-        }
-
-        // tracers
-        // yell
-        // footsteps  different for each
+        setDistanceToGoalReward();
 
     }
 
@@ -45,34 +35,15 @@ public class RewardTable {
         }
     }
 
-    public void update(){
-        if(agent.getClass() == Guard.class){
-            setDistanceToIntruderReward();
-        }
-        else if(agent.getClass() == Intruder.class) {
-            setDistanceToGoalReward();
-        }
-    }
-
-
     private void setDistanceToGoalReward(){
         for (int x = 0; x < table.length; x++) {
             for (int y = 0; y < table[x].length; y++) {
-                if(!map.getMap()[x][y].isWall() && !map.getMap()[x][y].isGoal())
-                    table[x][y] += 10/getDistanceFromGoal(x,y);
+                if(!map.getMap()[x][y].isWall() && !map.getMap()[x][y].isGoal()) {
+                    table[x][y] -= getDistanceFromGoal(x,y);
+                }
             }
         }
     }
-
-    private void setDistanceToIntruderReward(){
-        for (int x = 0; x < table.length; x++) {
-            for (int y = 0; y < table[x].length; y++) {
-                if(!map.getMap()[x][y].isWall() && !map.getMap()[x][y].isGoal())
-                    table[x][y] += 10/getDistanceFromIntruder(x,y);
-            }
-        }
-    }
-
 
     private double getDistanceFromGoal(int x, int y){
         double smallestDistance = Double.MAX_VALUE;

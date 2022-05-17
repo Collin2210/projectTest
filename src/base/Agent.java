@@ -1,5 +1,6 @@
 package base;
 
+
 public class Agent {
 
     private final int[] position;

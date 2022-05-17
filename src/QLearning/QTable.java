@@ -36,7 +36,7 @@ public class QTable {
     }
 
     public double getHighestQAvailableAtPosition(int x, int y){
-        double highest = Double.MIN_VALUE;
+        double highest = Double.NEGATIVE_INFINITY;
         for (int action = 0; action < QLearning.NUMBER_OF_POSSIBLE_ACTIONS; action++) {
             if(getQ(x,y,action) > highest)
                 highest = getQ(x,y,action);
@@ -44,25 +44,11 @@ public class QTable {
         return highest;
     }
 
-    public byte getActionWithHighestQAtState(int[] state, int[] previousState){
+    public byte getActionWithHighestQAtState(int[] state){
         int actionWithHighestQ = 0;
         double highestQ = Double.NEGATIVE_INFINITY;
         for (byte action = 0; action < QLearning.NUMBER_OF_POSSIBLE_ACTIONS; action++) {
-
-            int[] positionIfActionIsPerformed = {,};
-            try {
-                positionIfActionIsPerformed = QLearning.getNewPositionFromAction(action, state);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            // if it is the highest q-value yet AND action does not take us back to our previous position
-            if(
-                    getQ(state, action) > highestQ
-                    && agentHasPreviousPosition(previousState)
-                    && areSamePosition(previousState, positionIfActionIsPerformed)
-
-            ){
+            if(getQ(state, action) > highestQ) {
                 actionWithHighestQ = action;
                 highestQ = getQ(state, action);
             }

@@ -31,8 +31,9 @@ public class GameController {
 
     public void makeAgentsMoveSmartly(){
         for(Agent a : agents) {
-            if(a.getClass()==LearnerAgent.class)
+            if(a.getClass().getSuperclass()==LearnerAgent.class) {
                 ((LearnerAgent) a).moveSmartly();
+            }
         }
     }
 
@@ -50,15 +51,10 @@ public class GameController {
     }
 
     public void addGoalTiles(int[][] goalPosition){
-        for(Tile[] row : map.getMap()){
-            for(Tile tile : row){
-                for(int[] goal : goalPosition){
-                    if(tile.isAtPosition(goal)) {
-                        tile.setGoal();
-                        goalTiles.add(tile);
-                    }
-                }
-            }
+        for(int[] goal : goalPosition){
+            Tile goalTile = map.getTile(goal[0], goal[1]);
+            goalTile.setGoal();
+            goalTiles.add(goalTile);
         }
     }
 
