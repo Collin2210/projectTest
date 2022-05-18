@@ -1,21 +1,14 @@
 package base;
 
-// TODO: 5/16/2022
-//  create map
-//  create agent
-//  move agents
-//  agent w/ raycasting
-//  qlearning
-
-import RayCasting.RayCasting;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameController {
 
     public static final Map map = new Map();
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
+    public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
 
     public static int clock = 0;
 
@@ -102,6 +95,14 @@ public class GameController {
         }
     }
 
+    public void addTeleporters(Teleporter[] teles){
+        for(Teleporter t : teles){
+            teleporters.add(t);
+            map.getTile(t.position[0], t.position[1]).setTeleport();
+            map.getTile(t.destination[0], t.destination[1]).setAsTeleportDestination();
+        }
+    }
+
     public static void print(){
 
         String
@@ -109,7 +110,10 @@ public class GameController {
                 ANSI_YELLOW = "\u001B[33m",
                 ANSI_RED = "\u001B[31m",
                 ANSI_PURPLE = "\u001B[35m",
-                ANSI_BLUE = "\u001B[34m";
+                ANSI_BLUE = "\u001B[34m",
+                ANSI_CYAN = "\u001B[36m",
+                ANSI_GREEN = "\u001B[32m";
+
 
         for(Tile[] row : map.getMap()){
             for(Tile tile : row){
@@ -136,7 +140,11 @@ public class GameController {
                 else if (tile.isGoal())
                     System.out.print(ANSI_YELLOW + " G " + ANSI_RESET);
                 else if(tile.isWall())
-                    System.out.print(" L ");
+                    System.out.print(ANSI_GREEN + " L " + ANSI_RESET);
+                else if(tile.hasTeleport())
+                    System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
+                else if(tile.isATeleportDestination())
+                    System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
                 else
                     System.out.print(" O ");
             }

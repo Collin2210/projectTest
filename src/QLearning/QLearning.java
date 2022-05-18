@@ -3,6 +3,7 @@ package QLearning;
 import base.*;
 
 import static base.GameController.isNotInTerminalState;
+import static base.GameController.teleporters;
 
 public class QLearning {
 
@@ -84,19 +85,8 @@ public class QLearning {
      * */
     private void updateQValue(){
         double oldQ = qTable.getQ(previousState,actionPerformed);
-
-//        System.out.println("current state = " + Arrays.toString(currentState));
-//        System.out.println("previous state = " + Arrays.toString(previousState));
-//        System.out.println("action performed = " + actionPerformed);
-//
-//        System.out.println("oldQ = " + oldQ);
-
         double TD = temporalDifference();
         double newQ = oldQ + LEARNING_RATE * TD; // as per the Bellman Equation
-
-//        System.out.println("newQ = " + newQ);
-//        System.out.println();
-
         qTable.setQ(previousState, actionPerformed, newQ);
     }
 
@@ -106,10 +96,6 @@ public class QLearning {
         double reward = rewardTable.getReward(currentState[0],currentState[1]);
         double maxQ = qTable.getHighestQAvailableAtPosition(currentState[0], currentState[1]);
         double oldQ = qTable.getQ(previousState,actionPerformed);
-
-//        System.out.println("reward = " + reward);
-//        System.out.println("maxQ = " + maxQ);
-
         return (reward + DISCOUNT_FACTOR * maxQ - oldQ);
     }
 
@@ -121,12 +107,17 @@ public class QLearning {
         }
     }
 
-
     private void performAction(byte action) throws Exception {
         actionPerformed = action;
         int[] newPosition = getValidPositionFromAction(action);
-        int[] newState = new int[]{newPosition[0], newPosition[1]};
 
+        // check if action takes you to a teleporter
+        for(Teleporter t : teleporters){
+            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
+                newPosition = t.destination;
+        }
+
+        int[] newState = new int[]{newPosition[0], newPosition[1]};
         previousState = new int[]{currentState[0],currentState[1]};
         agent.setPosition(newState[0], newState[1]);
         currentState = newState;

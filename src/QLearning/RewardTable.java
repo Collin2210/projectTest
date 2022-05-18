@@ -2,8 +2,6 @@ package QLearning;
 
 import base.*;
 
-import java.util.Arrays;
-
 public class RewardTable {
 
     private final double[][] table;

@@ -5,12 +5,16 @@ public class Tile{
     private int[] position;
     private boolean
             isWall,
-            isGoal;
+            isGoal,
+            hasTeleport,
+            isATeleportDestination;
 
     public Tile(int x, int y) {
         this.position = new int[]{x, y};
         isWall = false;
         isGoal = false;
+        hasTeleport = false;
+        isATeleportDestination = false;
     }
 
     public int[] getPosition() {
@@ -46,4 +50,12 @@ public class Tile{
     public boolean isGoal() {
         return isGoal;
     }
+
+    public void setTeleport(){this.hasTeleport = true;}
+
+    public boolean hasTeleport(){return this.hasTeleport;}
+
+    public void setAsTeleportDestination(){this.isATeleportDestination = true;}
+
+    public boolean isATeleportDestination(){return this.isATeleportDestination;}
 }
