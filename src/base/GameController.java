@@ -55,7 +55,6 @@ public class GameController {
             rayEngine.calculate(a);
             ArrayList<int[]> visionT = rayEngine.getVisibleTiles(a);
             visionOfAgents.add(rayEngine.getVisibleTiles(a));
-            printVisionT(visionT);
         }
 
     }

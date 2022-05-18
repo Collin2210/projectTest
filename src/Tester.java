@@ -1,4 +1,5 @@
 import base.GameController;
+import base.Teleporter;
 
 public class Tester {
     public static void main(String[] args) {
