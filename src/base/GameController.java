@@ -1,6 +1,7 @@
 package base;
 
 import java.util.ArrayList;
+import rayTracer.RayCaster;
 import java.util.Arrays;
 
 public class GameController {
@@ -11,6 +12,9 @@ public class GameController {
     public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
 
     public static int clock = 0;
+    private ArrayList<ArrayList<int[]>> visionOfAgents;
+   // private ArrayList<RayCaster> listOfRayCasters;
+    RayCaster rayEngine;
 
     public GameController(){
     }
@@ -42,6 +46,20 @@ public class GameController {
             GameController.print();
         }
     }
+
+    public void runRaycast(){
+        for (Agent a:agents
+        ) {
+            rayEngine = new RayCaster(a);
+            //listOfRayCasters.add(rayEngine);
+            rayEngine.calculate(a);
+            ArrayList<int[]> visionT = rayEngine.getVisibleTiles(a);
+            visionOfAgents.add(rayEngine.getVisibleTiles(a));
+            printVisionT(visionT);
+        }
+
+    }
+
 
     public void addGoalTiles(ArrayList<int[]> goalPosition){
         for(Tile[] row : map.getMap()){
