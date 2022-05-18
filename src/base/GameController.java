@@ -160,8 +160,20 @@ public class GameController {
                     System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
                 else if(tile.isATeleportDestination())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
-                else
-                    System.out.print(" O ");
+                else {
+                    boolean isSeen = false;
+                    for(ArrayList<int[]> agentVis : visionOfAgents){
+                        for(int[] tilePos : agentVis){
+                            if(tilePos[0] == tile.getPosition()[0]
+                                    && tilePos[1] == tile.getPosition()[1])
+                                isSeen = true;
+                        }
+                    }
+                    if(isSeen) {
+                        System.out.print(ANSI_PURPLE + " O " + ANSI_RESET);
+                    }
+                    else System.out.print(" O ");
+                }
             }
             System.out.println();
         }
