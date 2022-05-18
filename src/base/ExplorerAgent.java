@@ -37,6 +37,8 @@ public class ExplorerAgent extends Agent{
     }
 
     public int[] getValidPositionFromAction(byte action) throws Exception {
+        changeAngleAccordingToAction(action);
+
         int[] newPosition = getNewPositionFromAction(action, this.getPosition());
 
         if(!newPositionIsValid(newPosition[0],newPosition[1])){
@@ -52,8 +54,9 @@ public class ExplorerAgent extends Agent{
 
     public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {
         int newX = currentState[0], newY = currentState[1];
-        if(action == MOVE_UP)
+        if(action == MOVE_UP) {
             newX -= 1;
+        }
         else if (action == MOVE_RIGHT)
             newY += 1;
         else if (action == MOVE_DOWN)
@@ -68,5 +71,16 @@ public class ExplorerAgent extends Agent{
 
     private boolean newPositionIsValid(int newX, int newY) {
         return Map.inMap(newX, newY);
+    }
+
+    private void changeAngleAccordingToAction(byte action){
+        if(action == MOVE_UP)
+            setAngle(90);
+        else if (action == MOVE_RIGHT)
+            setAngle(0);
+        else if (action == MOVE_DOWN)
+            setAngle(270);
+        else if (action == MOVE_LEFT)
+            setAngle(180);
     }
 }

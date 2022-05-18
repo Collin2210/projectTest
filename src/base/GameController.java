@@ -49,7 +49,6 @@ public class GameController {
 
     public void runRaycast(){
         for (Agent a:agents) {
-            a.rayEngine = new RayCaster(a);
             a.rayEngine.calculate(a);
             ArrayList<int[]> visionT = a.rayEngine.getVisibleTiles(a);
             visionOfAgents.add(visionT);
@@ -162,8 +161,8 @@ public class GameController {
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
                 else {
                     boolean isSeen = false;
-                    for(ArrayList<int[]> agentVis : visionOfAgents){
-                        for(int[] tilePos : agentVis){
+                    for(Agent a : agents){
+                        for(int[] tilePos : a.visionT){
                             if(tilePos[0] == tile.getPosition()[0]
                                     && tilePos[1] == tile.getPosition()[1])
                                 isSeen = true;

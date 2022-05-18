@@ -105,7 +105,6 @@ public class RayCaster {
         addPoint(p, line.getP1());
         listOfPoints.add(line.getP1());
 
-
         for (int i = 1; i < rays.size(); i++) {
             addPoint(p, line.getP2());
             listOfPoints.add(line.getP2());
@@ -139,7 +138,7 @@ public class RayCaster {
 
     public void calculate(Agent a){
 
-        rays = calcRays(lines, a.getX(), a.getY(), 180, 400);
+        rays = calcRays(lines, a.getX(), a.getY(), 180, Variables.AGENT_VISION_RANGE);
         p = createPolygon();
     }
 

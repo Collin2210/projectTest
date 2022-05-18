@@ -14,7 +14,7 @@ public class Agent {
     private int DEGREESOFANGLE = 360;
 
     RayCaster rayEngine;
-
+    public ArrayList<int[]> visionT;
 
 
     private ArrayList<int[]> visionArea = new ArrayList<>();
@@ -28,6 +28,8 @@ public class Agent {
         this.position = position;
         this.angle = (float) Math.toRadians(DEGREESOFANGLE);
         this.angleDeg = DEGREESOFANGLE;
+        this.rayEngine = new RayCaster(this);
+        this.visionT = new ArrayList<>();
     }
 
     public void moveRight(){
