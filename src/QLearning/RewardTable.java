@@ -78,7 +78,7 @@ public class RewardTable {
         return smallestDistance;
     }
 
-    private double distanceBetweenPoints(int xA,int yA, int xB, int yB){
+    public static double distanceBetweenPoints(int xA,int yA, int xB, int yB){
         return Math.sqrt( Math.pow(xB - xA,2) + Math.pow(yB - yA,2) );
     }
 

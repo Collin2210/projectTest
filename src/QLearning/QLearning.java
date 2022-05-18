@@ -2,8 +2,6 @@ package QLearning;
 
 import base.*;
 
-import java.util.Arrays;
-
 import static base.GameController.isNotInTerminalState;
 import static base.GameController.teleporters;
 

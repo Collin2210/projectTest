@@ -17,7 +17,7 @@ public class RayCaster {
     Map map;
     private LinkedList<Line2D.Float> lines;
     Polygon p;
-    ArrayList<Point2D> listOfPoints;
+    ArrayList<Point2D> listOfPoints ;
     private static Random r = new Random(100);
     LinkedList<Line2D.Float> rays;
     Agent a;

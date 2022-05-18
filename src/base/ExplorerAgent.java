@@ -10,12 +10,12 @@ public class ExplorerAgent extends Agent{
         super(position);
     }
 
-    public void move(){
+    public void makeRandomMove(){
         byte action = QLearning.getRandomAction();
         tryPerformingAction(action);
-
     }
-    private void tryPerformingAction(byte action){
+
+    public void tryPerformingAction(byte action){
         try {
             performAction(action);
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class ExplorerAgent extends Agent{
         this.setPosition(newState[0], newState[1]);
     }
 
-    private int[] getValidPositionFromAction(byte action) throws Exception {
+    public int[] getValidPositionFromAction(byte action) throws Exception {
         int[] newPosition = getNewPositionFromAction(action, this.getPosition());
 
         if(!newPositionIsValid(newPosition[0],newPosition[1])){

@@ -12,8 +12,6 @@ public class GameController {
     public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
 
     private static final ArrayList<ArrayList<int[]>> visionOfAgents = new ArrayList<>();
-   // private ArrayList<RayCaster> listOfRayCasters;
-    RayCaster rayEngine;
 
     public GameController(){
     }
@@ -41,17 +39,19 @@ public class GameController {
                 if(a.getClass().getSuperclass()==LearnerAgent.class) {
                     ((LearnerAgent) a).moveSmartly();
                 }
+                else if(a.getClass() == Guard.class){
+                    ((Guard) a).makeMove();
+                }
             }
-//            GameController.print();
+            GameController.print();
         }
     }
 
     public void runRaycast(){
         for (Agent a:agents) {
-            rayEngine = new RayCaster(a);
-            //listOfRayCasters.add(rayEngine);
-            rayEngine.calculate(a);
-            ArrayList<int[]> visionT = rayEngine.getVisibleTiles(a);
+            a.rayEngine = new RayCaster(a);
+            a.rayEngine.calculate(a);
+            ArrayList<int[]> visionT = a.rayEngine.getVisibleTiles(a);
             visionOfAgents.add(visionT);
         }
 
