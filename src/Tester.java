@@ -5,14 +5,12 @@ public class Tester {
 
         GameController g = new GameController();
 
-        int[][] agents = {{8,8}};
+        int[][] agents = {{30,30}};
         g.addAgents(agents);
 
         int[][] goalPos = {{0,8}, {0,9}};
         g.addGoalTiles(goalPos);
-
-        g.addVision();
-
+        g.runRaycast();
         g.print();
 
     }

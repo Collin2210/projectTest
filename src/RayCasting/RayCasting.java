@@ -231,13 +231,60 @@ public class RayCasting {
 
     }
 
+    static boolean pnpoly2(double[] vertx, double[] verty, double testx, double testy) {
+        int nvert = vertx.length;
+        int i, j;
+        boolean c = false;
+
+        double minX = vertx[0];
+        double minY = verty[0];
+        double maxX = vertx[0];
+        double maxY = verty[0];
+
+        for (int k = 1; k < vertx.length; k++) {
+            minX = Math.min(vertx[k], minX);
+            maxX = Math.max(vertx[k], maxX);;
+            minY = Math.min(verty[k], minY);;
+            maxY = Math.max(verty[k], maxY);;
+        }
+
+        if (testx < minX || testx > maxX || testy < minY || testy > maxY) {
+            return false;
+        }
+
+        for (i = 0, j = nvert-1; i < nvert; j = i++) {
+            if ( ((verty[i]>testy) != (verty[j]>testy)) &&
+                    (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
+                c = !c;
+        }
+        return c;
+    }
+
+
     static boolean pnpoly(double[] vertx, double[] verty, double testx, double testy) {
         int nvert = vertx.length;
         int i, j;
         boolean c = false;
+
+        double minX = vertx[0];
+        double minY = verty[0];
+        double maxX = vertx[0];
+        double maxY = verty[0];
+
+        for (int k = 1; k < vertx.length; k++) {
+            minX = Math.min(vertx[k], minX);
+            maxX = Math.max(vertx[k], maxX);;
+            minY = Math.min(verty[k], minY);;
+            maxY = Math.max(verty[k], maxY);;
+        }
+
+        if (testx < minX || testx > maxX || testy < minY || testy > maxY) {
+            return false;
+        }
+
         for (i = 0, j = nvert-1; i < nvert; j = i++) {
             if ( ((verty[i]>testy) != (verty[j]>testy)) &&
-                    (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
+                    (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]))
                 c = !c;
         }
         return c;

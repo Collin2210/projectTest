@@ -8,23 +8,40 @@ package base;
 //  qlearning
 
 import RayCasting.RayCasting;
+import rayTracer.RayCaster;
 
 import java.util.ArrayList;
 
 public class GameController {
 
     public static final Map map = new Map();
-    public RayCasting rayCaster = new RayCasting();
     private final ArrayList<Agent> agents;
     private final ArrayList<Tile> goalTiles;
 
     private ArrayList<ArrayList<int[]>> visionOfAgents;
+   // private ArrayList<RayCaster> listOfRayCasters;
+    RayCaster rayEngine;
 
     public GameController(){
         agents = new ArrayList<>();
         goalTiles = new ArrayList<>();
         visionOfAgents = new ArrayList<>();
+        //listOfRayCasters = new ArrayList<>();
     }
+
+    public void runRaycast(){
+        for (Agent a:agents
+        ) {
+            rayEngine = new RayCaster(a);
+            //listOfRayCasters.add(rayEngine);
+            rayEngine.calculate(a);
+            ArrayList<int[]> visionT = rayEngine.getVisibleTiles(a);
+            visionOfAgents.add(rayEngine.getVisibleTiles(a));
+            printVisionT(visionT);
+        }
+
+    }
+
 
     public void addGoalTiles(ArrayList<int[]> goalPosition){
         for(Tile[] row : map.getMap()){
@@ -51,11 +68,6 @@ public class GameController {
         }
     }
 
-    public void addAgents(ArrayList<int[]> agentPositions){
-        for(int[] position : agentPositions){
-            agents.add(new Agent(position));
-        }
-    }
 
     public void addAgents(int[][] agentPositions){
         for(int[] position : agentPositions){
@@ -65,13 +77,6 @@ public class GameController {
 
     int counter = 0;
 
-    public void addVision(){
-        for(Agent a : agents){
-            ArrayList<int[]> visionT = rayCaster.getVisibleTiles(a);
-            visionOfAgents.add(rayCaster.getVisibleTiles(a));
-            printVisionT(visionT);
-        }
-    }
 
     public void printVisionT(ArrayList<int[]> viT){
         StringBuilder s = new StringBuilder();

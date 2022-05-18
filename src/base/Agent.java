@@ -2,6 +2,7 @@ package base;
 
 import java.util.ArrayList;
 import RayCasting.RayCasting;
+import rayTracer.RayCaster;
 
 public class Agent {
 
@@ -10,15 +11,24 @@ public class Agent {
     public Map map;
     private final int[] position;
     private float angle;
+    private int angleDeg;
+    private int DEGREESOFANGLE = 360;
+
+    RayCaster rayEngine;
+
+
+
     private ArrayList<int[]> visionArea = new ArrayList<>();
     private int agentId;
     private final int yell=10;
     private final int footsteps=5;
     private boolean[][] yellArray=new boolean[v.getMapHeight()][v.getMapWidth()];
 
+
     public Agent(int[] position) {
         this.position = position;
-        this.angle = (float) Math.toRadians(270);
+        this.angle = (float) Math.toRadians(DEGREESOFANGLE);
+        this.angleDeg = DEGREESOFANGLE;
     }
 
     public void moveRight(){
@@ -140,7 +150,9 @@ public class Agent {
         position[1] = y;
     }
 
-
+    public int getAngleDeg() {
+        return angleDeg;
+    }
 
     public int getX(){
         return position[0];

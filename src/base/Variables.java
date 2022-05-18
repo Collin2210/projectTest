@@ -1,12 +1,7 @@
 package base;
 
-import java.util.ArrayList;
-
 public class Variables {
 
-    public static  int MAP_HEIGHT = 20;
-    public static int MAP_WIDTH = 20;
-    public static final int AGENT_VISION_RANGE = 8;
     private float scaling;
     private int numberOfGuards;
     private int numberOfIntruders;
@@ -21,10 +16,12 @@ public class Variables {
     private String[] spawnAreaGuards;
     private String[] walls;
 
-    public static final double FIELD_OF_VIEW = Math.toRadians(90);
+    public static int MAP_HEIGHT = 50;
+    public static int MAP_WIDTH = 50;
+    public static final int AGENT_VISION_RANGE = 20;
 
-
-
+    public static final int
+            FIELD_OF_VIEW = 150;
 
 
 
