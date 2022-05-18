@@ -1,7 +1,6 @@
 package base;
 
 import java.util.ArrayList;
-import RayCasting.RayCasting;
 import rayTracer.RayCaster;
 
 public class Agent {
@@ -120,23 +119,6 @@ public class Agent {
         else{
             this.angle = (float) Math.toRadians(360-(Math.toDegrees(this.angle)-90));
         }
-    }
-
-    public void getVision(RayCasting rayCaster){
-        try {
-//            System.out.println("x = " + this.getCurrentX() + " y = " + this.getCurrentY() + " vr = " + this.getVisionRange() + " ang = " + this.getCurrentAngle());
-            this.visionArea = rayCaster.getVisibleTiles(this);
-            System.out.println("agent."+agentId+": "+visionArea.size());
-        }
-        catch (Exception e){
-            if(this.visionArea.size()<1){
-                ArrayList<int[]> vis= new ArrayList<int[]>();
-                vis.add(this.getPosition());
-                setVisionArea(vis);
-                //e.printStackTrace();
-            }
-        }
-
     }
 
 

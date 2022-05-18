@@ -7,7 +7,6 @@ package base;
 //  agent w/ raycasting
 //  qlearning
 
-import RayCasting.RayCasting;
 import rayTracer.RayCaster;
 
 import java.util.ArrayList;
