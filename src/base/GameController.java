@@ -11,7 +11,6 @@ public class GameController {
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
     public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
 
-    public static int clock = 0;
     private ArrayList<ArrayList<int[]>> visionOfAgents;
    // private ArrayList<RayCaster> listOfRayCasters;
     RayCaster rayEngine;
@@ -43,7 +42,7 @@ public class GameController {
                     ((LearnerAgent) a).moveSmartly();
                 }
             }
-            GameController.print();
+//            GameController.print();
         }
     }
 
