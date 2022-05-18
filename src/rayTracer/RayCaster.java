@@ -34,11 +34,12 @@ public class RayCaster {
 
     private LinkedList<Line2D.Float> buildLines(){
         LinkedList<Line2D.Float> lines = new LinkedList<>();
-        for (int i = 0; i < 4; i++) {
-            int x1 = r.nextInt(this.mapWidth);
-            int y1 = r.nextInt(this.mapHeight);
-            int x2 = r.nextInt(this.mapWidth);
-            int y2 = r.nextInt(this.mapHeight);
+        for (int i = 0; i < 1; i++) {
+            int x1 = 10;
+            int y1 = 10;
+            int x2 = 20;
+            int y2 = 10;
+
             lines.add(new Line2D.Float(x1,y1,x2,y2));
         }
         return lines;
@@ -140,9 +141,6 @@ public class RayCaster {
 
         rays = calcRays(lines, a.getX(), a.getY(), 180, 400);
         p = createPolygon();
-        getVisibleTiles(a);
-
-
     }
 
     public ArrayList<int[]> getVisibleTiles(Agent agent){
@@ -155,14 +153,10 @@ public class RayCaster {
 
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();
 
-        int counter = 0;
         for(int x = (int) (agentX-(visionRange+1)); x < agentX+visionRange+1; x++){
             for(int y = (int) (agentY - (visionRange + 1)); y < agentY + visionRange + 1; y++ ){
                 if(Map.inMap(x,y)){
-                    counter++;
-                    System.out.println(counter);
                     Tile tile = map.getTile(x,y);
-
                     if(contains(new Point(tile.getPosition()[0], tile.getPosition()[1]))){
                         listOfVisibleTiles.add(new int[]{tile.getPosition()[0], tile.getPosition()[1]});
                     }

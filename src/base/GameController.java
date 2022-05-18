@@ -11,7 +11,7 @@ public class GameController {
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
     public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
 
-    private ArrayList<ArrayList<int[]>> visionOfAgents;
+    private static final ArrayList<ArrayList<int[]>> visionOfAgents = new ArrayList<>();
    // private ArrayList<RayCaster> listOfRayCasters;
     RayCaster rayEngine;
 
@@ -47,13 +47,12 @@ public class GameController {
     }
 
     public void runRaycast(){
-        for (Agent a:agents
-        ) {
+        for (Agent a:agents) {
             rayEngine = new RayCaster(a);
             //listOfRayCasters.add(rayEngine);
             rayEngine.calculate(a);
             ArrayList<int[]> visionT = rayEngine.getVisibleTiles(a);
-            visionOfAgents.add(rayEngine.getVisibleTiles(a));
+            visionOfAgents.add(visionT);
         }
 
     }
