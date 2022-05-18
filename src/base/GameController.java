@@ -1,16 +1,12 @@
 package base;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
 public class GameController {
 
     public static final Map map = new Map();
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
     public static final ArrayList<Teleporter> teleporters = new ArrayList<>();
-
-    public static int clock = 0;
 
     public GameController(){
     }
@@ -39,7 +35,6 @@ public class GameController {
                     ((LearnerAgent) a).moveSmartly();
                 }
             }
-            GameController.print();
         }
     }
 

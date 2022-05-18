@@ -2,20 +2,22 @@ package QLearning;
 
 import base.*;
 
+import java.util.Arrays;
+
 import static base.GameController.isNotInTerminalState;
 import static base.GameController.teleporters;
 
 public class QLearning {
 
-    static final double
+    public static final double
             LEARNING_RATE = 0.5,
             DISCOUNT_FACTOR = 0.9,
             RANDOMNESS_LEVEL = 0.5;
-    static final int
-            LEARNING_CYCLES = 10000;
-    static final byte
+    public static final int
+            LEARNING_CYCLES = 1000;
+    public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
-    static final byte
+    public static final byte
             MOVE_UP = 0,
             MOVE_RIGHT = 1,
             MOVE_DOWN = 2,
@@ -38,12 +40,13 @@ public class QLearning {
         this.agent = agent;
         currentState = agent.getPosition(); previousState = new int[]{-1, -1};
         qTable = new QTable(map);
-        rewardTable = new RewardTable();
+        rewardTable = new RewardTable(agent);
         spawnPosition = new int[]{agent.getX(), agent.getY()};
     }
 
     public void learn(){
         qTable.initialize();
+
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             while(isNotInTerminalState()){
                 byte action = getNextAction();
@@ -57,11 +60,11 @@ public class QLearning {
     public void moveSmartly(){
         byte action = getActionWithHighestQ();
         tryPerformingAction(action);
+
     }
 
     /** performs random action x% of the time, and performs action with highest Q all other times
      * */
-
     private byte getNextAction(){
         double rand = Math.random();
         if(rand <= RANDOMNESS_LEVEL) {
@@ -76,7 +79,7 @@ public class QLearning {
         return qTable.getActionWithHighestQAtState(currentState);
     }
 
-    private byte getRandomAction(){
+    public static byte getRandomAction(){
         byte min = 0, max = NUMBER_OF_POSSIBLE_ACTIONS-1;
         return (byte) (Math.random() * (max - min) + min);
     }
