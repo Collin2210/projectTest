@@ -20,12 +20,12 @@ public class Tester {
 //        int[][] goalPos = {{0,49}, {0,48}};
 //        g.addGoalTiles(goalPos);
 //
-//        g.runRaycast();
-//
-//        GameController.print();
-//
-//        g.makeAgentsLearn();
-//
-//        g.makeAgentsMoveSmartly();
+        g.runRaycast();
+
+        GameController.print();
+
+        g.makeAgentsLearn();
+
+        g.makeAgentsMoveSmartly();
     }
 }

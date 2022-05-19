@@ -34,53 +34,55 @@ public class ExplorerAgent extends Agent{
 
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         this.setPosition(newState[0], newState[1]);
+        this.visionT.clear();
+        this.getRayEngine().calculate(this);
+        this.visionT = this.getRayEngine().getVisibleTiles(this);
     }
 
-    public int[] getValidPositionFromAction(byte action) throws Exception {
-        changeAngleAccordingToAction(action);
+    int[] getValidPositionFromAction(byte action) throws Exception {
+        int[] newPositionData = getNewPositionFromAction(action, getPosition());
 
-        int[] newPosition = getNewPositionFromAction(action, this.getPosition());
-
-        if(!newPositionIsValid(newPosition[0],newPosition[1])){
-            if(action == QLearning.NUMBER_OF_POSSIBLE_ACTIONS-1){
+        if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
+            if(action == NUMBER_OF_POSSIBLE_ACTIONS-1){
                 return getValidPositionFromAction((byte) 0);
             }
             else {
-                return getValidPositionFromAction(action += 1);
+                action = getRandomAction();
+                return getValidPositionFromAction(action);
             }
         }
-        return newPosition;
+        // set angle
+        this.setAngleDeg(newPositionData[2]);
+        return new int[]{newPositionData[0], newPositionData[1]};
     }
 
     public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {
+        int angle;
         int newX = currentState[0], newY = currentState[1];
         if(action == MOVE_UP) {
             newX -= 1;
+            angle = 180;
         }
-        else if (action == MOVE_RIGHT)
+        else if (action == MOVE_RIGHT){
             newY += 1;
-        else if (action == MOVE_DOWN)
+            angle = 90;
+        }
+        else if (action == MOVE_DOWN){
             newX += 1;
-        else if (action == MOVE_LEFT)
+            angle = 0;
+        }
+        else if (action == MOVE_LEFT) {
             newY -= 1;
+            angle = 270;
+        }
         else {
             throw new Exception("action number not recognized");
         }
-        return new int[]{newX, newY};
+        return new int[]{newX, newY, angle};
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
         return map.inMap(new int[]{newX, newY});
     }
 
-    private void changeAngleAccordingToAction(byte action){
-        if(action == MOVE_UP)
-            setAngle(90);
-        else if (action == MOVE_RIGHT)
-            setAngle(0);
-        else if (action == MOVE_DOWN)
-            setAngle(270);
-        else if (action == MOVE_LEFT)
-            setAngle(180);
-    }
 }

@@ -1,6 +1,7 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Controller.Map;
 import Controller.FileParser;
@@ -43,9 +44,12 @@ public class GameController {
 
     public void makeAgentsLearn(){
         for(Agent a : agents) {
-            if(a.getClass().getSuperclass() == LearnerAgent.class)
+            if(a.getClass().getSuperclass() == LearnerAgent.class) {
                 ((LearnerAgent) a).learn();
+                runRayCastSingleAgent(a);
+            }
         }
+        visionOfAgents.clear();
     }
 
     public void makeAgentsMoveSmartly(){
@@ -53,22 +57,29 @@ public class GameController {
             for(Agent a : agents){
                 if(a.getClass().getSuperclass()==LearnerAgent.class) {
                     ((LearnerAgent) a).moveSmartly();
+                    runRayCastSingleAgent(a);
                 }
                 else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
+                    runRayCastSingleAgent(a);
                 }
+//                System.out.println("agent pos: " + Arrays.toString(a.getPosition()));
+//                System.out.println("");
             }
             GameController.print();
         }
     }
 
+    public void runRayCastSingleAgent(Agent a){
+        a.rayEngine.calculate(a);
+        a.visionT = a.rayEngine.getVisibleTiles(a);
+    }
+
     public void runRaycast(){
         for (Agent a:agents) {
             a.rayEngine.calculate(a);
-            ArrayList<int[]> visionT = a.rayEngine.getVisibleTiles(a);
-            visionOfAgents.add(visionT);
+            a.visionT = a.rayEngine.getVisibleTiles(a);
         }
-
     }
 
     public void addTeleport(){

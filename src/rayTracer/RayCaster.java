@@ -37,24 +37,11 @@ public class RayCaster {
     private LinkedList<Line2D.Float> buildLines(){
         LinkedList<Line2D.Float> lines = new LinkedList<>();
         for (int i = 0; i < 1; i++) {
-            int x1 = 10;
-            int y1 = 10;
-            int x2 = 20;
-            int y2 = 10;
 
-            lines.add(new Line2D.Float(x1,y1,x2,y2));
         }
         return lines;
     }
 
-
-    public LinkedList<Point2D.Float> getPolyPoints(){
-        LinkedList<Point2D.Float> polygonPoints = new LinkedList<>();
-        for (int i = 0; i < 75; i++) {
-
-        }
-        return polygonPoints;
-    }
 
     public LinkedList<Line2D.Float> calcRays(LinkedList<Line2D.Float> lines, int x, int y, int resolution, int maxDist){
         float[] distants = new float[resolution];
@@ -150,7 +137,7 @@ public class RayCaster {
                 agentX = agent.getX(),
                 agentY = agent.getY(),
                 visionRange = GameController.variables.getVisionRange(),
-                angle = agent.getAngle();
+                angle = agent.getAngleDeg();
 
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();
 

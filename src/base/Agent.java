@@ -12,10 +12,8 @@ public class Agent {
     public Tile t;
     public Map map;
     private final int[] position;
-    private float angle;
     private int angleDeg;
-    private int DEGREESOFANGLE = 360;
-    private Trace trace;
+//    private Trace trace;
 
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
@@ -30,18 +28,17 @@ public class Agent {
 
     public Agent(int[] position) {
         this.position = position;
-        this.angle = (float) Math.toRadians(DEGREESOFANGLE);
-        this.angleDeg = DEGREESOFANGLE;
+        this.angleDeg = 0;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
-        trace = new Trace(this);
+//        trace = new Trace(this);
     }
 
     public void moveRight(){
         int newX = position[0] + 1;
         if(Map.inMap(new int[]{newX, position[1]}))
             setPosition(newX, position[1]);
-        Trace.UpdateTrace();
+        //Trace.UpdateTrace();
     }
 
     /**
@@ -49,20 +46,20 @@ public class Agent {
      * how to set points in between
      */
 
-    public void yellPosition() {
-        int yell = 10;
-        //STEP 1: identifying the array limits: check if in Map !
-        int yellRadiusUpY =  position[1] + yell;
-        int yellRadiusDownY =  position[1] - yell;
-        int yellRadiusUpX =  position[0]+ yell;
-        int yellRadiusDownX =  position[0]- yell;
-
-        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
-            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
-                map.getTile(i, j).setYell();
-            }
-        }
-    }
+//    public void yellPosition() {
+//        int yell = 10;
+//        //STEP 1: identifying the array limits: check if in Map !
+//        int yellRadiusUpY =  position[1] + yell;
+//        int yellRadiusDownY =  position[1] - yell;
+//        int yellRadiusUpX =  position[0]+ yell;
+//        int yellRadiusDownX =  position[0]- yell;
+//
+//        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
+//            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
+//                map.getTile(i, j).setYell();
+//            }
+//        }
+//    }
 //
 //    public void updateFootstepsPosition() {
 //        int footstepsRadiusUpY = position[1] + yell;
@@ -83,42 +80,6 @@ public class Agent {
 //        }
 //    }
 
-
-    public void moveUp(){
-        int newY = position[1] + 1;
-        if(Map.inMap(position[0], newY))
-            setPosition(position[0], newY);
-        Trace.UpdateTrace();
-    }
-
-    public void moveLeft(){
-        int newX = position[0] - 1;
-        if(Map.inMap(newX, position[1]))
-            setPosition(newX, position[1]);
-        Trace.UpdateTrace();
-    }
-
-    public void moveDown(){
-        int newY = position[1] - 1;
-        if(Map.inMap(position[0], newY))
-            setPosition(position[0], newY);
-        Trace.UpdateTrace();
-    }
-
-    /**
-     * turn left and right by 90 degree, just angle, not square
-     */
-    public void turnRight(){
-        if(this.angle>Math.toRadians(90)) {
-            this.angle = (float) Math.toRadians((Math.toDegrees(this.angle) - 90) % 360);
-        }
-        else{
-            this.angle = (float) Math.toRadians(360-(Math.toDegrees(this.angle)-90));
-        }
-    }
-
-
-
     public int[] getPosition(){
         return position;
     }
@@ -129,7 +90,7 @@ public class Agent {
     }
 
     public int getAngleDeg() {
-        return angleDeg;
+        return this.angleDeg;
     }
 
     public int getX(){
@@ -140,20 +101,21 @@ public class Agent {
         return position[1];
     }
 
-    public float getAngle(){
-        return this.angle;
-    }
 
-    public void setAngle(float a){
-        this.angle = a;
+    public void setAngleDeg(int a){
+        this.angleDeg = a;
     }
 
     public void setVisionArea(ArrayList<int[]> visionArea){this.visionArea = visionArea;};
 
     public int getID(){return agentId;};
 
-    public Trace getAgentTrace(){return trace;}
+//    public Trace getAgentTrace(){return trace;}
 
     public ArrayList<int[]> getVisionT(){return visionT;}
+
+    public RayCaster getRayEngine() {
+        return rayEngine;
+    }
 
 }

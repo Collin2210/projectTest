@@ -15,7 +15,7 @@ public class RewardTable {
             STEP_COST = -1,
             GUARD_TILE_DISCOVERY_REWARD = 1;
 
-    private int[] ValueVector = new int[12];
+//    private int[] ValueVector = new int[12];
 
     public RewardTable(Agent agent) {
         this.map = GameController.map;
@@ -37,6 +37,7 @@ public class RewardTable {
                 if(map.getTile(x,y).isGoal()) {
                     if(agent.getClass() != Guard.class)
                         table[x][y] = GOAL_REWARD;
+                        System.out.println("goal: x and y:"+ x +", "+ y);
                 }
                 else if (map.getTile(x,y).hasWall())
                     table[x][y] = WALL_REWARD;
@@ -145,32 +146,23 @@ public class RewardTable {
 //        }
 //    }
 
-    public void yellReward() {
-        int yell = 10;
-        //STEP 1: identifying the array limits: check if in Map !
-        int yellRadiusUpY = agent.getY() + yell;
-        int yellRadiusDownY = agent.getY() - yell;
-        int yellRadiusUpX = agent.getX() + yell;
-        int yellRadiusDownX = agent.getX() - yell;
-
-        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
-            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
-                table[i][j] = 600;
-            }
-        }
-    }
+//    public void yellReward() {
+//        int yell = 10;
+//        //STEP 1: identifying the array limits: check if in Map !
+//        int yellRadiusUpY = agent.getY() + yell;
+//        int yellRadiusDownY = agent.getY() - yell;
+//        int yellRadiusUpX = agent.getX() + yell;
+//        int yellRadiusDownX = agent.getX() - yell;
+//
+//        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
+//            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
+//                table[i][j] = 600;
+//            }
+//        }
+//    }
 
     public double getReward(int stateX, int stateY){
         return table[stateX][stateY];
     }
 
-    public void printTable(){
-        for(double[] row : table){
-            for(double b : row) {
-                System.out.print(" " + b + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
 }
