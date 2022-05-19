@@ -1,5 +1,7 @@
 package QLearning;
 
+import Controller.Map;
+import Controller.Tile;
 import base.*;
 
 public class RewardTable {
@@ -18,7 +20,7 @@ public class RewardTable {
     public RewardTable(Agent agent) {
         this.map = GameController.map;
         this.agent = agent;
-        this.table = new double[Variables.MAP_HEIGHT][Variables.MAP_WIDTH];
+        this.table = new double[GameController.variables.getHeight()][GameController.variables.getWidth()];
 
         initialize(); // basically sets rewards for walls and goal
 
@@ -45,7 +47,7 @@ public class RewardTable {
     private void setDistanceToGoalReward(){
         for (int x = 0; x < table.length; x++) {
             for (int y = 0; y < table[x].length; y++) {
-                if(!map.getMap()[x][y].isWall() && !map.getMap()[x][y].isGoal()) {
+                if(!map.getTiles()[x][y].hasWall() && !map.getTiles()[x][y].isGoal()) {
                     table[x][y] = STEP_COST;
                     table[x][y] -= getDistanceFromGoal(x,y);
                 }
