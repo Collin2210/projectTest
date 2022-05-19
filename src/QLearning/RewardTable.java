@@ -91,9 +91,9 @@ public class RewardTable {
      * */
     private void checkTrace( ) { //within vision range
         //#ZERO STRESS: zero opponent detected
-        for( int i = 0; i < agent.getTileVision().size() ; i++){
-            int x = agent.getTileVision()[i][0];
-            int y = agent.getTileVision()[i][1];
+        for( int m = 0; m < agent.getVisionT().size() ; m++){
+            int x = agent.getVisionT()[m][0];
+            int y = agent.getVisionT()()[m][1];
 
             int stressLevel = Map.getTile(x, y).getTrace().getStress();
             if (stressLevel == 0) {// no opponent detected

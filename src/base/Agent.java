@@ -154,4 +154,6 @@ public class Agent {
 
     public Trace getAgentTrace(){return trace;}
 
+    public ArrayList<int[]> getVisionT(){return visionT;}
+
 }
