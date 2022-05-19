@@ -136,7 +136,7 @@ public class Trace {
     public int AlertLevel(){
         int AgentCounter = 0;
         for(int i = 0; i < GameController.agents.size(); i++){
-            if(sameCoordonnates(agent, i) == true)
+            if(sameCoordonnates(agent))
                 AgentCounter++;
         }
         if(AgentCounter > 1)
