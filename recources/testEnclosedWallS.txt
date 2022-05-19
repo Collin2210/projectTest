@@ -1,0 +1,32 @@
+name = testEnclosedWallS
+
+gameFile = /Users/joel/Documents/gamefile.txt
+gameMode = 0
+
+height = 100
+width = 100
+scaling = 0.1
+
+numGuards = 1
+
+numIntruders = 0
+baseSpeedIntruder = 14.0
+sprintSpeedIntruder = 20.0
+baseSpeedGuard = 14.0
+timeStep = 0.1
+targetArea = 20 40 25 45
+
+spawnAreaIntruders = 2 2 20 10
+spawnAreaGuards = 50 20 60 30
+
+wall = 20 75 60 80
+
+wall = 20 50 25 55
+wall = 3O 50 40 55
+
+wall = 20 50 25 75
+
+wall = 55 50 60 75
+
+shaded = 10 20 20 40
+texture = 10 20 20 40 0 0

@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import static rayTracer.Driver.dist;
-import static rayTracer.Driver.getRayCast;
 
 public class RayCaster {
     int mapHeight, mapWidth;
@@ -154,10 +153,11 @@ public class RayCaster {
 
         for(int x = (int) (agentX-(visionRange+1)); x < agentX+visionRange+1; x++){
             for(int y = (int) (agentY - (visionRange + 1)); y < agentY + visionRange + 1; y++ ){
-                if(Map.inMap(x,y)){
-                    Tile tile = map.getTile(x,y);
-                    if(contains(new Point(tile.getPosition()[0], tile.getPosition()[1]))){
-                        listOfVisibleTiles.add(new int[]{tile.getPosition()[0], tile.getPosition()[1]});
+                int[] position = {x,y};
+                if(Map.inMap(position)){
+                    Tile tile2 = map.getTile(x,y);
+                    if(contains(new Point(tile2.getPosition()[0], tile2.getPosition()[1]))){
+                        listOfVisibleTiles.add(new int[]{tile2.getPosition()[0], tile2.getPosition()[1]});
                     }
                 }
             }

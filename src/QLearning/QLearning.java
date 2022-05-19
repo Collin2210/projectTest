@@ -1,5 +1,6 @@
 package QLearning;
 
+import Controller.Map;
 import base.*;
 
 import static base.GameController.isNotInTerminalState;

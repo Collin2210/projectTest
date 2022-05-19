@@ -1,7 +1,7 @@
 package QLearning;
 
-import base.Map;
-import base.Variables;
+import Controller.Map;
+import base.GameController;
 
 import java.util.Arrays;
 
@@ -12,7 +12,7 @@ public class QTable {
 
     public QTable(Map map) {
         this.map = map;
-        this.table = new double[Variables.MAP_HEIGHT][Variables.MAP_WIDTH][QLearning.NUMBER_OF_POSSIBLE_ACTIONS];
+        this.table = new double[GameController.variables.getHeight()][GameController.variables.getWidth()][QLearning.NUMBER_OF_POSSIBLE_ACTIONS];
     }
 
     public void initialize(){

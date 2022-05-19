@@ -1,11 +1,14 @@
 package base;
 
 import java.util.ArrayList;
+
+import Controller.Map;
+import Controller.Tile;
 import rayTracer.RayCaster;
 
 public class Agent {
 
-    public Variables v=new Variables();
+//    public Variables v=new Variables();
     public Tile t;
     public Map map;
     private final int[] position;
@@ -21,7 +24,7 @@ public class Agent {
     private int agentId;
     private final int yell=10;
     private final int footsteps=5;
-    private boolean[][] yellArray=new boolean[Variables.MAP_HEIGHT][Variables.MAP_WIDTH];
+    private boolean[][] yellArray=new boolean[GameController.variables.getHeight()][GameController.variables.getWidth()];
 
 
     public Agent(int[] position) {
@@ -34,7 +37,7 @@ public class Agent {
 
     public void moveRight(){
         int newX = position[0] + 1;
-        if(Map.inMap(newX, position[1]))
+        if(Map.inMap(new int[]{newX, position[1]}))
             setPosition(newX, position[1]);
     }
 

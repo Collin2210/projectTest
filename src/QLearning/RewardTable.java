@@ -33,7 +33,7 @@ public class RewardTable {
                     if(agent.getClass() != Guard.class)
                         table[x][y] = GOAL_REWARD;
                 }
-                else if (map.getTile(x,y).isWall())
+                else if (map.getTile(x,y).hasWall())
                     table[x][y] = WALL_REWARD;
             }
         }
@@ -53,7 +53,7 @@ public class RewardTable {
     public void setGuardReward(){
         for (int x = 0; x < table.length; x++) {
             for (int y = 0; y < table[x].length; y++) {
-                if(!map.getMap()[x][y].isWall() && !map.getMap()[x][y].isGoal()) {
+                if(!map.getTile(x,y).hasWall() && !map.getTile(x,y).isGoal()) {
                     table[x][y] = GUARD_TILE_DISCOVERY_REWARD;
                 }
                 if(agent.getX() == x && agent.getY() == y)
@@ -70,8 +70,8 @@ public class RewardTable {
 
     private double getDistanceFromGoal(int x, int y){
         double smallestDistance = Double.MAX_VALUE;
-        for(Tile t : GameController.goalTiles){
-            double distance = distanceBetweenPoints(x,y,t.getPosition()[0],t.getPosition()[1]);
+        for(Tile t : GameController.GOAL_TILE){
+            double distance = distanceBetweenPoints(x,y,t.getXCoord(),t.getYCoord());
             if(distance < smallestDistance)
                 smallestDistance = distance;
         }

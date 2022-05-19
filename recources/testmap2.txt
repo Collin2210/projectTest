@@ -1,0 +1,11 @@
+height = 10
+width = 10
+numGuards = 1
+numIntruders = 1
+baseSpeedGuard = 5
+spawnAreaGuards = 9 0 10 1
+spawnAreaIntruders = 9 9 10 10
+isGoal = 0 8 1 9
+wall = 2 2 3 4
+visionRange = 5
+teleport = 3 3 3 5 0 0 10.0
