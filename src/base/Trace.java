@@ -19,6 +19,8 @@ package base;
  *   Finish writing the method below in connection with the reward table criterias
  * */
 
+import Controller.Map;
+
 public class Trace {
     /* INSTANCE 1: lifeTime
      *   Should be proportional to length so that they evolve in parallel
@@ -148,7 +150,7 @@ public class Trace {
      * Pointer in Tile
      */
     public void printTrace(){
-        Map.getTile( agent.getX(),  agent.getY()).setTrace(); //turns the boolean on !
-        Map.getTile(agent.getX(), agent.getY()).addTrace(this);//passes the entire object as an argument
+        GameController.map.getTile( agent.getX(),  agent.getY()).setTrace(); //turns the boolean on !
+        GameController.map.getTile(agent.getX(), agent.getY()).addTrace(this);//passes the entire object as an argument
     }
 }

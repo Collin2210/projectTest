@@ -1,6 +1,6 @@
 package Controller;
 
-import java.util.ArrayList;
+import base.Trace;
 
 public class Tile {
     private final int[] position;
@@ -10,7 +10,10 @@ public class Tile {
             hasWall,
             isTeleportIn,
             isTeleportOut,
+            hasTrace,
             isGoal;
+
+    public Trace AgentTrace;
 
     private int[] portalOut = new int[2];
     private double degreeOut;
@@ -34,6 +37,7 @@ public class Tile {
         isTeleportIn = false;
         isTeleportOut = false;
         isGoal = false;
+        hasTrace = false;
     }
 
     public void placeWall(){
@@ -82,6 +86,10 @@ public class Tile {
 
     public  boolean hasTeleportOut(){
         return isTeleportOut;
+    }
+
+    public void addTrace(Trace trace){
+        this.AgentTrace = trace;
     }
 
     public double getDegreeOut(){return degreeOut;}
