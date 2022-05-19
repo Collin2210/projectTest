@@ -15,12 +15,12 @@ public class Agent {
     private Trace trace;
 
     RayCaster rayEngine;
-    public ArrayList<int[]> visionT;
+    public ArrayList<int[]> visionT; //make a getter
 
 
     private ArrayList<int[]> visionArea = new ArrayList<>();
     private int agentId;
-    private final int yell=10;
+    private final int yell = 10;
     private final int footsteps=5;
     private boolean[][] yellArray=new boolean[Variables.MAP_HEIGHT][Variables.MAP_WIDTH];
 
@@ -45,30 +45,21 @@ public class Agent {
      * get agent position from parser
      * how to set points in between
      */
-//
-//    public void yellPosition(){
-//        int yellRadiusUpY=position[1]+yell;
-//        int yellRadiusDownY=position[1]-yell;
-//        int yellRadiusUpX=position[0]+yell;
-//        int yellRadiusDownX=position[0]-yell;
-//
-//        Tile agentPosition=map.getTile(position[0],position[1]);
-//        for (int i = 0; i < map.getMap().length; i++) {
-//            if(Map.inMap(position[0],yellRadiusUpY) && Map.inMap(position[0],yellRadiusDownY) && Map.inMap(position[0],yellRadiusUpX) && Map.inMap(position[0],yellRadiusDownX)){
-//                double x=(yell-position[0])^2;
-//                double y=(yell-position[1])^2;
-//                if((x+y)<(yell^2)){
-//                    map.getTile(position[1],yellRadiusUpY ).setYell();
-//                    map.getTile(position[1],yellRadiusDownY ).setYell();
-//                    map.getTile(position[0],yellRadiusUpX ).setYell();
-//                    map.getTile(position[0],yellRadiusDownX).setYell();
-//
-//                }
-//
-//            }
-//
-//        }
-//    }
+
+    public void yellPosition() {
+        int yell = 10;
+        //STEP 1: identifying the array limits: check if in Map !
+        int yellRadiusUpY =  position[1] + yell;
+        int yellRadiusDownY =  position[1] - yell;
+        int yellRadiusUpX =  position[0]+ yell;
+        int yellRadiusDownX =  position[0]- yell;
+
+        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
+            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
+                map.getTile(i, j).setYell();
+            }
+        }
+    }
 //
 //    public void updateFootstepsPosition() {
 //        int footstepsRadiusUpY = position[1] + yell;

@@ -6,6 +6,7 @@ public class Tile{
     private boolean
             isWall,
             isGoal,
+            isYell,
             hasTeleport,
             isATeleportDestination,
             hasTrace; //yes but which one, what stress level? From what agent?
@@ -20,6 +21,7 @@ public class Tile{
         isATeleportDestination = false;
         hasTrace = false;
         AgentTrace = new Trace();
+        isYell = false;
     }
 
     public int[] getPosition() {
@@ -38,7 +40,9 @@ public class Tile{
     public void setWall(){
         isWall = true;
     }
-
+    public void setYell(){
+        isYell = true;
+    }
     public void setGoal(){
         isGoal = true;
     }
