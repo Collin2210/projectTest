@@ -7,7 +7,10 @@ public class Tile{
             isWall,
             isGoal,
             hasTeleport,
-            isATeleportDestination;
+            isATeleportDestination,
+            hasTrace; //yes but which one, what stress level? From what agent?
+
+    public Trace AgentTrace;
 
     public Tile(int x, int y) {
         this.position = new int[]{x, y};
@@ -58,4 +61,13 @@ public class Tile{
     public void setAsTeleportDestination(){this.isATeleportDestination = true;}
 
     public boolean isATeleportDestination(){return this.isATeleportDestination;}
+
+    public void setTrace(){ hasTrace = true;}
+
+    public void addTrace(Trace mostRecent){
+        AgentTrace = mostRecent;
+    }
+    public Trace getTrace(){ return AgentTrace;}
+
+    public boolean hasTrace(){return hasTrace; }
 }

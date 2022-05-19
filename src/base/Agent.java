@@ -12,6 +12,7 @@ public class Agent {
     private float angle;
     private int angleDeg;
     private int DEGREESOFANGLE = 360;
+    private Trace trace;
 
     RayCaster rayEngine;
     public ArrayList<int[]> visionT;
@@ -30,12 +31,14 @@ public class Agent {
         this.angleDeg = DEGREESOFANGLE;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
+        trace = new Trace(this);
     }
 
     public void moveRight(){
         int newX = position[0] + 1;
         if(Map.inMap(newX, position[1]))
             setPosition(newX, position[1]);
+        Trace.UpdateTrace();
     }
 
     /**
@@ -91,18 +94,21 @@ public class Agent {
         int newY = position[1] + 1;
         if(Map.inMap(position[0], newY))
             setPosition(position[0], newY);
+        Trace.UpdateTrace();
     }
 
     public void moveLeft(){
         int newX = position[0] - 1;
         if(Map.inMap(newX, position[1]))
             setPosition(newX, position[1]);
+        Trace.UpdateTrace();
     }
 
     public void moveDown(){
         int newY = position[1] - 1;
         if(Map.inMap(position[0], newY))
             setPosition(position[0], newY);
+        Trace.UpdateTrace();
     }
 
     /**
@@ -151,4 +157,7 @@ public class Agent {
     public void setVisionArea(ArrayList<int[]> visionArea){this.visionArea = visionArea;};
 
     public int getID(){return agentId;};
+
+    public Trace getAgentTrace(){return trace;}
+
 }
