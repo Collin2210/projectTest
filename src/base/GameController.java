@@ -63,8 +63,8 @@ public class GameController {
                     ((Guard) a).makeMove();
                     runRayCastSingleAgent(a);
                 }
-//                System.out.println("agent pos: " + Arrays.toString(a.getPosition()));
-//                System.out.println("");
+                System.out.println("agent pos: " + Arrays.toString(a.getPosition()));
+                System.out.println("");
             }
             GameController.print();
         }

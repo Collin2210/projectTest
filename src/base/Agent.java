@@ -28,7 +28,7 @@ public class Agent {
 
     public Agent(int[] position) {
         this.position = position;
-        this.angleDeg = 0;
+        this.angleDeg = 180;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
 //        trace = new Trace(this);

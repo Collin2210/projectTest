@@ -6,7 +6,7 @@ public class Tester {
 
         GameController g = new GameController();
         g.startGame();
-        GameController.print();
+        //GameController.print();
 
 
 //        GameController g = new GameController();
@@ -19,7 +19,7 @@ public class Tester {
 //
 //        int[][] goalPos = {{0,49}, {0,48}};
 //        g.addGoalTiles(goalPos);
-//
+
         g.runRaycast();
 
         GameController.print();
