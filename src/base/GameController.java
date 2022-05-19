@@ -159,6 +159,17 @@ public class GameController {
                     System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
                 else if(tile.isATeleportDestination())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
+                 if(tile.hasTrace()) {
+                     if (tile.getTrace().getStress() == 0) {
+                         System.out.print(ANSI_GREEN + " . " + ANSI_RESET);
+                     }
+                     if (tile.getTrace().getStress() == 1) {
+                         System.out.print(ANSI_YELLOW + " . " + ANSI_RESET);
+                     }
+                     if (tile.getTrace().getStress() > 1) {
+                         System.out.print(ANSI_RED + " . " + ANSI_RESET);
+                     }
+                 }
                 else {
                     boolean isSeen = false;
                     for(Agent a : agents){

@@ -18,6 +18,8 @@ public class Tile{
         isGoal = false;
         hasTeleport = false;
         isATeleportDestination = false;
+        hasTrace = false;
+        AgentTrace = new Trace();
     }
 
     public int[] getPosition() {
