@@ -68,6 +68,8 @@ public class Tile {
         this.isGoal = true;
     }
 
+    public void setTrace() {this.hasTrace = true;}
+
     public boolean isGoal(){
         return isGoal;
     }

@@ -58,10 +58,8 @@ public class Map {
 
     private void placePortals(){
         ArrayList<Teleport> portals = this.variables.getPortals();
-        ArrayList<int[]> inPoints = new ArrayList<>();
         for (Teleport p : portals){
             ArrayList<int[]> portalPoints = p.getPoints();
-            int id = p.getId();
             double angle = p.getDegreeOut();
             int[] out = portalPoints.get(portalPoints.size()-1);
             map[out[0]][out[1]].placeTeleportOUT(angle);
@@ -69,7 +67,6 @@ public class Map {
             for(int[] c: portalPoints){
                 map[c[0]][c[1]].placeTeleportIN(out,angle);
             }
-            inPoints.addAll(portalPoints);
         }
     }
 

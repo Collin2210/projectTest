@@ -1,5 +1,8 @@
 package rayTracer;
 
+import Controller.Map;
+import Controller.Tile;
+import Controller.Variables;
 import base.*;
 
 import java.awt.*;
@@ -25,9 +28,9 @@ public class RayCaster {
     public RayCaster(Agent a){
         this.map = GameController.map;
         this.a = a;
-        Tile[][] tiles = map.getMap();
-        this.mapHeight = Variables.MAP_HEIGHT;
-        this.mapWidth = Variables.MAP_WIDTH;
+        Tile[][] tiles = map.getTiles();
+        this.mapHeight = map.getMapHeight();
+        this.mapWidth = map.getMapWidth();
         lines = buildLines();
     }
 
@@ -137,7 +140,7 @@ public class RayCaster {
 
     public void calculate(Agent a){
 
-        rays = calcRays(lines, a.getX(), a.getY(), 180, Variables.AGENT_VISION_RANGE);
+        rays = calcRays(lines, a.getX(), a.getY(), 180, GameController.variables.getVisionRange());
         p = createPolygon();
     }
 
@@ -146,7 +149,7 @@ public class RayCaster {
         float
                 agentX = agent.getX(),
                 agentY = agent.getY(),
-                visionRange = Variables.AGENT_VISION_RANGE,
+                visionRange = GameController.variables.getVisionRange(),
                 angle = agent.getAngle();
 
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();

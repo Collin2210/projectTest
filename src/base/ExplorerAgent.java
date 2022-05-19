@@ -70,7 +70,7 @@ public class ExplorerAgent extends Agent{
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
-        return Map.inMap(newX, newY);
+        return map.inMap(new int[]{newX, newY});
     }
 
     private void changeAngleAccordingToAction(byte action){
