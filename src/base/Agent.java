@@ -4,16 +4,17 @@ import java.util.ArrayList;
 
 import Controller.Map;
 import Controller.Tile;
+import Controller.Variables;
 import rayTracer.RayCaster;
 
 public class Agent {
 
-//    public Variables v=new Variables();
+    public Variables v=new Variables();
     public Tile t;
     public Map map;
     private final int[] position;
     private int angleDeg;
-//    private Trace trace;
+    private Trace trace;
 
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
@@ -31,14 +32,14 @@ public class Agent {
         this.angleDeg = 180;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
-//        trace = new Trace(this);
+        trace = new Trace(this);
     }
 
     public void moveRight(){
         int newX = position[0] + 1;
         if(Map.inMap(new int[]{newX, position[1]}))
             setPosition(newX, position[1]);
-        //Trace.UpdateTrace();
+        trace.UpdateTrace();
     }
 
     /**

@@ -38,6 +38,7 @@ public class Tile {
         isTeleportOut = false;
         isGoal = false;
         hasTrace = false;
+
     }
 
     public void placeWall(){

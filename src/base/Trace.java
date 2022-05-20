@@ -1,6 +1,5 @@
 package base;
 
-
 /* MARKER 1 : Trace aka pheromons
  *       1.0 : WHAT cost is associated (?) should be very tiny or cost free: have a simple implementation
  *       1.1 Type: historical past time information, long distance
@@ -99,8 +98,8 @@ public class Trace {
             return false;
     }
 
-    public boolean sameCoordonnates(Agent other){
-        if(agent.getX() == other.getX() && agent.getX() == other.getX())
+    public boolean sameCoordinates(Agent other){
+        if(agent.getX() == other.getX() && agent.getY() == other.getY())
             return true;
         else
             return false;
@@ -112,7 +111,7 @@ public class Trace {
      */
     public void UpdateTrace() {
         //connection to AGENT
-        TracePath[stepCounter][0] = agent.getX();//Tile coordonnates
+        TracePath[stepCounter][0] = agent.getX();//Tile coordinates
         TracePath[stepCounter][1] = agent.getY();
         TracePath[stepCounter][2] = lifeTime;
 
@@ -136,7 +135,7 @@ public class Trace {
     public int AlertLevel(){
         int AgentCounter = 0;
         for(int i = 0; i < GameController.agents.size(); i++){
-            if(sameCoordonnates(agent))
+            if(sameCoordinates(agent))
                 AgentCounter++;
         }
         if(AgentCounter > 1)
@@ -146,7 +145,7 @@ public class Trace {
     }
 
     /* METHOD: printTrace
-     * Connection between Trace element from Agent and the global info source via MapCoordonnates
+     * Connection between Trace element from Agent and the global info source via Map coordinates
      * Pointer in Tile
      */
     public void printTrace(){
