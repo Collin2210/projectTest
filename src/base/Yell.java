@@ -22,6 +22,7 @@ public class Yell {
      * propagate yell around guard vision
      */
     public void propagateYell() {
+        //timer = 4;
         int yellRange = Variables.GUARD_YELL_RANGE;
         int
                 x = agent.getX(),
@@ -36,12 +37,11 @@ public class Yell {
         for (int i = yellStartX; i < yellEndX; i++) {
             for (int j = yellStartY; j < yellEndY; j++) {
                 if (Map.inMap(i, j)) {
-                    Tile tile = map.getTile(i, j);
+                    Tile tile = GameController.map.getTile(i, j);
                     tile.setYell();
                 }
             }
         }
-
     }
 
 
@@ -49,7 +49,4 @@ public class Yell {
         return timer;
     }
 
-    public int getStressLevel() {
-        return stressLevel;
-    }
 }

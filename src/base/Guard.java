@@ -12,9 +12,14 @@ public class Guard extends ExplorerAgent {
     public Guard(int[] position) {
         super(position);
         isFollowingAgent = false;
+        yelling = false;
+        this.yell = new Yell(this);
     }
 
     public void makeMove(){
+        //remove guard's yell
+        //place yell if needed
+        yell.remove();
         checkVision();
 
         if(isFollowingAgent)
