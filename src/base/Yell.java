@@ -10,7 +10,7 @@ public class Yell {
     /**
      * when guard comes to the position
      * checks within vision range for intruder
-     * if intruder is there, sends yell
+     * if intruder is there, se
      */
     Map map;
     Agent agent;

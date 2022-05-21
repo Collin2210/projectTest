@@ -18,6 +18,29 @@ public class RewardTable {
             YELL_REWARD = 10,
             GUARD_TILE_DISCOVERY_REWARD = 1;
 
+
+    public void initialValueVector(){
+        ValueVector[0] = 100; //#CASE 1 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[1] = -100; //#CASE 2 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = GUARD)
+
+        ValueVector[2] = -100;//#CASE 3 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[3] = +500;//#CASE 4 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+
+        //#LEVEL 1 STRESS: One opponent detected
+        ValueVector[4] = -200; //#CASE 5 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[5] = +200; //#CASE 6 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = GUARD)
+
+        ValueVector[6] = -2000;//#CASE 7 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[7] = +500;//#CASE 8 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+
+        //#LEVEL 2 STRESS : more than 1 opponents detected
+        ValueVector[8] = -3000; //#CASE 9 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[9] = +1500; //#CASE 10 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = GUARD)
+
+        ValueVector[10] = -1000;//#CASE 11 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[11] = +1000;//#CASE 12 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+    }
+
     private int[] ValueVector = new int[12];
 
     public RewardTable(Agent agent) {
@@ -29,7 +52,9 @@ public class RewardTable {
 
         initialize(); // basically sets rewards for walls and goal
 
-        if(agent.getClass() == Intruder.class)
+        initialValueVector();
+
+        if(agent.getClass() == Intruder.class) {
             setDistanceToGoalReward();
         checkTrace(this.agent);
     }
@@ -127,60 +152,6 @@ public class RewardTable {
         return Math.sqrt( Math.pow(xB - xA,2) + Math.pow(yB - yA,2) );
     }
 
-    private void checkTrace(Agent a /*current exploring Agent*/) { //within vision range
-        //#ZERO STRESS: zero opponent detected
-        for( int i = 0; i < a.getVisionT()/* acquisition of vision range*/.size() ; i++){
-            int x = a.getVisionT().get(i)[0];
-            int y = a.getVisionT().get(i)[1];
-
-            Trace trace = map.getTile(x, y).getTrace();
-
-            int stressLevel = map.getTile(x, y).getTrace().getStress();
-            if (stressLevel == 0) {// no opponent detected
-                if (trace.isTeamTrace(a) == true) {
-                    //#CASE 1
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[0];
-                    } else //#CASE 2
-                        table[x][y] = ValueVector[1];
-                } else {//#CASE 3
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[2];
-                    } else //#CASE 4
-                        table[x][y] = ValueVector[3];
-                }
-            }
-            if (stressLevel == 1) {//medium stress: 1 opponent detected
-                if (trace.isTeamTrace(a) == true) {
-                    //#CASE 5
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[4];
-                    } else //#CASE 6
-                        table[x][y] = ValueVector[5];
-                } else {//#CASE 7
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[6];
-                    } else //#CASE 8
-                        table[x][y] = ValueVector[7];
-                }
-            }
-            if (stressLevel > 1) {//high stress: more than 1 opponent detected
-                if (trace.isTeamTrace(a) == true) {
-                    //#CASE 9
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[8];
-                    } else //#CASE 10
-                        table[x][y] = ValueVector[9];
-                } else {//#CASE 11
-                    if (a.getClass() == Intruder.class) {
-                        table[x][y] = ValueVector[10];
-                    } else //#CASE 12
-                        table[x][y] = ValueVector[11];
-                }
-
-            }
-        }
-    }
 
     public double getReward(int stateX, int stateY){
         return table[stateX][stateY];

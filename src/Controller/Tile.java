@@ -57,6 +57,10 @@ public class Tile {
                 && this.position[1] == position[1] );
     }
 
+    public void resetBoolTrace(){hasTrace = false;}
+
+    public void resetTrace(){ AgentTrace = null;}
+
     public Trace getTrace(){return AgentTrace;};
 
     public void setGoal(){

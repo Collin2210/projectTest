@@ -35,6 +35,9 @@ public class Trace {
     //INSTANCE 3: owner/producer : from which we derive the position
     private Agent agent;
 
+    private int X_co;
+    private int Y_co;
+
     //DEFAULT CONSTRUCTOR
     public Trace(){
         /*stress initialized with zero*/
@@ -42,6 +45,8 @@ public class Trace {
     //CONSTRUCTOR with VARIABLE
     public Trace(Agent a){
         agent = a;
+        X_co = agent.getX();
+        Y_co = agent.getY();
         AlertLevel(); // assess the stress associated to current situation
     }
 
@@ -60,6 +65,7 @@ public class Trace {
 
     public int getStress(){return stress;}
 
+    public Agent getOwner(){return agent;}
 
     public boolean isTeamTrace(Agent a ){
         if(agent/*trace Owner*/.getClass() == a.getClass()){
@@ -69,6 +75,8 @@ public class Trace {
             return false;
     }
 
+    public int getX_co(){ return X_co;}
+    public int getY_co(){ return Y_co;}
     /* METHOD 1:  ALERT LEVEL
      *   Compute the agent's stress based on environmental information such as
      *   * The number of opponent within vision range

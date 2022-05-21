@@ -53,9 +53,16 @@ public class Agent {
         Tile tile = map.getTile(position[0], position[1]);
         tile.placeTrace(traceStep);
     }
-    public void updateTrace(){
-        for(int i = 0 ; i < trace.size(); i++){
-            trace.get(i).decreaseLifeTime();
+
+
+    public void updateTrace() {
+        for (int i = 0; i < trace.size(); i++) {
+            if (trace.get(i).getLifeTime() > 0) {
+                trace.get(i).decreaseLifeTime();
+            } else if (trace.get(i).getLifeTime() == 0) { //update empty the corresponding Tile instances
+                GameController.map.getTile(trace.get(i).getX_co(), trace.get(i).getY_co()).resetBoolTrace();
+                GameController.map.getTile(trace.get(i).getX_co(), trace.get(i).getY_co()).resetTrace();
+            }
         }
     }
 
