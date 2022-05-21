@@ -54,7 +54,7 @@ public class QLearning {
         }
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
-            while(!isInTerminalState()){
+            while(!GameEndChecker.isInTerminalState()){
                 for(Agent a : agents) {
                     if (a.getClass().getSuperclass() == LearnerAgent.class) {
                         this.agent = (LearnerAgent) a;
@@ -74,7 +74,7 @@ public class QLearning {
 
     public void moveSmartly(){
         int moveCount = 0;
-        while(!isInTerminalState()){
+        while(!GameEndChecker.isInTerminalState()){
             for(Agent a : agents) {
                 if(a.getClass().getSuperclass() == LearnerAgent.class) {
                     this.agent = (LearnerAgent) a;
@@ -174,8 +174,8 @@ public class QLearning {
         agent.visionT.clear();
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
-        agent.updateTrace(); //decrease life time of every created trace
-        agent.AgentStep(); //create a new trace for the current time step
+        agent.updateTrace();
+        agent.AgentStep();
     }
 
 
@@ -234,10 +234,6 @@ public class QLearning {
             throw new Exception("action number not recognized");
         }
         return new int[]{newX, newY, angle};
-    }
-
-    public Map getMap() {
-        return map;
     }
 
     public LearnerAgent getAgent() {
