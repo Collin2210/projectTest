@@ -27,24 +27,10 @@ public class Trace {
      */
     private int lifeTime = 10;
 
-    /* INSTANCE 2: length
-     * Could be depending on the size of the map
-     *  has to grow until this, starts at zero then from 10 to infinite gotta repaint it
-     */
-    private int length = 10;
-
-    /* INSTANCE 3:  an  array of integer array
-     * should store the coordonnates of the Tiles where the trace is located
-     */
-    private int [][] TracePath = new int[length][2];
-
-    // INSTANCE 4: current position to be filled
-    private int stepCounter = 0;
-
-    //INSTANCE 5: between 1 and 3: green, orange, red alert level
+    //INSTANCE 2: between 1 and 3: green, orange, red alert level
     private int stress = 0;
 
-    //INSTANCE 6: owner/producer
+    //INSTANCE 3: owner/producer
     private Agent agent;
 
     //DEFAULT CONSTRUCTOR
@@ -56,18 +42,7 @@ public class Trace {
         agent = a;
     }
 
-
     //HELPER METHODS : to modify private instances *******************************************************************
-    //STEP COUNTER TRILOGY: create, update, delete(reset)
-    public void increaseStepCounter() {
-        stepCounter++;
-    }
-
-    public void resetStepCounter() {
-        if (stepCounter == length) {
-            stepCounter = 0;
-        }// next time step the oldest trace will be Overriden
-    }
 
     /* LOCAL LIFETIME TRILOGY: create, update, delete(reset)
      * ATTENTION: outside loop :
@@ -79,14 +54,6 @@ public class Trace {
     }
 
     public int getLifeTime(){return lifeTime;}
-
-    public void UpdateLifeTime(int i, int j) {
-        for (int u = 0; u < stepCounter; u++) {
-            if (TracePath[u][3] > 0) {
-                TracePath[u][3]--; //decrese lifeTime by One
-            }
-        }
-    }
 
     public int getStress(){return stress;}
 
@@ -110,17 +77,7 @@ public class Trace {
      * CALLED AFTER MOVE DECISION !!
      */
     public void UpdateTrace() {
-        //connection to AGENT
-        TracePath[stepCounter][0] = agent.getX();//Tile coordinates
-        TracePath[stepCounter][1] = agent.getY();
-        TracePath[stepCounter][2] = lifeTime;
-
-        //Extract then derive information form the Tile where the Agent is located
-        stress = AlertLevel();
-
-        //update main parameters for next time step
-        increaseStepCounter(); //general agent steps
-        resetStepCounter();
+        //decrease the life_time
 
         printTrace();// connection to Tile
     }
