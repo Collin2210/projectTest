@@ -13,8 +13,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.1;
     public static final int
-            LEARNING_CYCLES = 300,
-            MOVE_LIMIT = 100;
+            LEARNING_CYCLES = 300;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -27,9 +26,6 @@ public class QLearning {
     public LearnerAgent agent;
     public QTable qTable;
     public RewardTable rewardTable;
-    public boolean moveLimit;
-
-    public int moveCount;
 
     /**
      *
@@ -212,10 +208,6 @@ public class QLearning {
 
     public QTable getqTable() {
         return qTable;
-    }
-
-    public void setqTable(QTable q){
-        this.qTable = q;
     }
 
     public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {
