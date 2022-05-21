@@ -33,6 +33,7 @@ public class Guard extends ExplorerAgent {
                     if(ax == tilePos[0] && ay == tilePos[1]) {
                         isFollowingAgent = true;
                         intruderToCatch = (Intruder) a;
+                        // yell
                     }
                 }
             }

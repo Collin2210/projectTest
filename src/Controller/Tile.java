@@ -17,18 +17,6 @@ public class Tile {
 
     private int[] portalOut = new int[2];
     private double degreeOut;
-    private final int size = 10;
-
-
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
 
     public Tile(int x, int y) {
         this.position = new int[]{x, y};
@@ -107,24 +95,5 @@ public class Tile {
 
     public int getYCoord() {
         return this.position[1];
-    }
-
-    public String toString(){
-        String s = "_";
-
-        if(this.hasTeleportIn()){
-            s = "T";
-        }
-        if(this.hasTeleportOut()){
-            s = "O";
-        }
-        if(this.hasWall()) {
-            s = "W";
-        }
-        if(this.hasShade()){
-            s = "H";
-        }
-
-        return s;
     }
 }

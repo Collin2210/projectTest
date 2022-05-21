@@ -2,10 +2,7 @@ package QLearning;
 
 import Controller.Map;
 import Controller.Teleport;
-import base.Agent;
-import base.GameController;
-import base.Guard;
-import base.LearnerAgent;
+import base.*;
 
 import static base.GameController.*;
 
@@ -180,11 +177,15 @@ public class QLearning {
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
 
+        agent.updateTrace(); //decrease life time of every created trace
+        agent.AgentStep(); //create a new trace for the current time step
+
     }
 
 
     private void putAgentsBackOnSpawn(){
         for(Agent a : agents) {
+            this.agent = (LearnerAgent)a;
             agent.setPosition(agent.getSpawnPosition()[0], agent.getSpawnPosition()[1]);
             agent.setPreviousState(new int[]{,});
         }
