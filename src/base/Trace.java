@@ -57,6 +57,10 @@ public class Trace {
 
     public int getStress(){return stress;}
 
+    public void updateTrace(){
+        //for(agent)
+    }
+
     public boolean isTeamTrace(Agent a ){
         if(agent/*trace Owner*/.getClass() == a.getClass()){
             return true;
@@ -70,16 +74,6 @@ public class Trace {
             return true;
         else
             return false;
-    }
-
-    /* METHOD 2: UPDATE TRACE . MOST IMPORTANT BECAUSE ONLY CALL INSIDE OF AGENT
-     *   Ensures that the agent current position is added to the Trace
-     * CALLED AFTER MOVE DECISION !!
-     */
-    public void UpdateTrace() {
-        //decrease the life_time
-
-        printTrace();// connection to Tile
     }
 
     /* METHOD 1:  ALERT LEVEL

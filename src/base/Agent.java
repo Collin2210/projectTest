@@ -14,7 +14,9 @@ public class Agent {
     public Map map;
     private final int[] position;
     private int angleDeg;
-    private Trace trace;
+    private Trace traceStep;
+    private ArrayList<Trace> trace;
+
 
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
