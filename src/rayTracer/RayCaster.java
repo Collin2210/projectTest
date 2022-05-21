@@ -36,7 +36,7 @@ public class RayCaster {
 
     private LinkedList<Line2D.Float> buildLines(){
         LinkedList<Line2D.Float> lines = new LinkedList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < lines.size(); i++) {
 
         }
         return lines;
