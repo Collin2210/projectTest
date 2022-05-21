@@ -88,7 +88,7 @@ public class QLearning {
 
             }
             moveCount++;
-            GameController.print();
+            //GameController.print();
         }
         System.out.println("Move count: " + moveCount);
     }
@@ -174,7 +174,6 @@ public class QLearning {
         agent.visionT.clear();
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
-
         agent.updateTrace(); //decrease life time of every created trace
         agent.AgentStep(); //create a new trace for the current time step
     }

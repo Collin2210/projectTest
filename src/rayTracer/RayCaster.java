@@ -47,7 +47,9 @@ public class RayCaster {
         float[] distants = new float[resolution];
         LinkedList<Line2D.Float> rays = new LinkedList<>();
         // (angle (4 directions) * 90-visionrange/2)/2 and
-        for (int i = (int) ((-Variables.FIELD_OF_VIEW/2+ a.getAngleDeg())/2); i < (Variables.FIELD_OF_VIEW/2+a.getAngleDeg())/2; i++) {
+        int start = (int) ((-Variables.FIELD_OF_VIEW/2+ a.getAngleDeg())/2),
+                end = (int)(Variables.FIELD_OF_VIEW/2+a.getAngleDeg())/2;
+        for (int i = start; i < end; i++) {
             double direction = (Math.PI*2) * ((double) i/resolution);
             float minDist = maxDist;
             for (Line2D.Float line : lines){

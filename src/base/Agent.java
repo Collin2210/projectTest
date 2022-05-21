@@ -57,12 +57,19 @@ public class Agent {
 
 
     public void updateTrace() {
-        for (int i = 0; i < trace.size(); i++) {
-            if (trace.get(i).getLifeTime() > 0) {
+        int traceSize = trace.size();
+        for(int i = 0; i< traceSize; i++){
+            if(trace.get(i).getLifeTime() > 0){
                 trace.get(i).decreaseLifeTime();
-            } else if (trace.get(i).getLifeTime() == 0) { //update empty the corresponding Tile instances
-                GameController.map.getTile(trace.get(i).getX_co(), trace.get(i).getY_co()).resetBoolTrace();
-                GameController.map.getTile(trace.get(i).getX_co(), trace.get(i).getY_co()).resetTrace();
+            }
+            else{
+                Trace t = trace.get(i);
+                trace.remove(t);
+                Tile tile = GameController.map.getTile(trace.get(i).getX_co(),trace.get(i).getY_co());
+                tile.resetTrace();
+                tile.resetBoolTrace();
+                i--;
+                traceSize--;
             }
         }
     }

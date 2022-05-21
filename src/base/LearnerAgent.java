@@ -17,6 +17,7 @@ public class LearnerAgent extends Agent {
 
     public void moveSmartly(){
         brain.moveSmartly();
+        System.out.println("moving");
     }
 
     public QLearning getBrain() {

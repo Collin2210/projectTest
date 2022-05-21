@@ -53,6 +53,16 @@ public class GameController {
     public void makeAgentsMoveSmartly(){
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.moveSmartly();
+
+    }
+
+    public void moveAgentDumbly(){
+        for(int i = 0; i < 15; i++){
+            Agent a = agents.get(0);
+            a.setPosition(a.getX()+1,a.getY());
+            a.updateTrace();
+            GameController.print();
+        }
     }
 
 
@@ -157,8 +167,10 @@ public class GameController {
                 else if(tile.hasWall())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
 
-                if(tile.hasTrace()) {
-                    if (tile.getTrace().getStress() == 0) {
+                else if(tile.hasTrace()) {
+                    System.out.print(ANSI_RED + " 0 " + ANSI_RESET);
+
+                    /*if (tile.getTrace().getStress() == 0) {
                         System.out.print(ANSI_GREEN + " . " + ANSI_RESET);
                     }
                     if (tile.getTrace().getStress() == 1) {
@@ -166,7 +178,7 @@ public class GameController {
                     }
                     if (tile.getTrace().getStress() > 1) {
                         System.out.print(ANSI_RED + " . " + ANSI_RESET);
-                    }
+                    }*/
                 }
 
                 else {

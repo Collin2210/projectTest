@@ -1,5 +1,5 @@
 
-import Controller.Position;
+//import Controller.Position;
 import base.GameController;
 
 public class Tester {
@@ -11,8 +11,9 @@ public class Tester {
         GameController g = new GameController();
         g.startGame();
         GameController.print();
+        //g.moveAgentDumbly();
         g.makeAgentsLearn();
-        g.makeAgentsMoveSmartly();
+        //g.makeAgentsMoveSmartly();
 
 
     }

@@ -45,6 +45,7 @@ public class Trace {
     //CONSTRUCTOR with VARIABLE
     public Trace(Agent a){
         agent = a;
+        lifeTime = 10;
         X_co = agent.getX();
         Y_co = agent.getY();
         AlertLevel(); // assess the stress associated to current situation
