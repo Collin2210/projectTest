@@ -11,6 +11,7 @@ public class Tile {
             isTeleportIn,
             isTeleportOut,
             hasTrace,
+            isYell,
             isGoal;
 
     public Trace AgentTrace;
@@ -63,6 +64,10 @@ public class Tile {
     }
 
     public void setTrace() {this.hasTrace = true;}
+
+    public void setYell(){
+        this.isYell=true;
+    }
 
     public boolean isGoal(){
         return isGoal;
