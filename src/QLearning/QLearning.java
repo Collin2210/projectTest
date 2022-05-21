@@ -1,19 +1,23 @@
 package QLearning;
 
 import Controller.Map;
-import base.*;
+import Controller.Teleport;
+import base.Agent;
+import base.GameController;
+import base.Guard;
+import base.LearnerAgent;
 
-import static base.GameController.isNotInTerminalState;
-import static base.GameController.teleporters;
+import static base.GameController.*;
 
 public class QLearning {
 
     public static final double
             LEARNING_RATE = 0.5,
-            DISCOUNT_FACTOR = 0.9,
-            RANDOMNESS_LEVEL = 0.5;
+            DISCOUNT_FACTOR = 0.1,
+            RANDOMNESS_LEVEL = 0.1;
     public static final int
-            LEARNING_CYCLES = 300;
+            LEARNING_CYCLES = 300,
+            MOVE_LIMIT = 100;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -22,44 +26,73 @@ public class QLearning {
             MOVE_DOWN = 2,
             MOVE_LEFT = 3;
 
-    final Map map;
-    final Agent agent;
-    QTable qTable;
-    RewardTable rewardTable;
+    public final Map map;
+    public LearnerAgent agent;
+    public QTable qTable;
+    public RewardTable rewardTable;
+    public boolean moveLimit;
 
-    byte actionPerformed;
+    public int moveCount;
 
-    int[]
-            currentState,
-            previousState,
-            spawnPosition;
+    /**
+     *
+     * TODO: make rewardtable static, rn it's dynamically changed.
+     * check the static reward table and sum it with occurances and
+     * thus reward values from it's sensors.
+     *
+     * Test: raycasting singleAgentMethod
+     *
+     */
 
-    public QLearning(Agent agent) {
+    public QLearning(LearnerAgent agent) {
         this.map = GameController.map;
         this.agent = agent;
-        currentState = agent.getPosition(); previousState = new int[]{-1, -1};
-        qTable = new QTable(map);
+        this.qTable = new QTable(map);
         rewardTable = new RewardTable(agent);
-        spawnPosition = new int[]{agent.getX(), agent.getY()};
     }
 
     public void learn(){
-        qTable.initialize();
-
-        for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
-            while(isNotInTerminalState()){
-                byte action = getNextAction();
-                tryPerformingAction(action);
-                updateQValue();
+        for(Agent a : agents){
+            if(a.getClass().getSuperclass() == LearnerAgent.class){
+                ((LearnerAgent)a).getBrain().getqTable().initialize();
             }
-            putAgentBackOnSpawn();
+        }
+        for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
+            int moveCount = 0;
+            while(!isInTerminalState()){
+                for(Agent a : agents) {
+                    if (a.getClass().getSuperclass() == LearnerAgent.class) {
+                        this.agent = (LearnerAgent) a;
+                        byte action = getNextAction();
+                        tryPerformingAction(action);
+                        updateQValue();
+                    }
+                }
+                moveCount++;
+            }
+            System.out.print("Game Number: " +cycleCount);
+            System.out.println(" Move count: " + moveCount);
+            putAgentsBackOnSpawn();
         }
     }
 
     public void moveSmartly(){
-        byte action = getActionWithHighestQ();
-        tryPerformingAction(action);
-
+        int moveCount = 0;
+        while(!isInTerminalState()){
+            for(Agent a : agents) {
+                if(a.getClass().getSuperclass() == LearnerAgent.class) {
+                    this.agent = (LearnerAgent) a;
+                    byte action = getActionWithHighestQ();
+                    tryPerformingAction(action);
+                    updateQValue();
+                }
+                else if(a.getClass() == Guard.class)
+                    ((Guard) a).makeMove();
+            }
+            moveCount++;
+            GameController.print();
+        }
+        System.out.println("Move count: " + moveCount);
     }
 
     /** performs random action x% of the time, and performs action with highest Q all other times
@@ -75,7 +108,8 @@ public class QLearning {
     }
 
     private byte getActionWithHighestQ(){
-        return qTable.getActionWithHighestQAtState(currentState);
+        int[] currentState = this.agent.getPosition();
+        return this.agent.getBrain().getqTable().getActionWithHighestQAtState(currentState);
     }
 
     public static byte getRandomAction(){
@@ -86,54 +120,74 @@ public class QLearning {
     /** updates q-value at previous state after action is performed
      * */
     private void updateQValue(){
-        double oldQ = qTable.getQ(previousState,actionPerformed);
+        int[] previousState = this.agent.getPreviousState();
+        byte actionPerformed = this.agent.getActionPerformed();
+        double oldQ = this.agent.getBrain().getqTable().getQ(previousState,actionPerformed);
         double TD = temporalDifference();
         double newQ = oldQ + LEARNING_RATE * TD; // as per the Bellman Equation
-        qTable.setQ(previousState, actionPerformed, newQ);
+        this.agent.getBrain().getqTable().setQ(previousState, actionPerformed, newQ);
     }
 
     /** returns how much the q-value changes at previous state after action is performed
      */
     private double temporalDifference(){
+        int[] currentState = this.agent.getPosition();
+        int[] previousState = this.agent.getPreviousState();
+        byte actionPerformed = this.agent.getActionPerformed();
+
         double reward = rewardTable.getReward(currentState[0],currentState[1]);
-        double maxQ = qTable.getHighestQAvailableAtPosition(currentState[0], currentState[1]);
-        double oldQ = qTable.getQ(previousState,actionPerformed);
+        double maxQ = this.agent.getBrain().getqTable().getHighestQAvailableAtPosition(currentState[0], currentState[1]);
+        double oldQ = this.agent.getBrain().getqTable().getQ(previousState,actionPerformed);
         return (reward + DISCOUNT_FACTOR * maxQ - oldQ);
     }
 
     private void tryPerformingAction(byte action){
         try {
             performAction(action);
+            //runRayCastSingleAgent();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void performAction(byte action) throws Exception {
-        actionPerformed = action;
-        int[] newPosition = getValidPositionFromAction(action);
-
-        // check if action takes you to a teleporter
-        for(Teleporter t : teleporters){
-            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
-                newPosition = t.destination;
-        }
-
-        int[] newState = new int[]{newPosition[0], newPosition[1]};
-        previousState = new int[]{currentState[0],currentState[1]};
-        agent.setPosition(newState[0], newState[1]);
-        currentState = newState;
-        agent.visionT.clear();
+    public void runRayCastSingleAgent(){
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
     }
 
 
-    private void putAgentBackOnSpawn(){
-        agent.setPosition(spawnPosition[0], spawnPosition[1]);
-        agent.setAngleDeg(0);
-        previousState = new int[]{,};
-        currentState = spawnPosition;
+    private void performAction(byte action) throws Exception {
+        int[] currentState = this.agent.getPosition();
+        agent.setActionPerformed(action);
+
+        //update trace
+        //agent.getTrace().decreaseLifeTime();
+
+        int[] newPosition = getValidPositionFromAction(action);
+
+        // check if action takes you to a teleporter
+//        for(Teleport t : teleporters){
+//            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
+//                newPosition = t.destination;
+//        }
+
+        int[] newState = new int[]{newPosition[0], newPosition[1]};
+        agent.setPreviousState(new int[]{currentState[0],currentState[1]});
+        agent.setPosition(newState[0], newState[1]);
+        agent.getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
+        agent.visionT.clear();
+        agent.getRayEngine().calculate(agent);
+        agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
+
+    }
+
+
+    private void putAgentsBackOnSpawn(){
+        for(Agent a : agents) {
+            agent.setPosition(agent.getSpawnPosition()[0], agent.getSpawnPosition()[1]);
+            agent.setPreviousState(new int[]{,});
+        }
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
@@ -141,6 +195,7 @@ public class QLearning {
     }
 
     private int[] getValidPositionFromAction(byte action) throws Exception {
+        int[] currentState = this.agent.getPosition();
         int[] newPositionData = getNewPositionFromAction(action, currentState);
 
         if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
@@ -154,7 +209,15 @@ public class QLearning {
         }
         // set angle
         agent.setAngleDeg(newPositionData[2]);
-        return new int[]{newPositionData[0], newPositionData[1]};
+        return new int[]{newPositionData[0], newPositionData[1], agent.getAngleDeg()};
+    }
+
+    public QTable getqTable() {
+        return qTable;
+    }
+
+    public void setqTable(QTable q){
+        this.qTable = q;
     }
 
     public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {

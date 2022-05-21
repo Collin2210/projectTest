@@ -27,10 +27,10 @@ public class ExplorerAgent extends Agent{
         int[] newPosition = getValidPositionFromAction(action);
 
         // check if action takes you to a teleporter
-        for(Teleporter t : teleporters){
-            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
-                newPosition = t.destination;
-        }
+//        for(Teleport t : teleporters){
+//            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
+//                newPosition = t.destination;
+//        }
 
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         this.setPosition(newState[0], newState[1]);

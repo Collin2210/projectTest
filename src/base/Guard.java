@@ -25,7 +25,7 @@ public class Guard extends ExplorerAgent {
     }
 
     private void checkVision(){
-        this.visionT = rayEngine.getVisibleTiles(this);
+        this.visionT = this.getRayEngine().getVisibleTiles(this);
         for(int[] tilePos : visionT){
             for(Agent a : GameController.agents){
                 if(a.getClass() == Intruder.class){

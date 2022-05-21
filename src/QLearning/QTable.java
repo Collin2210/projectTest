@@ -12,7 +12,10 @@ public class QTable {
 
     public QTable(Map map) {
         this.map = map;
-        this.table = new double[GameController.variables.getHeight()][GameController.variables.getWidth()][QLearning.NUMBER_OF_POSSIBLE_ACTIONS];
+        int
+                height = GameController.variables.getHeight(),
+                width  = GameController.variables.getWidth();
+        this.table = new double[height][width][QLearning.NUMBER_OF_POSSIBLE_ACTIONS];
     }
 
     public void initialize(){

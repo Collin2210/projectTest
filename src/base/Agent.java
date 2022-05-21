@@ -19,6 +19,10 @@ public class Agent {
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
 
+    private ArrayList<int[]> savedPath;
+    private byte actionPerformed;
+    private int[] previousState;
+    private int[] spawnPosition;
 
     private ArrayList<int[]> visionArea = new ArrayList<>();
     private int agentId;
@@ -32,14 +36,12 @@ public class Agent {
         this.angleDeg = 180;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
-        trace = new Trace(this);
-    }
-
-    public void moveRight(){
-        int newX = position[0] + 1;
-        if(Map.inMap(new int[]{newX, position[1]}))
-            setPosition(newX, position[1]);
-        trace.UpdateTrace();
+       // traceStep = new Trace(this);
+      //  trace.add(traceStep);
+        spawnPosition = new int[] {position[0], position[1]};
+        savedPath = new ArrayList<>();
+        savedPath.add(position);
+        previousState = new int[2];
     }
 
     /**
@@ -117,6 +119,34 @@ public class Agent {
 
     public RayCaster getRayEngine() {
         return rayEngine;
+    }
+
+    public int[] getSpawnPosition() {
+        return spawnPosition;
+    }
+
+    public void setSpawnPosition(int[] spawnPosition) {
+        this.spawnPosition = spawnPosition;
+    }
+
+    public int[] getPreviousState() {
+        return previousState;
+    }
+
+    public void setPreviousState(int[] previousState) {
+        this.previousState = previousState;
+    }
+
+    public byte getActionPerformed() {
+        return actionPerformed;
+    }
+
+    public void setActionPerformed(byte actionPerformed) {
+        this.actionPerformed = actionPerformed;
+    }
+
+    public ArrayList<int[]> getSavedPath() {
+        return savedPath;
     }
 
 }

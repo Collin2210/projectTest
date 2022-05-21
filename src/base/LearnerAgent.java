@@ -19,4 +19,8 @@ public class LearnerAgent extends Agent {
         brain.moveSmartly();
     }
 
+    public QLearning getBrain() {
+        return brain;
+    }
+
 }

@@ -110,12 +110,12 @@ public class Map {
 
     public static boolean inMap(int[] position){
         return position[0] < GameController.variables.getHeight()
-                && position[1] < GameController.variables.getWidth() && position[0] > 0 && position[1] > 0;
+                && position[1] < GameController.variables.getWidth() && position[0] >= 0 && position[1] >= 0;
     }
 
     public static boolean inMap(int x, int y){
         return x < GameController.variables.getHeight()
-                && y < GameController.variables.getWidth() && x > 0 && y > 0;
+                && y < GameController.variables.getWidth() && x >= 0 && y >= 0;
     }
 
     // Getters n Setters
