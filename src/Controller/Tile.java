@@ -73,6 +73,13 @@ public class Tile {
         return isGoal;
     }
 
+    public boolean hasYell(){
+        return isYell;
+    }
+
+    public boolean hasTrace(){
+        return hasTrace;
+    }
     public boolean hasWall(){
         return hasWall;
     }

@@ -15,6 +15,7 @@ public class RewardTable {
             WALL_REWARD = -1000,
             GOAL_REWARD = 1000,
             STEP_COST = -1,
+            YELL_REWARD = 10,
             GUARD_TILE_DISCOVERY_REWARD = 1;
 
     private int[] ValueVector = new int[12];

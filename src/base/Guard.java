@@ -8,6 +8,8 @@ public class Guard extends ExplorerAgent {
 
     private boolean isFollowingAgent;
     private Intruder intruderToCatch;
+    private Yell yell;
+    private boolean yelling;
 
     public Guard(int[] position) {
         super(position);
@@ -24,7 +26,8 @@ public class Guard extends ExplorerAgent {
 
         if(isFollowingAgent)
             followIntruder();
-        else
+        }
+        else {
             makeRandomMove();
 
     }

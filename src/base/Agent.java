@@ -11,7 +11,6 @@ public class Agent {
 
     public Variables v=new Variables();
     public Tile t;
-    public Map map;
     private final int[] position;
     private int angleDeg;
 
@@ -28,7 +27,6 @@ public class Agent {
 
     private ArrayList<int[]> visionArea = new ArrayList<>();
     private int agentId;
-    private final int yell = 10;
     private final int footsteps=5;
     private boolean[][] yellArray=new boolean[GameController.variables.getHeight()][GameController.variables.getWidth()];
 

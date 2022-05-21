@@ -4,6 +4,8 @@ import Controller.Map;
 import Controller.Tile;
 import Controller.Variables;
 
+import java.util.ArrayList;
+
 public class Yell {
     /**
      * when guard comes to the position
@@ -31,7 +33,7 @@ public class Yell {
                 yellStartX = x - yellRange,
                 yellEndX = x + yellRange;
         int
-                yellStartY = y - yellRange,
+                yellStartY = y + yellRange,
                 yellEndY = y - yellRange;
 
         for (int i = yellStartX; i < yellEndX; i++) {
@@ -39,6 +41,7 @@ public class Yell {
                 if (Map.inMap(i, j)) {
                     Tile tile = GameController.map.getTile(i, j);
                     tile.setYell();
+                    yellPositions.add(new int[] {i,j});
                 }
             }
         }
