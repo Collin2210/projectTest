@@ -27,8 +27,8 @@ public class Yell {
         //timer = 4;
         int yellRange = Variables.GUARD_YELL_RANGE;
         int
-                x = agent.getX(),
-                y = agent.getY();
+                x = guard.getX(),
+                y = guard.getY();
         int
                 yellStartX = x - yellRange,
                 yellEndX = x + yellRange;

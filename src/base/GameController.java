@@ -100,7 +100,6 @@ public class GameController {
 
     public void addGuards(){
         ArrayList<int[]> spawn = variables.getGuardSpawnPoints();
-        System.out.println("guard size= "+variables.getGuardSpawnPoints().size());
         int nrOfIntruders = variables.getNumberOfGuards();
         for(int i = 0;i<nrOfIntruders;i++){
             agents.add(new Guard(spawn.get(i)));

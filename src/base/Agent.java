@@ -43,6 +43,7 @@ public class Agent {
         previousState = new int[2];
 
         // initializing Trace
+        trace = new ArrayList<>();
         Trace traceStep = new Trace(this);
         trace.add(traceStep);
     }
@@ -50,7 +51,7 @@ public class Agent {
     public void AgentStep(){ //create a brand new trace for the current step
         Trace traceStep = new Trace(this);
         trace.add(traceStep);
-        Tile tile = map.getTile(position[0], position[1]);
+        Tile tile = GameController.map.getTile(position[0], position[1]);
         tile.placeTrace(traceStep);
     }
 
@@ -64,6 +65,11 @@ public class Agent {
                 GameController.map.getTile(trace.get(i).getX_co(), trace.get(i).getY_co()).resetTrace();
             }
         }
+    }
+
+    public void putBackOnSpawn(){
+        setPosition(spawnPosition[0], spawnPosition[1]);
+        previousState = new int[]{,};
     }
 
     /**
@@ -105,70 +111,80 @@ public class Agent {
 //        }
 //    }
 
-    public int[] getPosition(){
+    public int[] getPosition () {
         return position;
     }
 
-    public void setPosition(int x, int y){
+    public void setPosition ( int x, int y){
         position[0] = x;
         position[1] = y;
     }
 
-    public int getAngleDeg() {
+    public int getAngleDeg () {
         return this.angleDeg;
     }
 
-    public int getX(){
+    public int getX () {
         return position[0];
     }
 
-    public int getY(){
+    public int getY () {
         return position[1];
     }
 
 
-    public void setAngleDeg(int a){
+    public void setAngleDeg ( int a){
         this.angleDeg = a;
     }
 
-    public void setVisionArea(ArrayList<int[]> visionArea){this.visionArea = visionArea;};
+    public void setVisionArea (ArrayList < int[]>visionArea){
+        this.visionArea = visionArea;
+    }
+    ;
 
-    public int getID(){return agentId;};
+    public int getID () {
+        return agentId;
+    }
+    ;
 
-   public ArrayList<Trace> getTrace(){return trace;}
+    public ArrayList<Trace> getTrace () {
+        return trace;
+    }
 
-    public ArrayList<int[]> getVisionT(){return visionT;}
+    public ArrayList<int[]> getVisionT () {
+        return visionT;
+    }
 
-    public RayCaster getRayEngine() {
+    public RayCaster getRayEngine () {
         return rayEngine;
     }
 
-    public int[] getSpawnPosition() {
+    public int[] getSpawnPosition () {
         return spawnPosition;
     }
 
-    public void setSpawnPosition(int[] spawnPosition) {
+    public void setSpawnPosition ( int[] spawnPosition){
         this.spawnPosition = spawnPosition;
     }
 
-    public int[] getPreviousState() {
+    public int[] getPreviousState () {
         return previousState;
     }
 
-    public void setPreviousState(int[] previousState) {
+    public void setPreviousState ( int[] previousState){
         this.previousState = previousState;
     }
 
-    public byte getActionPerformed() {
+    public byte getActionPerformed () {
         return actionPerformed;
     }
 
-    public void setActionPerformed(byte actionPerformed) {
+    public void setActionPerformed ( byte actionPerformed){
         this.actionPerformed = actionPerformed;
     }
 
-    public ArrayList<int[]> getSavedPath() {
+    public ArrayList<int[]> getSavedPath () {
         return savedPath;
     }
-
 }
+

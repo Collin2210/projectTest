@@ -82,7 +82,7 @@ public class ExplorerAgent extends Agent{
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
-        return map.inMap(new int[]{newX, newY});
+        return Map.inMap(new int[]{newX, newY});
     }
 
 }

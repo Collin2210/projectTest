@@ -43,6 +43,8 @@ public class RewardTable {
 
     private int[] ValueVector = new int[12];
 
+    private int rewardOfOccurrences;
+
     public RewardTable(Agent agent) {
         this.map = GameController.map;
         this.agent = agent;
@@ -63,14 +65,6 @@ public class RewardTable {
         for (int x = 0; x < table.length; x++) {
             for (int y = 0; y < table[x].length; y++) {
                 if(map.getTile(x,y).isGoal()) {
-                    System.out.println("gets here 1");
-                    /*if(agent.getClass() != Guard.class) {
-                        System.out.println("gets here 2");
-                        table[x][y] = GOAL_REWARD;
-                        System.out.println("goal: x and y:"+ x +", "+ y);
-                    }
-
-                     */
                     if(agent.getClass() == Intruder.class){
                         table[x][y] = GOAL_REWARD;
                     }
@@ -84,24 +78,52 @@ public class RewardTable {
         }
     }
 
-    public double sumOfRewards(){
-        int reward = 0;
-        ArrayList<int[]> visionTable = agent.visionT;
-
-        for (int[] pos:visionTable) {
-//            if(map.getMap()[pos[0]][pos[1]].has
-//            );
-
+    public double getOccurenceReward(int x, int y){
+        int totalReward = 0;
+        if(map.getTile(x,y).hasYell()){
+            totalReward += YELL_REWARD;
         }
-        for (int x = 0; x < table.length; x++) {
-            for (int y = 0; y < table[x].length; y++) {
-                if(!map.getTile(x,y).hasWall() && !map.getTile(x,y).isGoal()) {
-
+        if(map.getTile(x,y).hasTrace()){
+            Trace trace = map.getTile(x,y).getTrace();
+            if(agent.getClass() == Guard.class){
+                if(trace.getOwner().getClass() == Guard.class){
+                    if(trace.getStress() == 0)
+                        totalReward+=ValueVector[1];
+                    else if(trace.getStress() == 1)
+                        totalReward += ValueVector[5];
+                    else if(trace.getStress() == 2)
+                        totalReward += ValueVector[9];
+                }
+                else if(trace.getOwner().getClass() == Intruder.class){
+                    if(trace.getStress() == 0)
+                        totalReward+=ValueVector[3];
+                    else if(trace.getStress() == 1)
+                            totalReward+=ValueVector[7];
+                    else if (trace.getStress() == 2)
+                        totalReward+=ValueVector[11];
+                }
+            }
+            else if(agent.getClass() == Intruder.class){
+                if(trace.getOwner().getClass() == Guard.class){
+                    if(trace.getStress() == 0)
+                        totalReward+=ValueVector[2];
+                    else if(trace.getStress() == 1)
+                        totalReward += ValueVector[6];
+                    else if(trace.getStress() == 2)
+                        totalReward += ValueVector[10];
+                }
+                else if(trace.getOwner().getClass() == Intruder.class){
+                    if(trace.getStress() == 0)
+                        totalReward+=ValueVector[0];
+                    else if(trace.getStress() == 1)
+                        totalReward+=ValueVector[4];
+                    else if (trace.getStress() == 2)
+                        totalReward+=ValueVector[8];
                 }
             }
         }
-        return 0;
 
+        return totalReward;
     }
 
 
@@ -154,7 +176,7 @@ public class RewardTable {
 
 
     public double getReward(int stateX, int stateY){
-        return table[stateX][stateY];
+        return table[stateX][stateY] + getOccurenceReward(stateX,stateY);
     }
 
 

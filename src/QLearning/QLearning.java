@@ -1,7 +1,6 @@
 package QLearning;
 
 import Controller.Map;
-import Controller.Teleport;
 import base.*;
 
 import static base.GameController.*;
@@ -26,6 +25,8 @@ public class QLearning {
     public LearnerAgent agent;
     public QTable qTable;
     public RewardTable rewardTable;
+    public EMTable emTable;
+
 
     /**
      *
@@ -42,12 +43,13 @@ public class QLearning {
         this.agent = agent;
         this.qTable = new QTable(map);
         rewardTable = new RewardTable(agent);
+        emTable = new EMTable(agent.getPosition());
     }
 
     public void learn(){
         for(Agent a : agents){
             if(a.getClass().getSuperclass() == LearnerAgent.class){
-                ((LearnerAgent)a).getBrain().getqTable().initialize();
+                ((LearnerAgent)a).getBrain().getQTable().initialize();
             }
         }
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
@@ -102,7 +104,7 @@ public class QLearning {
 
     private byte getActionWithHighestQ(){
         int[] currentState = this.agent.getPosition();
-        return this.agent.getBrain().getqTable().getActionWithHighestQAtState(currentState);
+        return this.agent.getBrain().getQTable().getActionWithHighestQAtState(currentState);
     }
 
     public static byte getRandomAction(){
@@ -115,10 +117,10 @@ public class QLearning {
     private void updateQValue(){
         int[] previousState = this.agent.getPreviousState();
         byte actionPerformed = this.agent.getActionPerformed();
-        double oldQ = this.agent.getBrain().getqTable().getQ(previousState,actionPerformed);
+        double oldQ = this.agent.getBrain().getQTable().getQ(previousState,actionPerformed);
         double TD = temporalDifference();
         double newQ = oldQ + LEARNING_RATE * TD; // as per the Bellman Equation
-        this.agent.getBrain().getqTable().setQ(previousState, actionPerformed, newQ);
+        this.agent.getBrain().getQTable().setQ(previousState, actionPerformed, newQ);
     }
 
     /** returns how much the q-value changes at previous state after action is performed
@@ -129,8 +131,8 @@ public class QLearning {
         byte actionPerformed = this.agent.getActionPerformed();
 
         double reward = rewardTable.getReward(currentState[0],currentState[1]);
-        double maxQ = this.agent.getBrain().getqTable().getHighestQAvailableAtPosition(currentState[0], currentState[1]);
-        double oldQ = this.agent.getBrain().getqTable().getQ(previousState,actionPerformed);
+        double maxQ = this.agent.getBrain().getQTable().getHighestQAvailableAtPosition(currentState[0], currentState[1]);
+        double oldQ = this.agent.getBrain().getQTable().getQ(previousState,actionPerformed);
         return (reward + DISCOUNT_FACTOR * maxQ - oldQ);
     }
 
@@ -172,15 +174,12 @@ public class QLearning {
 
         agent.updateTrace(); //decrease life time of every created trace
         agent.AgentStep(); //create a new trace for the current time step
-
     }
 
 
     private void putAgentsBackOnSpawn(){
         for(Agent a : agents) {
-            this.agent = (LearnerAgent)a;
-            agent.setPosition(agent.getSpawnPosition()[0], agent.getSpawnPosition()[1]);
-            agent.setPreviousState(new int[]{,});
+            a.putBackOnSpawn();
         }
     }
 
@@ -206,7 +205,7 @@ public class QLearning {
         return new int[]{newPositionData[0], newPositionData[1], agent.getAngleDeg()};
     }
 
-    public QTable getqTable() {
+    public QTable getQTable() {
         return qTable;
     }
 
