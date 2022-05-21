@@ -26,9 +26,12 @@ public class Tile {
         isTeleportOut = false;
         isGoal = false;
         hasTrace = false;
-
     }
 
+    public void placeTrace(Trace trace ){
+        hasTrace = true;
+        AgentTrace = trace;
+    }
     public void placeWall(){
         hasWall = true;
     }
@@ -52,6 +55,8 @@ public class Tile {
         return ( this.position[0] == position[0]
                 && this.position[1] == position[1] );
     }
+
+    public Trace getTrace(){return AgentTrace;};
 
     public void setGoal(){
         this.isGoal = true;

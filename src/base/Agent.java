@@ -14,7 +14,7 @@ public class Agent {
     public Map map;
     private final int[] position;
     private int angleDeg;
-    private Trace traceStep;
+
     private ArrayList<Trace> trace;
 
 
@@ -38,12 +38,27 @@ public class Agent {
         this.angleDeg = 180;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
-       // traceStep = new Trace(this);
-      //  trace.add(traceStep);
+
         spawnPosition = new int[] {position[0], position[1]};
         savedPath = new ArrayList<>();
         savedPath.add(position);
         previousState = new int[2];
+
+        // initializing Trace
+        Trace traceStep = new Trace(this);
+        trace.add(traceStep);
+    }
+
+    public void AgentStep(){ //create a brand new trace for the current step
+        Trace traceStep = new Trace(this);
+        trace.add(traceStep);
+        Tile tile = map.getTile(position[0], position[1]);
+        tile.placeTrace(traceStep);
+    }
+    public void updateTrace(){
+        for(int i = 0 ; i < trace.size(); i++){
+            trace.get(i).decreaseLifeTime();
+        }
     }
 
     /**
@@ -115,7 +130,7 @@ public class Agent {
 
     public int getID(){return agentId;};
 
-//    public Trace getAgentTrace(){return trace;}
+   public ArrayList<Trace> getTrace(){return trace;}
 
     public ArrayList<int[]> getVisionT(){return visionT;}
 

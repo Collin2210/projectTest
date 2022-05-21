@@ -158,9 +158,6 @@ public class QLearning {
         int[] currentState = this.agent.getPosition();
         agent.setActionPerformed(action);
 
-        //update trace
-        //agent.getTrace().decreaseLifeTime();
-
         int[] newPosition = getValidPositionFromAction(action);
 
         // check if action takes you to a teleporter

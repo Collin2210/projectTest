@@ -20,6 +20,8 @@ package base;
 
 import Controller.Map;
 
+import java.util.ArrayList;
+
 public class Trace {
     /* INSTANCE 1: lifeTime
      *   Should be proportional to length so that they evolve in parallel
@@ -30,7 +32,7 @@ public class Trace {
     //INSTANCE 2: between 1 and 3: green, orange, red alert level
     private int stress = 0;
 
-    //INSTANCE 3: owner/producer
+    //INSTANCE 3: owner/producer : from which we derive the position
     private Agent agent;
 
     //DEFAULT CONSTRUCTOR
@@ -40,6 +42,7 @@ public class Trace {
     //CONSTRUCTOR with VARIABLE
     public Trace(Agent a){
         agent = a;
+        AlertLevel(); // assess the stress associated to current situation
     }
 
     //HELPER METHODS : to modify private instances *******************************************************************
@@ -57,21 +60,11 @@ public class Trace {
 
     public int getStress(){return stress;}
 
-    public void updateTrace(){
-        //for(agent)
-    }
 
     public boolean isTeamTrace(Agent a ){
         if(agent/*trace Owner*/.getClass() == a.getClass()){
             return true;
         }
-        else
-            return false;
-    }
-
-    public boolean sameCoordinates(Agent other){
-        if(agent.getX() == other.getX() && agent.getY() == other.getY())
-            return true;
         else
             return false;
     }
@@ -83,16 +76,19 @@ public class Trace {
      *           NB: larger d <-- reduces stress for an intruder
      *               larger d <-- increases stress for a guard
      * */
-    public int AlertLevel(){
-        int AgentCounter = 0;
-        for(int i = 0; i < GameController.agents.size(); i++){
-            if(sameCoordinates(agent))
-                AgentCounter++;
+    public void AlertLevel() {
+        int counter = 0;
+        for (int[] tilePos : agent.visionT) {
+            for (Agent a : GameController.agents) {
+                if (a.getClass() == Intruder.class) {
+                    int ax = a.getX(), ay = a.getY();
+                    if (ax == tilePos[0] && ay == tilePos[1]) {
+                        counter++;
+                    }
+                }
+            }
         }
-        if(AgentCounter > 1)
-            return 2;
-        else
-            return AgentCounter;
+        this.stress = counter;
     }
 
     /* METHOD: printTrace
