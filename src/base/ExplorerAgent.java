@@ -1,5 +1,6 @@
 package base;
 
+import Controller.Map;
 import QLearning.QLearning;
 
 import static QLearning.QLearning.*;

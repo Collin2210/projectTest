@@ -58,7 +58,7 @@ public class RewardTable {
 
         if(agent.getClass() == Intruder.class) {
             setDistanceToGoalReward();
-        checkTrace(this.agent);
+        }
     }
 
     private void initialize(){
@@ -140,24 +140,6 @@ public class RewardTable {
                 }
             }
         }
-    }
-
-    public void setGuardReward(){
-        for (int x = 0; x < table.length; x++) {
-            for (int y = 0; y < table[x].length; y++) {
-                if(!map.getTile(x,y).hasWall() && !map.getTile(x,y).isGoal()) {
-                    table[x][y] = GUARD_TILE_DISCOVERY_REWARD;
-                }
-                if(agent.getX() == x && agent.getY() == y)
-                    table[x][y] = 0;
-            }
-        }
-    }
-
-    public void updateGuardReward(int[] seenTilePosition){
-        // no reward if the agent goes back there
-        int x = seenTilePosition[0], y = seenTilePosition[1];
-        table[x][y] = 0;
     }
 
     private double getDistanceFromGoal(int x, int y){

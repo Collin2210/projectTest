@@ -73,6 +73,8 @@ public class Tile {
         this.isYell=true;
     }
 
+    public void removeYell() { this.isYell = false;}
+
     public boolean isGoal(){
         return isGoal;
     }

@@ -58,6 +58,7 @@ public class QLearning {
                 for(Agent a : agents) {
                     if (a.getClass().getSuperclass() == LearnerAgent.class) {
                         this.agent = (LearnerAgent) a;
+                        this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
                         byte action = getNextAction();
                         tryPerformingAction(action);
                         updateQValue();
@@ -81,8 +82,10 @@ public class QLearning {
                     tryPerformingAction(action);
                     updateQValue();
                 }
-                else if(a.getClass() == Guard.class)
+                else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
+                }
+
             }
             moveCount++;
             GameController.print();
@@ -232,5 +235,41 @@ public class QLearning {
             throw new Exception("action number not recognized");
         }
         return new int[]{newX, newY, angle};
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public LearnerAgent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(LearnerAgent agent) {
+        this.agent = agent;
+    }
+
+    public QTable getqTable() {
+        return qTable;
+    }
+
+    public void setqTable(QTable qTable) {
+        this.qTable = qTable;
+    }
+
+    public RewardTable getRewardTable() {
+        return rewardTable;
+    }
+
+    public void setRewardTable(RewardTable rewardTable) {
+        this.rewardTable = rewardTable;
+    }
+
+    public EMTable getEmTable() {
+        return emTable;
+    }
+
+    public void setEmTable(EMTable emTable) {
+        this.emTable = emTable;
     }
 }

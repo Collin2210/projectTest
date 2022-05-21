@@ -72,44 +72,9 @@ public class Agent {
         previousState = new int[]{,};
     }
 
-    /**
-     * get agent position from parser
-     * how to set points in between
-     */
-
-//    public void yellPosition() {
-//        int yell = 10;
-//        //STEP 1: identifying the array limits: check if in Map !
-//        int yellRadiusUpY =  position[1] + yell;
-//        int yellRadiusDownY =  position[1] - yell;
-//        int yellRadiusUpX =  position[0]+ yell;
-//        int yellRadiusDownX =  position[0]- yell;
-//
-//        for (int i = yellRadiusDownX; i < yellRadiusUpX; i++) {
-//            for (int j = yellRadiusDownX; j < yellRadiusDownY; j++) {
-//                map.getTile(i, j).setYell();
-//            }
-//        }
-//    }
-//
-//    public void updateFootstepsPosition() {
-//        int footstepsRadiusUpY = position[1] + yell;
-//        int footstepsRadiusDownY = position[1] - yell;
-//        int footstepsRadiusUpX = position[0] + yell;
-//        int footstepsRadiusDownX = position[0] - yell;
-//        for (int i = 0; i < map.getMap().length; i++) {
-//            if(Map.inMap(position[0],footstepsRadiusUpY) && Map.inMap(position[0],footstepsRadiusDownY) && Map.inMap(position[0],footstepsRadiusUpX) && Map.inMap(position[0],footstepsRadiusDownX)){
-//                double x = (yell - position[0]) ^ 2;
-//                double y = (yell - position[1]) ^ 2;
-//                if ((x + y) < (yell ^ 2)) {
-//                    map.getTile(position[1], footstepsRadiusUpY).setFootsteps();
-//                    map.getTile(position[1], footstepsRadiusDownY).setFootsteps();
-//                    map.getTile(position[0], footstepsRadiusUpX).setFootsteps();
-//                    map.getTile(position[0], footstepsRadiusDownX).setFootsteps();
-//                }
-//            }
-//        }
-//    }
+    public void resetTrace(Trace trace){
+        //trace
+    }
 
     public int[] getPosition () {
         return position;

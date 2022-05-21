@@ -23,29 +23,29 @@ public class Guard extends ExplorerAgent {
         //place yell if needed
         yell.remove();
         checkVision();
-
-        if(isFollowingAgent)
+        if(isFollowingAgent) {
             followIntruder();
         }
         else {
             makeRandomMove();
-
+        }
     }
 
     private void checkVision(){
         this.visionT = this.getRayEngine().getVisibleTiles(this);
-        for(int[] tilePos : visionT){
-            for(Agent a : GameController.agents){
-                if(a.getClass() == Intruder.class){
-                    int ax = a.getX(), ay = a.getY();
-                    if(ax == tilePos[0] && ay == tilePos[1]) {
-                        isFollowingAgent = true;
-                        intruderToCatch = (Intruder) a;
-                        // yell
+            for(int[] tilePos : visionT){
+                for(Agent a : GameController.agents){
+                    if(a.getClass() == Intruder.class){
+                        int ax = a.getX(), ay = a.getY();
+                        if(ax == tilePos[0] && ay == tilePos[1]) {
+                            isFollowingAgent = true;
+                            intruderToCatch = (Intruder) a;
+                            yell.propagateYell();
+                            yelling = true;
+                        }
                     }
                 }
             }
-        }
     }
 
     private void followIntruder(){
