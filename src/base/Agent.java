@@ -50,9 +50,15 @@ public class Agent {
 
     public void AgentStep(){ //create a brand new trace for the current step
         Trace traceStep = new Trace(this);
-        trace.add(traceStep);
+       // if(trace.size() < 10) {// debugging
+            trace.add(traceStep);
+       // }
+
         Tile tile = GameController.map.getTile(position[0], position[1]);
-        tile.placeTrace(traceStep);
+
+      //  if(trace.size() < 10) {// debugging
+            tile.placeTrace(traceStep);
+    //
     }
 
 
@@ -64,7 +70,7 @@ public class Agent {
             }
             else{
                 Trace t = trace.get(i);
-                trace.remove(t);
+                trace.remove(t); // the first only ?!
                 Tile tile = GameController.map.getTile(trace.get(i).getX_co(),trace.get(i).getY_co());
                 tile.resetTrace();
                 tile.resetBoolTrace();
@@ -77,10 +83,6 @@ public class Agent {
     public void putBackOnSpawn(){
         setPosition(spawnPosition[0], spawnPosition[1]);
         previousState = new int[]{,};
-    }
-
-    public void resetTrace(Trace trace){
-        //trace
     }
 
     public int[] getPosition () {
