@@ -44,8 +44,9 @@ public class Agent {
 
         // initializing Trace
         trace = new ArrayList<>();
-        Trace traceStep = new Trace(this);
-        trace.add(traceStep);
+        //Trace traceStep = new Trace(this);
+        //trace.add(traceStep);
+
     }
 
     public void AgentStep(){ //create a brand new trace for the current step

@@ -71,6 +71,8 @@ public class QLearning {
                     }
                 }
                 moveCount++;
+                //GameController.print();
+
             }
             System.out.print("Game Number: " +cycleCount);
             System.out.println(" Move count: " + moveCount);
@@ -96,6 +98,7 @@ public class QLearning {
                     int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
                     pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
+                System.out.println(a.getTrace().toString());
             }
             moveCount++;
             GameController.print();

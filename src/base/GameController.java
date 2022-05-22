@@ -154,7 +154,7 @@ public class GameController {
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
 
                 else if(tile.hasTrace()) {
-                    System.out.print(ANSI_RED + " 0 " + ANSI_RESET);
+                    System.out.print(ANSI_PURPLE + " T " + ANSI_RESET);
 
                     /*if (tile.getTrace().getStress() == 0) {
                         System.out.print(ANSI_GREEN + " . " + ANSI_RESET);
@@ -177,7 +177,7 @@ public class GameController {
                         }
                     }
                     if(isSeen) {
-                        System.out.print(ANSI_PURPLE + " O " + ANSI_RESET);
+                        System.out.print(ANSI_GREEN + " V " + ANSI_RESET);
                     }
                     else System.out.print(" O ");
                 }

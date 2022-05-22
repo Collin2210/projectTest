@@ -1,9 +1,9 @@
 height = 30
 width = 30
-numGuards = 5
-numIntruders = 5
+numGuards = 1
+numIntruders = 1
 baseSpeedGuard = 5
-spawnAreaGuards = 12 11 20 19
+spawnAreaGuards = 12 10 20 19
 spawnAreaIntruders = 5 0 10 1
 isGoal = 15 14 17 18
-visionRange = 10
+visionRange = 5
