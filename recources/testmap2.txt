@@ -1,9 +1,9 @@
-height = 50
-width = 50
-numGuards = 1
-numIntruders = 1
+height = 30
+width = 30
+numGuards = 5
+numIntruders = 5
 baseSpeedGuard = 5
-spawnAreaGuards = 46 5 47 6
-spawnAreaIntruders = 5 0 6 1
-isGoal = 25 24 26 25
-visionRange = 5
+spawnAreaGuards = 12 11 20 19
+spawnAreaIntruders = 5 0 10 1
+isGoal = 15 14 17 18
+visionRange = 10

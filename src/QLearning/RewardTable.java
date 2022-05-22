@@ -159,7 +159,7 @@ public class RewardTable {
 
 
     public double getReward(int stateX, int stateY){
-        return table[stateX][stateY];
+        return table[stateX][stateY]+getOccurenceReward(stateX, stateY);
     }
 
     public void printTable(){

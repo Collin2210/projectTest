@@ -14,8 +14,15 @@ public class GameController {
     public static Variables variables;
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
-    public static final ArrayList<Teleport> teleporters = new ArrayList<>();
-    private static final ArrayList<ArrayList<int[]>> visionOfAgents = new ArrayList<>();
+
+    public static final ArrayList<int[]> portalEntrances = new ArrayList<>();
+    public static final ArrayList<int[]> portalDestinations = new ArrayList<>();
+    public static final ArrayList<Double> portalDegrees = new ArrayList<>();
+
+    public static final ArrayList<ArrayList<int[]>> pathOfAllAgents = new ArrayList<>();
+
+    public static int numOfGuardWins = 0;
+    public static int numOfIntruderWins = 0;
 
     public GameController(){
     }

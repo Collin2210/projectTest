@@ -13,7 +13,7 @@ public class QLearning {
     public static final double
             LEARNING_RATE = 0.5,
             DISCOUNT_FACTOR = 0.1,
-            RANDOMNESS_LEVEL = 0.1;
+            RANDOMNESS_LEVEL = 0.5;
     public static final int
             LEARNING_CYCLES = 300,
             MOVE_LIMIT = 100;
@@ -152,7 +152,6 @@ public class QLearning {
     private void tryPerformingAction(byte action){
         try {
             performAction(action);
-            runRayCastSingleAgent();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

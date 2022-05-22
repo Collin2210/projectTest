@@ -1,5 +1,7 @@
 package Controller;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * TO DO: add a getter and a setter for @distanceViewing and adapt the parser accordingly
@@ -47,6 +49,10 @@ public class Variables {
     private ArrayList<Teleport> portals = new ArrayList<Teleport>();
     private ArrayList<Shade> shades = new ArrayList<Shade>();
     private ArrayList<Texture> textures = new ArrayList<Texture>();
+    private LinkedList<Line2D.Float> rayCastingWalls = new LinkedList<>();
+
+
+
     private Target target;
     private Spawn spawnAreaGuards;
     private Spawn spawnAreaIntruders;
@@ -113,6 +119,9 @@ public class Variables {
         this.walkingSpeedIntruder = walkingSpeedIntruder;
     }
 
+    public LinkedList<Line2D.Float> getRayCastingWalls() {
+        return rayCastingWalls;
+    }
 
     public void setTargetArea(int x1, int y1, int x2, int y2){
         this.target = new Target(x1,y1,x2,y2);
@@ -233,6 +242,10 @@ public class Variables {
     public void createWall(int x1, int y1, int x2, int y2){
         if(unlock){
             this.walls.add(new Wall(x1,y1,x2,y2));
+            this.rayCastingWalls.add(new Line2D.Float(x1,y1,x2,y1));
+            this.rayCastingWalls.add(new Line2D.Float(x2,y1,x2,y2));
+            this.rayCastingWalls.add(new Line2D.Float(x2,y2,x2,y1));
+            this.rayCastingWalls.add(new Line2D.Float(x2,y1,x1,y1));
         }
     }
 

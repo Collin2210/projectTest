@@ -25,6 +25,7 @@ public class RayCaster {
     Agent a;
     private ArrayList<int[]> visionArea = new ArrayList<>();
 
+
     public RayCaster(Agent a){
         this.map = GameController.map;
         this.a = a;
@@ -35,10 +36,7 @@ public class RayCaster {
     }
 
     private LinkedList<Line2D.Float> buildLines(){
-        LinkedList<Line2D.Float> lines = new LinkedList<>();
-        for (int i = 0; i < lines.size(); i++) {
-
-        }
+        LinkedList<Line2D.Float> lines = map.getVariables().getRayCastingWalls();
         return lines;
     }
 
@@ -139,7 +137,7 @@ public class RayCaster {
                 agentX = agent.getX(),
                 agentY = agent.getY(),
                 visionRange = GameController.variables.getVisionRange(),
-                angle = agent.getAngleDeg();
+                angle = (float) agent.getAngleDeg();
 
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();
 
