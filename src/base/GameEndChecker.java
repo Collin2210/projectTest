@@ -38,6 +38,8 @@ public class GameEndChecker {
         // if agents have spent 3 seconds in goal, end game
         if(timeSpentInGoalByIntruders == 3) {
             intrudersWin = true;
+            System.out.println("intruders win");
+            GameController.numOfIntruderWins++;
             return true;
         }
         return false;
@@ -59,6 +61,8 @@ public class GameEndChecker {
                     double distance = RewardTable.distanceBetweenPoints(guardX,guardY,intruderX,intruderY);
                     // if distance is small enough, end game
                     if(distance <= 1) {
+                        System.out.println("guards win");
+                        GameController.numOfGuardWins++;
                         guardsWin = true;
                         return true;
                     }

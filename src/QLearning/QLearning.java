@@ -1,7 +1,10 @@
 package QLearning;
 
 import Controller.Map;
+import Controller.Tile;
 import base.*;
+
+import java.util.Arrays;
 
 import static base.GameController.*;
 
@@ -12,7 +15,8 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.1;
     public static final int
-            LEARNING_CYCLES = 300;
+            LEARNING_CYCLES = 300,
+            MOVE_LIMIT = 100;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -26,7 +30,6 @@ public class QLearning {
     public QTable qTable;
     public RewardTable rewardTable;
     public EMTable emTable;
-
 
     /**
      *
@@ -63,6 +66,9 @@ public class QLearning {
                         tryPerformingAction(action);
                         updateQValue();
                     }
+                    else if(a.getClass() == Guard.class){
+                        ((Guard) a).makeMove();
+                    }
                 }
                 moveCount++;
             }
@@ -82,11 +88,14 @@ public class QLearning {
                     byte action = getActionWithHighestQ();
                     tryPerformingAction(action);
                     updateQValue();
+                    int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
+                    pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
                 else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
+                    int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
+                    pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
-
             }
             moveCount++;
             GameController.print();
@@ -163,11 +172,13 @@ public class QLearning {
         int[] newPosition = getValidPositionFromAction(action);
 
         // check if action takes you to a teleporter
-//        for(Teleport t : teleporters){
-//            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
-//                newPosition = t.destination;
-//        }
-
+        for(int[] portalIn : portalEntrances){
+            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
+                int index = portalEntrances.indexOf(portalIn);
+                newPosition = portalDestinations.get(index);
+                agent.setAngleDeg(portalDegrees.get(index));
+            }
+        }
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
         agent.setPosition(newState[0], newState[1]);
@@ -183,6 +194,12 @@ public class QLearning {
     private void putAgentsBackOnSpawn(){
         for(Agent a : agents) {
             a.putBackOnSpawn();
+            a.getTrace().clear(); // reset the value of trace stored in the Agent Object
+        }
+        for(Tile[] row : map.getTiles()){// reset the value of trace stored in the Tile Object
+            for(Tile t : row)
+                if(t.hasTrace())
+                    t.resetTrace();
         }
     }
 
@@ -205,7 +222,7 @@ public class QLearning {
         }
         // set angle
         agent.setAngleDeg(newPositionData[2]);
-        return new int[]{newPositionData[0], newPositionData[1], agent.getAngleDeg()};
+        return new int[]{newPositionData[0], newPositionData[1], (int) agent.getAngleDeg()};
     }
 
     public QTable getQTable() {

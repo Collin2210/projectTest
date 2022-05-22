@@ -6,6 +6,7 @@ import Controller.Tile;
 import Controller.Variables;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameController {
 
@@ -27,20 +28,18 @@ public class GameController {
         addWalls();
         addIntruder();
         addGuards();
+        addTeleports();
         runRaycast();
     }
 
     public void makeAgentsLearn(){
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.learn();
-        visionOfAgents.clear();
-
     }
 
     public void makeAgentsMoveSmartly(){
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.moveSmartly();
-
     }
 
     public void moveAgentDumbly(){
@@ -59,11 +58,12 @@ public class GameController {
         }
     }
 
-    public void addTeleport(){
+    public void addTeleports(){
         ArrayList<Controller.Teleport> portals = variables.getPortals();
-        ArrayList<int[]> portalPos = new ArrayList<>();
         for(Controller.Teleport t : portals){
-            portalPos.addAll(t.getPointsIn());
+            portalEntrances.addAll(t.getPointsIn());
+            Collections.addAll(portalDestinations, t.getPointOut());
+            portalDegrees.add(t.getDegreeOut());
         }
     }
 
@@ -90,6 +90,7 @@ public class GameController {
         int nrOfIntruders = variables.getNumberOfIntruders();
         for(int i = 0;i<nrOfIntruders;i++){
             agents.add(new Intruder(spawn.get(i)));
+            pathOfAllAgents.add(new ArrayList<>());
         }
     }
 
@@ -98,6 +99,7 @@ public class GameController {
         int nrOfIntruders = variables.getNumberOfGuards();
         for(int i = 0;i<nrOfIntruders;i++){
             agents.add(new Guard(spawn.get(i)));
+            pathOfAllAgents.add(new ArrayList<>());
         }
     }
 

@@ -13,8 +13,8 @@ public class Tester {
         GameController.print();
         //g.moveAgentDumbly();
         g.makeAgentsLearn();
+        System.out.println("guards won " + GameController.numOfGuardWins);
+        System.out.println("intruders won " + GameController.numOfIntruderWins);
         g.makeAgentsMoveSmartly();
-
-
     }
 }

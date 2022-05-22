@@ -4,7 +4,7 @@ import Controller.Map;
 import QLearning.QLearning;
 
 import static QLearning.QLearning.*;
-import static base.GameController.teleporters;
+import static base.GameController.*;
 
 public class ExplorerAgent extends Agent{
     public ExplorerAgent(int[] position) {
@@ -19,31 +19,44 @@ public class ExplorerAgent extends Agent{
     public void tryPerformingAction(byte action){
         try {
             performAction(action);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private void performAction(byte action) throws Exception {
+        int[] currentState = this.getPosition();
+        this.setActionPerformed(action);
+
         int[] newPosition = getValidPositionFromAction(action);
 
-        // check if action takes you to a teleporter
-//        for(Teleport t : teleporters){
-//            if(t.position[0] == newPosition[0] && t.position[1] == newPosition[1])
-//                newPosition = t.destination;
-//        }
-
+        // check if action takes you to a teleport
+        for(int[] portalIn : portalEntrances){
+            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
+                int index = portalEntrances.indexOf(portalIn);
+                newPosition = portalDestinations.get(index);
+                this.setAngleDeg(portalDegrees.get(index));
+            }
+        }
         int[] newState = new int[]{newPosition[0], newPosition[1]};
-        this.setPosition(newState[0], newState[1]);
-        this.visionT.clear();
-        this.getRayEngine().calculate(this);
+        setPreviousState(new int[]{currentState[0],currentState[1]});
+        setPosition(newState[0], newState[1]);
+        getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
+        visionT.clear();
+        getRayEngine().calculate(this);
         this.visionT = this.getRayEngine().getVisibleTiles(this);
-        this.updateTrace(); //decrease life time of every created trace
-        this.AgentStep(); //create a new trace for the current time step
+        this.updateTrace();
+        this.AgentStep();
+    }
+
+    private boolean newPositionIsValid(int newX, int newY) {
+        return Map.inMap(newX, newY);
     }
 
     int[] getValidPositionFromAction(byte action) throws Exception {
-        int[] newPositionData = getNewPositionFromAction(action, getPosition());
+        int[] currentState = this.getPosition();
+        int[] newPositionData = getNewPositionFromAction(action, currentState);
 
         if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
             if(action == NUMBER_OF_POSSIBLE_ACTIONS-1){
@@ -56,7 +69,7 @@ public class ExplorerAgent extends Agent{
         }
         // set angle
         this.setAngleDeg(newPositionData[2]);
-        return new int[]{newPositionData[0], newPositionData[1]};
+        return new int[]{newPositionData[0], newPositionData[1], (int) this.getAngleDeg()};
     }
 
     public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {
@@ -83,9 +96,4 @@ public class ExplorerAgent extends Agent{
         }
         return new int[]{newX, newY, angle};
     }
-
-    private boolean newPositionIsValid(int newX, int newY) {
-        return Map.inMap(new int[]{newX, newY});
-    }
-
 }

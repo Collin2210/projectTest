@@ -12,7 +12,7 @@ public class Agent {
     public Variables v=new Variables();
     public Tile t;
     private final int[] position;
-    private int angleDeg;
+    private double angleDeg;
 
     private ArrayList<Trace> trace;
 
@@ -73,14 +73,13 @@ public class Agent {
                 trace.remove(t); // the first only ?!
                 Tile tile = GameController.map.getTile(trace.get(i).getX_co(),trace.get(i).getY_co());
                 tile.resetTrace();
-                tile.resetBoolTrace();
                 i--;
                 traceSize--;
             }
         }
     }
 
-    public void putBackOnSpawn(){
+    public void putBackOnSpawn() {
         setPosition(spawnPosition[0], spawnPosition[1]);
         previousState = new int[]{,};
     }
@@ -94,7 +93,7 @@ public class Agent {
         position[1] = y;
     }
 
-    public int getAngleDeg () {
+    public double getAngleDeg () {
         return this.angleDeg;
     }
 
@@ -107,7 +106,7 @@ public class Agent {
     }
 
 
-    public void setAngleDeg ( int a){
+    public void setAngleDeg ( double a){
         this.angleDeg = a;
     }
 
