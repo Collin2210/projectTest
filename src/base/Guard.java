@@ -82,4 +82,11 @@ public class Guard extends ExplorerAgent {
         return vp;
     }
 
+    public boolean isFollowingAgent() {
+        return isFollowingAgent;
+    }
+
+    public Intruder getIntruderToCatch() {
+        return intruderToCatch;
+    }
 }

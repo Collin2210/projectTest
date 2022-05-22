@@ -6,7 +6,6 @@ import Controller.Tile;
 import Controller.Variables;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GameController {
 
@@ -15,7 +14,6 @@ public class GameController {
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
     public static final ArrayList<Teleport> teleporters = new ArrayList<>();
-    public static final ArrayList<int[]> agentPosition = new ArrayList<>();
     private static final ArrayList<ArrayList<int[]>> visionOfAgents = new ArrayList<>();
 
     public GameController(){
@@ -30,17 +28,6 @@ public class GameController {
         addIntruder();
         addGuards();
         runRaycast();
-    }
-
-    public static boolean isInTerminalState(){
-        for(Agent a : agents) {
-            if (a.getClass() == Intruder.class) {
-                Tile t = map.getTile(a.getX(), a.getY());
-                if(GameController.goalTiles.contains(t))
-                    return true;
-            }
-        }
-        return false;
     }
 
     public void makeAgentsLearn(){
@@ -65,14 +52,12 @@ public class GameController {
         }
     }
 
-
     public void runRaycast() {
         for (Agent a : agents) {
             a.rayEngine.calculate(a);
             a.visionT = a.rayEngine.getVisibleTiles(a);
         }
     }
-
 
     public void addTeleport(){
         ArrayList<Controller.Teleport> portals = variables.getPortals();
@@ -115,14 +100,6 @@ public class GameController {
             agents.add(new Guard(spawn.get(i)));
         }
     }
-
-//    public void addTeleporters(Teleport[] teles){
-//        for(Teleport t : teles){
-//            teleporters.add(t);
-//            map.getTile(t.position[0], t.position[1]).setTeleport();
-//            map.getTile(t.destination[0], t.destination[1]).setAsTeleportDestination();
-//        }
-//    }
 
     public static void print(){
 
