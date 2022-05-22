@@ -13,13 +13,13 @@ public class ExplorerAgent extends Agent{
 
     public void makeRandomMove(){
         byte action = QLearning.getRandomAction();
+        System.out.println("random action = " + action);
         tryPerformingAction(action);
     }
 
     public void tryPerformingAction(byte action){
         try {
             performAction(action);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -59,13 +59,10 @@ public class ExplorerAgent extends Agent{
         int[] newPositionData = getNewPositionFromAction(action, currentState);
 
         if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
-            if(action == NUMBER_OF_POSSIBLE_ACTIONS-1){
-                return getValidPositionFromAction((byte) 0);
-            }
-            else {
-                action = getRandomAction();
-                return getValidPositionFromAction(action);
-            }
+            action = getRandomAction();
+            setActionPerformed(action);
+            System.out.println("new action = " + action);
+            return getValidPositionFromAction(action);
         }
         // set angle
         this.setAngleDeg(newPositionData[2]);

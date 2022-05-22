@@ -1,5 +1,6 @@
 package base;
 
+import Controller.Map;
 import QLearning.*;
 
 import java.util.ArrayList;
@@ -59,14 +60,16 @@ public class Guard extends ExplorerAgent {
 
         for (int act = 0; act < QLearning.NUMBER_OF_POSSIBLE_ACTIONS; act++) {
             int[] newPosition = tryToGetValidPosition(action);
-            double distance = RewardTable.distanceBetweenPoints(
-                    intruderToCatch.getX(), intruderToCatch.getY(),
-                    newPosition[0], newPosition[1]
-            );
+            if(Map.inMap(newPosition[0],newPosition[1]) && !GameController.map.getTile(newPosition[0], newPosition[1]).hasWall()){
+                double distance =
+                        RewardTable.distanceBetweenPoints(
+                                intruderToCatch.getX(), intruderToCatch.getY(),
+                                newPosition[0], newPosition[1] );
 
-            if(distance < smallest_distance){
-                smallest_distance = distance;
-                action = (byte) act;
+                if(distance < smallest_distance){
+                    smallest_distance = distance;
+                    action = (byte) act;
+                }
             }
         }
         return action;
