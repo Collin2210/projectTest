@@ -1,6 +1,7 @@
 package base;
 
 import Controller.Map;
+import Controller.Teleport;
 import QLearning.QLearning;
 
 import static QLearning.QLearning.*;
@@ -13,7 +14,6 @@ public class ExplorerAgent extends Agent{
 
     public void makeRandomMove(){
         byte action = QLearning.getRandomAction();
-        System.out.println("random action = " + action);
         tryPerformingAction(action);
     }
 
@@ -32,13 +32,15 @@ public class ExplorerAgent extends Agent{
         int[] newPosition = getValidPositionFromAction(action);
 
         // check if action takes you to a teleport
-        for(int[] portalIn : portalEntrances){
-            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
-                int index = portalEntrances.indexOf(portalIn);
-                newPosition = portalDestinations.get(index);
-                this.setAngleDeg(portalDegrees.get(index));
+        for(Teleport t : portals){
+            for(int[] in : t.getPointsIn()){
+                if(newPosition[0] == in[0] && newPosition[1] == in[1]){
+                    newPosition = t.getPointOut();
+                    setAngleDeg(t.getDegreeOut());
+                }
             }
         }
+
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         setPreviousState(new int[]{currentState[0],currentState[1]});
         setPosition(newState[0], newState[1]);
@@ -61,7 +63,6 @@ public class ExplorerAgent extends Agent{
         if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
             action = getRandomAction();
             setActionPerformed(action);
-            System.out.println("new action = " + action);
             return getValidPositionFromAction(action);
         }
         // set angle

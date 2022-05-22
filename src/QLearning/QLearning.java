@@ -1,6 +1,7 @@
 package QLearning;
 
 import Controller.Map;
+import Controller.Teleport;
 import Controller.Tile;
 import base.*;
 
@@ -173,14 +174,16 @@ public class QLearning {
 
         int[] newPosition = getValidPositionFromAction(action);
 
-        // check if action takes you to a teleporter
-        for(int[] portalIn : portalEntrances){
-            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
-                int index = portalEntrances.indexOf(portalIn);
-                newPosition = portalDestinations.get(index);
-                agent.setAngleDeg(portalDegrees.get(index));
+        // check if action takes you to a teleport
+        for(Teleport t : portals){
+            for(int[] in : t.getPointsIn()){
+                if(newPosition[0] == in[0] && newPosition[1] == in[1]){
+                    newPosition = t.getPointOut();
+                    agent.setAngleDeg(t.getDegreeOut());
+                }
             }
         }
+
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
         agent.setPosition(newState[0], newState[1]);

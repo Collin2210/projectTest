@@ -1,9 +1,6 @@
 package base;
 
-import Controller.FileParser;
-import Controller.Map;
-import Controller.Tile;
-import Controller.Variables;
+import Controller.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +12,7 @@ public class GameController {
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
 
-    public static final ArrayList<int[]> portalEntrances = new ArrayList<>();
-    public static final ArrayList<int[]> portalDestinations = new ArrayList<>();
-    public static final ArrayList<Double> portalDegrees = new ArrayList<>();
+    public static final ArrayList<Teleport> portals = new ArrayList<>();
 
     public static final ArrayList<ArrayList<int[]>> pathOfAllAgents = new ArrayList<>();
 
@@ -66,12 +61,7 @@ public class GameController {
     }
 
     public void addTeleports(){
-        ArrayList<Controller.Teleport> portals = variables.getPortals();
-        for(Controller.Teleport t : portals){
-            portalEntrances.addAll(t.getPointsIn());
-            Collections.addAll(portalDestinations, t.getPointOut());
-            portalDegrees.add(t.getDegreeOut());
-        }
+        portals.addAll(variables.getPortals());
     }
 
     public void addGoal(){
