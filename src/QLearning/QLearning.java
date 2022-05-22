@@ -78,6 +78,7 @@ public class QLearning {
             for(Agent a : agents) {
                 if(a.getClass().getSuperclass() == LearnerAgent.class) {
                     this.agent = (LearnerAgent) a;
+                    this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
                     byte action = getActionWithHighestQ();
                     tryPerformingAction(action);
                     updateQValue();
@@ -88,7 +89,7 @@ public class QLearning {
 
             }
             moveCount++;
-            //GameController.print();
+            GameController.print();
         }
         System.out.println("Move count: " + moveCount);
     }
@@ -142,7 +143,7 @@ public class QLearning {
     private void tryPerformingAction(byte action){
         try {
             performAction(action);
-            //runRayCastSingleAgent();
+            runRayCastSingleAgent();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

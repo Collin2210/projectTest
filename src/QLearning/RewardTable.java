@@ -20,25 +20,25 @@ public class RewardTable {
 
 
     public void initialValueVector(){
-        ValueVector[0] = 100; //#CASE 1 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
-        ValueVector[1] = -100; //#CASE 2 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = GUARD)
+        ValueVector[0] = 10; //#CASE 1 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[1] = -5; //#CASE 2 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = GUARD)
 
-        ValueVector[2] = -100;//#CASE 3 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
-        ValueVector[3] = +500;//#CASE 4 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+        ValueVector[2] = -10;//#CASE 3 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[3] = +10;//#CASE 4 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
 
         //#LEVEL 1 STRESS: One opponent detected
-        ValueVector[4] = -200; //#CASE 5 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
-        ValueVector[5] = +200; //#CASE 6 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = GUARD)
+        ValueVector[4] = -20; //#CASE 5 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[5] = +20; //#CASE 6 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = GUARD)
 
-        ValueVector[6] = -2000;//#CASE 7 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
-        ValueVector[7] = +500;//#CASE 8 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+        ValueVector[6] = -20;//#CASE 7 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[7] = +5;//#CASE 8 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
 
         //#LEVEL 2 STRESS : more than 1 opponents detected
-        ValueVector[8] = -3000; //#CASE 9 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
-        ValueVector[9] = +1500; //#CASE 10 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = GUARD)
+        ValueVector[8] = -30; //#CASE 9 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
+        ValueVector[9] = +15; //#CASE 10 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = GUARD)
 
-        ValueVector[10] = -1000;//#CASE 11 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
-        ValueVector[11] = +1000;//#CASE 12 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+        ValueVector[10] = -10;//#CASE 11 : (STRESS = RED) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
+        ValueVector[11] = +10;//#CASE 12 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
     }
 
     private int[] ValueVector = new int[12];
@@ -82,6 +82,7 @@ public class RewardTable {
         int totalReward = 0;
         if(map.getTile(x,y).hasYell()){
             totalReward += YELL_REWARD;
+
         }
         if(map.getTile(x,y).hasTrace()){
             Trace trace = map.getTile(x,y).getTrace();
@@ -122,7 +123,7 @@ public class RewardTable {
                 }
             }
         }
-
+        table[x][y] += totalReward;
         return totalReward;
     }
 
@@ -158,7 +159,7 @@ public class RewardTable {
 
 
     public double getReward(int stateX, int stateY){
-        return table[stateX][stateY] + getOccurenceReward(stateX,stateY);
+        return table[stateX][stateY];
     }
 
 

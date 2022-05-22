@@ -13,7 +13,7 @@ public class Tester {
         GameController.print();
         //g.moveAgentDumbly();
         g.makeAgentsLearn();
-        //g.makeAgentsMoveSmartly();
+        g.makeAgentsMoveSmartly();
 
 
     }

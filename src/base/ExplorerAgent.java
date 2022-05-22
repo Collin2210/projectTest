@@ -38,6 +38,8 @@ public class ExplorerAgent extends Agent{
         this.visionT.clear();
         this.getRayEngine().calculate(this);
         this.visionT = this.getRayEngine().getVisibleTiles(this);
+        this.updateTrace(); //decrease life time of every created trace
+        this.AgentStep(); //create a new trace for the current time step
     }
 
     int[] getValidPositionFromAction(byte action) throws Exception {
