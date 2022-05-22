@@ -108,4 +108,8 @@ public class Trace {
         GameController.map.getTile( agent.getX(),  agent.getY()).setTrace(); //turns the boolean on !
         GameController.map.getTile(agent.getX(), agent.getY()).addTrace(this);//passes the entire object as an argument
     }
+
+    public String toString(){
+        return "("+getX_co()+","+getY_co()+")";
+    }
 }

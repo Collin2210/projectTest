@@ -51,13 +51,12 @@ public class Agent {
     public void AgentStep(){ //create a brand new trace for the current step
         Trace traceStep = new Trace(this);
        // if(trace.size() < 10) {// debugging
-            trace.add(traceStep);
+        trace.add(traceStep);
        // }
-
         Tile tile = GameController.map.getTile(position[0], position[1]);
 
       //  if(trace.size() < 10) {// debugging
-            tile.placeTrace(traceStep);
+        tile.placeTrace(traceStep);
     //
     }
 
@@ -77,6 +76,8 @@ public class Agent {
                 traceSize--;
             }
         }
+
+        GameController.map.getTile(spawnPosition[0],spawnPosition[1]).resetTrace();
     }
 
     public void putBackOnSpawn() {
