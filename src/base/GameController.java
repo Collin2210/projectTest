@@ -32,6 +32,7 @@ public class GameController {
         addGuards();
         addTeleports();
         runRaycast();
+
     }
 
     public void makeAgentsLearn(){

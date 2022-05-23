@@ -17,6 +17,7 @@ import Visuals.entities.Entity;
 import Visuals.entities.Light;
 import Visuals.entities.Player;
 import base.GameController;
+import base.GameEndChecker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjglx.util.vector.Vector2f;
 import org.lwjglx.util.vector.Vector3f;
@@ -267,32 +268,6 @@ public class Main implements Runnable {
 
 	}
 
-	// Creation of walls
-
-	private ArrayList<Entity> createWallFromParams(double x1, double y1, double x2, double y2){
-		if(isParallelToX(y1, y2)){
-			return createWallParallelToX(Math.abs(x2-x1), (int)Math.min(x1, x2), (int)Math.min(y1, y2));
-		}
-		return createWallParallelToY(Math.abs(y2-y1), (int)Math.min(x1, x2), (int)Math.min(y1, y2));
-	}
-
-	private boolean isParallelToX(double y1, double y2){
-		return Math.abs(y2 - y1) == 1;
-	}
-
-	private ArrayList<Entity> createWallParallelToX(double wallLength, int startX, int startY){
-		ArrayList<Entity> walls = new ArrayList<>();
-		for(int i = 0; i < wallLength; i++)
-			walls.add(new Entity(texturedModelWall, new Vector3f(startX + i+L,0,startY+L),0,0,0,1,1));
-		return walls;
-	}
-
-	private ArrayList<Entity> createWallParallelToY(double wallLength, int startX, int startY){
-		ArrayList<Entity> walls = new ArrayList<>();
-		for(int i = 0; i < wallLength; i++)
-			walls.add(new Entity(texturedModelWall, new Vector3f(startX+L,0,startY + i+L),0,90,0,1,1));
-		return walls;
-	}
 
 //	private ArrayList<ArrayList<Entity>> createWallsFromFile(){
 //		ArrayList<ArrayList<Entity>> walls = new ArrayList<>();

@@ -96,7 +96,7 @@ public class QLearning {
                 }
                 else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
-                    int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
+                    int newX = a.getX(), newY = a.getY(), index = agents.indexOf(a);
                     pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
                 System.out.println(a.getTrace().toString());
