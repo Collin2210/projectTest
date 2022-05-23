@@ -1,6 +1,6 @@
 package Visuals.main;
 
-import Controller.Position;
+import Controller.*;
 import Visuals.engine.graphics.Loader;
 import Visuals.engine.graphics.MasterRenderer;
 import Visuals.engine.graphics.models.RawModel;
@@ -41,28 +41,36 @@ public class Main implements Runnable {
 	public RawModel intruderModel;
 	public RawModel wallModel;
 	public RawModel portalModel;
+	public RawModel traceModel;
+	public RawModel goalModel;
 
 	public ModelData modelDataGuard;
 	public ModelData modelDataIntruder;
 	public ModelData modelDataWall;
 	public ModelData modelDataPortal;
+	public ModelData modelDataTrace;
+	public ModelData modelDataGoal;
 
 	public ModelTexture textureGuard;
 	public ModelTexture textureIntruder;
 	public ModelTexture textureWall;
 	public ModelTexture texturePortal;
+	public ModelTexture textureTrace;
+	public ModelTexture textureGoal;
 
 	public TexturedModel texturedModelGuard;
 	public TexturedModel texturedModelIntruder;
 	public TexturedModel texturedModelWall;
 	public TexturedModel texturedModelPortal;
-
+	public TexturedModel texturedModelTrace;
+	public TexturedModel texturedModelgoal;
 
 	public MasterRenderer renderer;
 
 	public Player guard;
 	public Player intruder;
 	public Player camPlayer;
+	public Entity goal;
 
 	public Camera camera;
 
@@ -97,6 +105,8 @@ public class Main implements Runnable {
 	public long lastClick;
 	public static int L = 150;
 
+	public int moveIndex = 0;
+
 	public ArrayList<ArrayList<int[]>> listOfMovesEveryAgent;
 
 
@@ -122,6 +132,8 @@ public class Main implements Runnable {
 		modelDataIntruder = OBJFileLoader.loadOBJ("guard");
 		modelDataWall = OBJFileLoader.loadOBJ("wall");
 		modelDataPortal = OBJFileLoader.loadOBJ("portal");
+		modelDataGoal = OBJFileLoader.loadOBJ("goal");
+
 
 		// * step 2: load the model data
 
@@ -129,6 +141,7 @@ public class Main implements Runnable {
 		intruderModel = loader.loadToVAO(modelDataIntruder.getVertices(),modelDataIntruder.getTextureCoords(),modelDataIntruder.getNormals(),modelDataIntruder.getIndices());
 		wallModel = loader.loadToVAO(modelDataWall.getVertices(),modelDataWall.getTextureCoords(),modelDataWall.getNormals(),modelDataWall.getIndices());
 		portalModel = loader.loadToVAO(modelDataPortal.getVertices(),modelDataPortal.getTextureCoords(),modelDataPortal.getNormals(),modelDataPortal.getIndices());
+		goalModel = loader.loadToVAO(modelDataGoal.getVertices(),modelDataGoal.getTextureCoords(),modelDataGoal.getNormals(),modelDataGoal.getIndices());
 
 		// create texture for terrain
 		backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
@@ -144,6 +157,7 @@ public class Main implements Runnable {
 		texturedModelIntruder = new TexturedModel(intruderModel, new ModelTexture(loader.loadTexture("portalTexture")));
 		texturedModelWall = new TexturedModel(wallModel, new ModelTexture(loader.loadTexture("stoneWall")));
 		texturedModelPortal = new TexturedModel(portalModel, new ModelTexture(loader.loadTexture("portalTexture")));
+		texturedModelgoal = new TexturedModel(goalModel, new ModelTexture(loader.loadTexture("portalTexture")));
 
 		textureGuard = texturedModelGuard.getTexture();
 		textureGuard.setShineDamper(5);
@@ -154,6 +168,49 @@ public class Main implements Runnable {
 		textureIntruder.setReflectivity((float)0.5);
 
 		input = new Input();
+
+
+		// game
+		g.startGame();
+
+		GameController.print();
+		//g.moveAgentDumbly();
+		g.makeAgentsLearn();
+		System.out.println("guards won " + GameController.numOfGuardWins);
+		System.out.println("intruders won " + GameController.numOfIntruderWins);
+		g.makeAgentsMoveSmartly();
+		listOfMovesEveryAgent = GameController.pathOfAllAgents;
+		ArrayList<Entity> walls = createWallsFromFile();
+
+		for (int x = -1; x < 30; x++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(x+L,0,-1+L),0,90,0,1,1));
+		}
+		for (int x = -1; x < 30; x++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(x+L,0,30+L),0,90,0,1,1));
+		}
+		for (int y = -1; y < 30; y++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(-1+L,0,y+L),0,90,0,1,1));
+		}
+		for (int y = -1; y < 30; y++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(30+L,0,y+L),0,90,0,1,1));
+		}
+
+		for(Teleport t : GameController.variables.getPortals()){
+			ArrayList<int[]> entrances = t.getPointsIn();
+			int[] destination = t.getPointOut();
+			double angle = t.getDegreeOut();
+			for (int[] telePos:entrances) {
+				entities.add(new Entity(texturedModelPortal, new Vector3f(telePos[0]+L,0,telePos[1]+L), (float) 0, (float) angle,0,1,1));
+			}
+			entities.add(new Entity(texturedModelPortal, new Vector3f(destination[0]+L,0,destination[1]+L), (float) 0, (float) angle,0,1,1));
+		}
+
+		for (Tile t : GameController.goalTiles){
+			entities.add(new Entity(texturedModelgoal, new Vector3f(t.getXCoord()+L,0,t.getYCoord()+L), (float) 0, 90,0,1,1));
+		}
+
+
+		// game
 
 
 
@@ -168,33 +225,35 @@ public class Main implements Runnable {
 		// generate players
 		// * step 4: Generate entities or players.
 
-		//ArrayList<ArrayList<Entity>> walls = createWallsFromFile();
-		intruder = new Player(texturedModelGuard, new Vector3f(L,0,L),0,90,0,1,1);  //portal
-		//guard = new Player(texturedModelGuard, new Vector3f(variables.getSpawnGuard().x,0,variables.getSpawnGuard().y),0,90,0,1,1);  //portal
-		camPlayer = new Player(texturedModelIntruder, new Vector3f(10+L,0,10+L),0,90,0,1,1);
+		for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
+			if(i<GameController.variables.getNumberOfIntruders()){
+				ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
 
-		/*for(ArrayList<Entity> wall : walls){
-			entities.addAll(wall);
+				players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0]+L,0,pathIntruder.get(0)[1]+L),0,90,0,1,i));
+				System.out.println("added intruder at: " + pathIntruder.get(0)[0]+ ", "+ pathIntruder.get(0)[1]) ;
+			}
+			else if(i>=GameController.variables.getNumberOfIntruders()){
+				ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
+				players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0]+L,0,pathGuard.get(0)[1]+L),0,90,0,1,i));
+				System.out.println("added guard at: " + pathGuard.get(0)[0]+ ", "+ pathGuard.get(0)[1]) ;
+			}
 		}
 
-		 */
+		
+		//intruder = new Player(texturedModelGuard, new Vector3f(L,0,L),0,90,0,1,1);  //portal
+		//guard = new Player(texturedModelGuard, new Vector3f(variables.getSpawnGuard().x,0,variables.getSpawnGuard().y),0,90,0,1,1);  //portal
+		camPlayer = new Player(texturedModelIntruder, new Vector3f(L+15,0,L+15),0,90,0,1,1);
 
-		players.add(intruder);
+		entities.addAll(walls);
+
+		//players.add(intruder);
 		//players.add(guard);
 
 		// put the camera
-		camera = new Camera(intruder);
+		camera = new Camera(camPlayer);
 
 		lastClick = System.currentTimeMillis();
-		g.startGame();
 
-		GameController.print();
-		//g.moveAgentDumbly();
-		g.makeAgentsLearn();
-		System.out.println("guards won " + GameController.numOfGuardWins);
-		System.out.println("intruders won " + GameController.numOfIntruderWins);
-		g.makeAgentsMoveSmartly();
-		listOfMovesEveryAgent = GameController.pathOfAllAgents;
 
 	}
 
@@ -209,8 +268,32 @@ public class Main implements Runnable {
 			render();
 			if (Input.isKeyDown(GLFW.GLFW_KEY_F11)) window.setFullscreen(!window.isFullscreen());
 
-			if (Input.isKeyDown(GLFW.GLFW_KEY_M) && pathIndex < path.size()) {
+			if (Input.isKeyDown(GLFW.GLFW_KEY_M)&&moveIndex<GameController.pathOfAllAgents.get(0).size()-1){
 
+
+				long currTime = System.currentTimeMillis();
+
+				if(currTime-lastClick > 100) {
+
+					for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
+						if (i < GameController.variables.getNumberOfIntruders()) {
+							ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
+							players.get(i).move(new Vector2f(pathIntruder.get(moveIndex)[0] + L, pathIntruder.get(moveIndex)[1] + L));
+
+//						players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0]+L,0,pathIntruder.get(0)[1]+L),0,90,0,1,i));
+							System.out.println("added intruder at: " + pathIntruder.get(0)[0] + ", " + pathIntruder.get(0)[1]);
+							moveIndex++;
+							lastClick = currTime;
+						} else if (i >= GameController.variables.getNumberOfIntruders()) {
+							ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
+							players.get(i).move(new Vector2f(pathGuard.get(moveIndex)[0] + L, pathGuard.get(moveIndex)[1] + L));
+//						players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0]+L,0,pathGuard.get(0)[1]+L),0,90,0,1,i));
+							System.out.println("added guard at: " + pathGuard.get(0)[0] + ", " + pathGuard.get(0)[1]);
+							moveIndex++;
+							lastClick = currTime;
+						}
+					}
+				}
 
 
 
@@ -219,19 +302,35 @@ public class Main implements Runnable {
 //				if(currTime-lastClick > 100){
 //					intruder.move(new Vector2f(+L,pos.getY()+L));
 //					pathIndex++;
-//					lastClick = currTime;
+//
 //				}
 			}
 
-			if (Input.isKeyDown(GLFW.GLFW_KEY_N) && pathIndex < path.size() && pathIndex>0) {
+			if (Input.isKeyDown(GLFW.GLFW_KEY_N) && pathIndex <= path.size() && pathIndex>0) {
 
-//				long currTime = System.currentTimeMillis();
-//				if(currTime-lastClick > 100){
-//					Position pos = path.get(pathIndex-1);
-//					intruder.move(new Vector2f(pos.getX()+L,pos.getY()+L));
-//					pathIndex--;
-//					lastClick = currTime;
-//				}
+				long currTime = System.currentTimeMillis();
+
+				if(currTime-lastClick > 100) {
+
+					for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
+						if (i < GameController.variables.getNumberOfIntruders()) {
+							ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
+							players.get(i).move(new Vector2f(pathIntruder.get(moveIndex)[0] + L, pathIntruder.get(moveIndex)[1] + L));
+
+//						players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0]+L,0,pathIntruder.get(0)[1]+L),0,90,0,1,i));
+							System.out.println("added intruder at: " + pathIntruder.get(0)[0] + ", " + pathIntruder.get(0)[1]);
+							moveIndex++;
+							lastClick = currTime;
+						} else if (i >= GameController.variables.getNumberOfIntruders()) {
+							ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
+							players.get(i).move(new Vector2f(pathGuard.get(moveIndex)[0] + L, pathGuard.get(moveIndex)[1] + L));
+//						players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0]+L,0,pathGuard.get(0)[1]+L),0,90,0,1,i));
+							System.out.println("added guard at: " + pathGuard.get(0)[0] + ", " + pathGuard.get(0)[1]);
+							moveIndex--;
+							lastClick = currTime;
+						}
+					}
+				}
 			}
 		}
 
@@ -269,20 +368,31 @@ public class Main implements Runnable {
 	}
 
 
-//	private ArrayList<ArrayList<Entity>> createWallsFromFile(){
+	private ArrayList<Entity> createWallsFromFile(){
 //		ArrayList<ArrayList<Entity>> walls = new ArrayList<>();
+		ArrayList<Entity> walls = new ArrayList<>();
 //
 //		// x,y,z,w: this order.
 //
-//		walls.add(createWallFromParams(variables.getWall1().x, variables.getWall1().y, variables.getWall1().z, variables.getWall1().w));
+//		for (int j = 0; j < GameController.variables.getWalls().size(); j++) {
+//			walls.add(createWallFromParams(texturedModelWall, new Vector3f(startX+L,0,startY + i+L)));
+//		}
+//
+		for(Wall w : GameController.variables.getWalls()){
+			for(int[] tile : w.getPoints()){
+				walls.add(new Entity(texturedModelWall, new Vector3f(tile[0]+L,0,tile[1]+L),0,90,0,1,1));
+			}
+		}
+
+//		walls.add(createWallFromParams(GameController.variables.getWalls().get(0), variables.getWall1().y, variables.getWall1().z, variables.getWall1().w));
 //		walls.add(createWallFromParams(variables.getWall2().x, variables.getWall2().y, variables.getWall2().z, variables.getWall2().w));
 //		walls.add(createWallFromParams(variables.getWall3().x, variables.getWall3().y, variables.getWall3().z, variables.getWall3().w));
 //		walls.add(createWallFromParams(variables.getWall4().x, variables.getWall4().y, variables.getWall4().z, variables.getWall4().w));
 //		walls.add(createWallFromParams(variables.getWall5().x, variables.getWall5().y, variables.getWall5().z, variables.getWall5().w));
 //
 //		System.out.println(variables.getWall5().w);
-//		return walls;
-//	}
+		return walls;
+	}
 
 
 	public static int getWIDTH() {

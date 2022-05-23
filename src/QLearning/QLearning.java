@@ -16,7 +16,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.5;
     public static final int
-            LEARNING_CYCLES = 300,
+            LEARNING_CYCLES = 10,
             MOVE_LIMIT = 100;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
@@ -99,7 +99,7 @@ public class QLearning {
                     int newX = a.getX(), newY = a.getY(), index = agents.indexOf(a);
                     pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
-                System.out.println(a.getTrace().toString());
+//                System.out.println(a.getTrace().toString());
             }
             moveCount++;
             GameController.print();
