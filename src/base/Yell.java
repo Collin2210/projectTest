@@ -3,6 +3,7 @@ package base;
 import Controller.Map;
 import Controller.Tile;
 import Controller.Variables;
+import QLearning.RewardTable;
 
 import java.util.ArrayList;
 
@@ -18,13 +19,19 @@ public class Yell {
     private Guard guard;
     //private int timer;
     private int yellRadius=20;
+    private int[] yellPosition;
 
     public ArrayList<int[]> yellPositions=new ArrayList<>();
 
     public Yell(Agent agent){
         guard = (Guard) agent;
         guard.startYelling();
+        yellPosition = guard.getPosition();
         //timer = 4;
+    }
+
+    public int[] getYellPosition() {
+        return yellPosition;
     }
 
     /**
@@ -59,12 +66,16 @@ public class Yell {
      */
     public void doYell(){
         for(Agent agent: GameController.agents){
-            if (agent instanceof Guard){
-                Guard guard = (Guard) agent;
-                
-                //guard.yell();
-                
 
+            if (agent instanceof Guard){
+                Guard other = (Guard) agent;
+                double distance = RewardTable.distanceBetweenPoints(guard.getX(), guard.getY(), other.getX(),other.getY());
+
+                if (distance <yellRadius){
+                    other.setYell(this);
+                    other.hearingYell();
+                }
+                //guard.yell();
 
 
             }
@@ -108,7 +119,9 @@ public class Yell {
     }
 
     public int getYellRadius(){return yellRadius;}
-    
-    
+
+
+
+
 
 }

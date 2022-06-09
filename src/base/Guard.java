@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class Guard extends ExplorerAgent {
 
     private boolean isFollowingAgent;
-    private Intruder intruderToCatch;
-    private Yell yell;
+    private Intruder intruderToCatch = null;
+    private Yell yell = null;
     private boolean yelling;
+
+    private int[] targetLocation;
 
     public Guard(int[] position) {
         super(position);
@@ -22,10 +24,12 @@ public class Guard extends ExplorerAgent {
     public void makeMove(){
         //remove guard's yell
         //place yell if needed
-        yell.remove();
+        //yell.remove();
         checkVision();
         if(isFollowingAgent) {
             followIntruder();
+        }else if (this.yell != null){
+            followYell();
         }
         else {
             makeRandomMove();
@@ -54,7 +58,14 @@ public class Guard extends ExplorerAgent {
         tryPerformingAction(action);
     }
 
+
     private byte getActionThatMinimizesDistance(){
+        int[] position = new int[]{intruderToCatch.getX(), intruderToCatch.getY()};
+        return getActionThatMinimizesDistance(position);
+    }
+
+
+    private byte getActionThatMinimizesDistance(int[] position){
         byte action = 0;
         double smallest_distance = Double.POSITIVE_INFINITY;
 
@@ -63,7 +74,7 @@ public class Guard extends ExplorerAgent {
             if(Map.inMap(newPosition[0],newPosition[1]) && !GameController.map.getTile(newPosition[0], newPosition[1]).hasWall()){
                 double distance =
                         RewardTable.distanceBetweenPoints(
-                                intruderToCatch.getX(), intruderToCatch.getY(),
+                                position[0], position[1],
                                 newPosition[0], newPosition[1] );
 
                 if(distance < smallest_distance){
@@ -101,5 +112,27 @@ public class Guard extends ExplorerAgent {
 
     public void endYelling(){
 
+    }
+    public void setYell(Yell yell){
+        this.yell = yell;
+    }
+
+    public void doYell(){
+        Yell yellObject = new Yell(this);
+        yellObject.doYell();
+
+    }
+
+    public void hearingYell(){
+        if(!isFollowingAgent){
+
+        }
+    }
+
+    public void followYell()
+    {
+        int[] yellPosition = this.yell.getYellPosition();
+        byte action = getActionThatMinimizesDistance(yellPosition);
+        tryPerformingAction(action);
     }
 }
