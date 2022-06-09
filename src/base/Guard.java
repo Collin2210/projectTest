@@ -8,24 +8,32 @@ public class Guard extends ExplorerAgent {
     private Intruder intruderToCatch;
     private Yell yell;
     private boolean yelling;
+    private boolean isScatterMode;
+    private boolean isOnTower;
 
     public Guard(int[] position) {
         super(position);
         isFollowingAgent = false;
         yelling = false;
         this.yell = new Yell(this);
+        isScatterMode = true;
+        isOnTower = false;
     }
 
     public void makeMove(){
         //remove guard's yell
         //place yell if needed
         yell.remove();
-        checkVision();
-        if(isFollowingAgent) {
-            followIntruder();
-        }
-        else {
-            makeRandomMove();
+        while(isScatterMode()) {
+            //if on a tower, checkVision should change
+
+            //not on a tower
+            checkVision();
+            if (isFollowingAgent || yelling) {
+                followIntruder();
+            } else {
+                isScatterMode = true;
+            }
         }
     }
 
@@ -40,6 +48,7 @@ public class Guard extends ExplorerAgent {
                             intruderToCatch = (Intruder) a;
                             yell.propagateYell();
                             yelling = true;
+                            isScatterMode = false;
                         }
                     }
                 }
@@ -87,4 +96,10 @@ public class Guard extends ExplorerAgent {
     public Intruder getIntruderToCatch() {
         return intruderToCatch;
     }
+
+    public boolean isScatterMode(){
+        return isScatterMode;
+    }
+
+    public boolean isOnTower(){return isOnTower;}
 }
