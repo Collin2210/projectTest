@@ -102,6 +102,10 @@ public class FileParser {
                 v.createShade(Integer.parseInt(coords[0+i].trim()),Integer.parseInt(coords[1+i].trim()),Integer.parseInt(coords[2+i].trim()),
                         Integer.parseInt(coords[3+i].trim()));
                 break;
+            case "tower":
+                v.createTower(Integer.parseInt(coords[0+i].trim()),Integer.parseInt(coords[1+i].trim()),Integer.parseInt(coords[2+i].trim()),
+                        Integer.parseInt(coords[3+i].trim()));
+                break;
         }
 
 

@@ -48,6 +48,7 @@ public class Variables {
     private ArrayList<Wall> walls = new ArrayList<Wall>();
     private ArrayList<Teleport> portals = new ArrayList<Teleport>();
     private ArrayList<Shade> shades = new ArrayList<Shade>();
+    private ArrayList<Tower> towers = new ArrayList<Tower>();
     private ArrayList<Texture> textures = new ArrayList<Texture>();
     private LinkedList<Line2D.Float> rayCastingWalls = new LinkedList<>();
 
@@ -141,6 +142,8 @@ public class Variables {
     public ArrayList<Teleport> getPortals(){return portals;}
 
     public ArrayList<Shade> getShades(){return shades;}
+
+    public ArrayList<Tower> getTowers(){return towers;}
 
     public int getMode() {
         return mode;
@@ -274,6 +277,11 @@ public class Variables {
         }
     }
 
+    public void createTower(int x1, int y1, int x2, int y2){
+        if(unlock){
+            this.towers.add(new Tower(x1,y1,x2,y2));
+        }
+    }
 
     public void createTexture(int x1, int x2, int x3, int x4, int x5, int x6) {
         if(unlock){

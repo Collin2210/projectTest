@@ -41,6 +41,7 @@ public class Map {
         placeWalls();
         placePortals();
         placeShade();
+        placeTowers();
     }
 
     private void placeWalls(){
@@ -53,6 +54,13 @@ public class Map {
         ArrayList<int[]> shadePoints = shadesPoints();
         for(int[] c: shadePoints){
             map[c[0]][c[1]].placeShade();
+        }
+    }
+
+    private void placeTowers(){
+        ArrayList<int[]> towerPoints = towerPoints();
+        for(int[] c: towerPoints){
+            map[c[0]][c[1]].placeTower();
         }
     }
 
@@ -104,6 +112,14 @@ public class Map {
         return shadePoints;
     }
 
+    private ArrayList<int[]> towerPoints(){
+        ArrayList<Tower> towers = this.variables.getTowers();
+        ArrayList<int[]> towerPoints = new ArrayList<>();
+        for(Tower t: towers){
+            towerPoints.addAll(t.getPoints());
+        }
+        return towerPoints;
+    }
     private ArrayList<int[]> teleportPoints(){
         return new ArrayList<int[]>();
     }

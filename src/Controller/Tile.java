@@ -12,7 +12,8 @@ public class Tile {
             isTeleportOut,
             hasTrace,
             isYell,
-            isGoal;
+            isGoal,
+            isTower;
 
     public Trace AgentTrace;
 
@@ -27,6 +28,7 @@ public class Tile {
         isTeleportOut = false;
         isGoal = false;
         hasTrace = false;
+        isTower = false;
     }
 
     public void placeTrace(Trace trace ){
@@ -75,11 +77,11 @@ public class Tile {
     }
 
     public void removeYell() { this.isYell = false;}
-
+    public void placeTower(){this.isTower = true;}
     public boolean isGoal(){
         return isGoal;
     }
-
+    public boolean hasTower(){return isTower;}
     public boolean hasYell(){
         return isYell;
     }
