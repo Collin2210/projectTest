@@ -2,6 +2,7 @@ package base;
 
 import Controller.*;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,6 +12,7 @@ public class GameController {
     public static Variables variables;
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
+    public static ArrayList<Yell> yells=new ArrayList<>();
 
     public static final ArrayList<Teleport> portals = new ArrayList<>();
 

@@ -92,4 +92,14 @@ public class Guard extends ExplorerAgent {
     public Intruder getIntruderToCatch() {
         return intruderToCatch;
     }
+
+    public void startYelling(){
+        yell = new Yell(this);
+        yelling = true;
+        GameController.yells.add(yell);
+    }
+
+    public void endYelling(){
+
+    }
 }
