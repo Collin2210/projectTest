@@ -7,7 +7,6 @@ public class Tester {
 
         //System.out.println(new Position(1, 1).equals(new Position(1, 1)));
 
-
         GameController g = new GameController();
         g.startGame();
         GameController.print();

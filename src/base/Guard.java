@@ -2,8 +2,6 @@ package base;
 
 import QLearning.*;
 
-import java.util.ArrayList;
-
 public class Guard extends ExplorerAgent {
 
     private boolean isFollowingAgent;

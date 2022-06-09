@@ -105,6 +105,9 @@ public class Agent {
         return position[1];
     }
 
+    public void setX(int x) {this.position[0] = x;}
+
+    public void setY(int y) {this.position[1] = y;}
 
     public void setAngleDeg ( double a){
         this.angleDeg = a;
