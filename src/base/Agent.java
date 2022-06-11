@@ -16,7 +16,6 @@ public class Agent {
 
     private ArrayList<Trace> trace;
 
-
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
 
@@ -29,6 +28,8 @@ public class Agent {
     private int agentId;
     private final int footsteps=5;
     private boolean[][] yellArray=new boolean[GameController.variables.getHeight()][GameController.variables.getWidth()];
+
+    private boolean isOnTower;
 
 
     public Agent(int[] position) {
@@ -46,6 +47,8 @@ public class Agent {
         trace = new ArrayList<>();
         Trace traceStep = new Trace(this);
         trace.add(traceStep);
+
+        isOnTower = false;
     }
 
     public void AgentStep(){ //create a brand new trace for the current step
@@ -161,6 +164,14 @@ public class Agent {
 
     public ArrayList<int[]> getSavedPath () {
         return savedPath;
+    }
+
+    public boolean isOnTower() {
+        return isOnTower;
+    }
+
+    public void setOnTower(boolean onTower) {
+        isOnTower = onTower;
     }
 }
 

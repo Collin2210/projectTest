@@ -139,6 +139,9 @@ public class RayCaster {
                 visionRange = GameController.variables.getVisionRange(),
                 angle = (float) agent.getAngleDeg();
 
+        if(agent.isOnTower())
+            visionRange += GameController.TOWER_VISION_BONUS;
+
         ArrayList<int[]> listOfVisibleTiles = new ArrayList<>();
 
         for(int x = (int) (agentX-(visionRange+1)); x < agentX+visionRange+1; x++){

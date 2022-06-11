@@ -9,7 +9,6 @@ public class Guard extends ExplorerAgent {
     private Yell yell;
     private boolean yelling;
     private boolean isScatterMode;
-    private boolean isOnTower;
 
     private double[] explorationArea; // {ogX, ogY, height, width}
 
@@ -19,7 +18,6 @@ public class Guard extends ExplorerAgent {
         yelling = false;
         this.yell = new Yell(this);
         isScatterMode = true;
-        isOnTower = false;
     }
 
     public void makeMove(){
@@ -27,9 +25,6 @@ public class Guard extends ExplorerAgent {
         //place yell if needed
         yell.remove();
         while(isScatterMode()) {
-            //if on a tower, checkVision should change
-
-            //not on a tower
             checkVision();
             if (isFollowingAgent || yelling) {
                 followIntruder();
@@ -103,9 +98,11 @@ public class Guard extends ExplorerAgent {
         return isScatterMode;
     }
 
-    public boolean isOnTower(){return isOnTower;}
-
     public void setExplorationArea(double[] area){
         this.explorationArea = area;
+    }
+
+    public double[] getExplorationArea() {
+        return explorationArea;
     }
 }

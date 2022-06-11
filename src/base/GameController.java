@@ -24,6 +24,8 @@ public class GameController {
     public static int numOfGuardWins = 0;
     public static int numOfIntruderWins = 0;
 
+    public static final double TOWER_VISION_BONUS = 10 ;
+
     public GameController(){
     }
 
