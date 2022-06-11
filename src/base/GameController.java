@@ -104,8 +104,14 @@ public class GameController {
     public void addGuards(){
         ArrayList<int[]> spawn = variables.getGuardSpawnPoints();
         int nrOfIntruders = variables.getNumberOfGuards();
+
+        // guard's exploration areas
+        ArrayList<double[]> areas = GuardAlgo.getAreasForGuards();
+
         for(int i = 0;i<nrOfIntruders;i++){
-            agents.add(new Guard(spawn.get(i)));
+            Guard g = new Guard(spawn.get(i));
+            g.setExplorationArea(areas.get(i));
+            agents.add(g);
             pathOfAllAgents.add(new ArrayList<>());
         }
     }

@@ -11,6 +11,8 @@ public class Guard extends ExplorerAgent {
     private boolean isScatterMode;
     private boolean isOnTower;
 
+    private double[] explorationArea; // {ogX, ogY, height, width}
+
     public Guard(int[] position) {
         super(position);
         isFollowingAgent = false;
@@ -102,4 +104,8 @@ public class Guard extends ExplorerAgent {
     }
 
     public boolean isOnTower(){return isOnTower;}
+
+    public void setExplorationArea(double[] area){
+        this.explorationArea = area;
+    }
 }
