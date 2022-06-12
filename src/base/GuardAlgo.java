@@ -1,8 +1,5 @@
 package base;
 
-import Controller.Map;
-import Controller.Variables;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
