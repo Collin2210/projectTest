@@ -4,20 +4,19 @@ import Controller.Map;
 import QLearning.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Guard extends ExplorerAgent {
 
-    private boolean isFollowingAgent;
+    private boolean isFollowingAgent = false;
     private Intruder intruderToCatch = null;
     private Yell yell = null;
-    private boolean yelling;
 
     private int[] targetLocation;
 
     public Guard(int[] position) {
         super(position);
         isFollowingAgent = false;
-        yelling = false;
         this.yell = new Yell(this);
     }
 
@@ -38,24 +37,38 @@ public class Guard extends ExplorerAgent {
 
     private void checkVision(){
         this.visionT = this.getRayEngine().getVisibleTiles(this);
-            for(int[] tilePos : visionT){
-                for(Agent a : GameController.agents){
-                    if(a.getClass() == Intruder.class){
-                        int ax = a.getX(), ay = a.getY();
-                        if(ax == tilePos[0] && ay == tilePos[1]) {
-                            isFollowingAgent = true;
-                            intruderToCatch = (Intruder) a;
-                            yell.propagateYell();
-                            yelling = true;
-                        }
+        for(int[] tilePos : visionT){
+            for(Agent a : GameController.agents ){
+                if(a.getClass() == Intruder.class && !isFollowingAgent){
+                    int ax = a.getX(), ay = a.getY();
+                    if(ax == tilePos[0] && ay == tilePos[1]) {
+                        isFollowingAgent = true;
+                        intruderToCatch = (Intruder) a;
+                        this.doYell();
+                        /*
+                        yell.propagateYell();
+                        yelling = true;
+                        */
                     }
                 }
             }
+        }
     }
+
+    private boolean hasCaught(Intruder intruder){
+        // We have to make sure to remove the intruder from the map after it is caught.
+        return Arrays.equals(this.getPosition(), intruder.getPosition());
+    }
+
 
     private void followIntruder(){
         byte action = getActionThatMinimizesDistance();
         tryPerformingAction(action);
+        if (this.hasCaught(this.intruderToCatch)){
+            // remove the agent from the map as well.
+            this.intruderToCatch = null;
+            this.isFollowingAgent = false;
+        }
     }
 
 
@@ -104,11 +117,13 @@ public class Guard extends ExplorerAgent {
         return intruderToCatch;
     }
 
+    /*
     public void startYelling(){
         yell = new Yell(this);
         yelling = true;
         GameController.yells.add(yell);
     }
+     */
 
     public void endYelling(){
 
@@ -120,8 +135,11 @@ public class Guard extends ExplorerAgent {
     public void doYell(){
         Yell yellObject = new Yell(this);
         yellObject.doYell();
-
+        this.yell = yellObject;
+        GameController.yells.add(yellObject);
     }
+
+
 
     public void hearingYell(){
         if(!isFollowingAgent){

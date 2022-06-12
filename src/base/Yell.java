@@ -25,7 +25,7 @@ public class Yell {
 
     public Yell(Agent agent){
         guard = (Guard) agent;
-        guard.startYelling();
+        //guard.startYelling();
         yellPosition = guard.getPosition();
         //timer = 4;
     }
@@ -76,8 +76,6 @@ public class Yell {
                     other.hearingYell();
                 }
                 //guard.yell();
-
-
             }
         }
 
