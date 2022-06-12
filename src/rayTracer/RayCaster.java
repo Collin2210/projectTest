@@ -159,8 +159,4 @@ public class RayCaster {
         return listOfVisibleTiles;
 
     }
-
-
-
-
 }

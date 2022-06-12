@@ -1,7 +1,7 @@
 height = 30
 width = 30
 numGuards = 5
-numIntruders = 5
+numIntruders = 0
 baseSpeedGuard = 5
 spawnAreaGuards = 12 11 20 19
 spawnAreaIntruders = 5 0 10 1

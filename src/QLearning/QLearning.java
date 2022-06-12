@@ -15,7 +15,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.5;
     public static final int
-            LEARNING_CYCLES = 300,
+            LEARNING_CYCLES = 1,
             MOVE_LIMIT = 100;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
@@ -57,7 +57,8 @@ public class QLearning {
         }
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
-            while(!GameEndChecker.isInTerminalState()){
+            int counter_limit = 10;
+            while(!GameEndChecker.isInTerminalState() && counter_limit != 0){
                 for(Agent a : agents) {
                     if (a.getClass().getSuperclass() == LearnerAgent.class) {
                         this.agent = (LearnerAgent) a;
@@ -70,6 +71,8 @@ public class QLearning {
                         ((Guard) a).makeMove();
                     }
                 }
+                print();
+                counter_limit--;
                 moveCount++;
             }
             System.out.print("Game Number: " +cycleCount);

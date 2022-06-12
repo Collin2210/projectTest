@@ -6,6 +6,7 @@ import Controller.Tile;
 import Controller.Variables;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class GameController {
@@ -193,6 +194,25 @@ public class GameController {
             System.out.println();
         }
         System.out.println();
+    }
+
+    private static void printRect(double[] rect){
+        double
+                height = rect[2], width = rect[3];
+        double[]
+                og = {rect[0],  rect[1]},
+                point1 = {rect[0], rect[1] + height},
+                point2 = {rect[0] + width, rect[1]+height},
+                point3 = {rect[0] + width, rect[1]};
+
+        double[][] points = {og, point1, point2, point3};
+
+        StringBuilder s = new StringBuilder("polygon(");
+        for(double[] p : points)
+            s.append("(").append(p[0]).append(",").append(p[1]).append("),");
+        s.append(")");
+
+        System.out.println(s);
     }
 
 }

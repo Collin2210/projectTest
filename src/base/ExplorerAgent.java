@@ -29,8 +29,9 @@ public class ExplorerAgent extends Agent{
 
         int[] nextPosition = this.getPosition();
 
-        if(!isInHisArea())
+        if(!isInHisArea()) {
             nextPosition = getTileClosestToArea();
+        }
         else {
             boolean appropriateNeighbourIsFound = false;
             for(int[] neighbour : getAllNeighbours()){
@@ -54,6 +55,7 @@ public class ExplorerAgent extends Agent{
     }
 
     private int[] getTileClosestToArea(){
+
         int[][] neighbours = getAllNeighbours();
 
         double smallestDistanceToRegion = Double.MAX_VALUE;
@@ -97,10 +99,6 @@ public class ExplorerAgent extends Agent{
                 && startY <= y && y < endY;
     }
 
-    public void setExplorationArea(double[] explorationArea) {
-        this.explorationArea = explorationArea;
-    }
-
     public boolean isInHisArea(int[] position){
         int
                 x = position[0], y = position[1],
@@ -118,7 +116,6 @@ public class ExplorerAgent extends Agent{
         }
         return false;
     }
-
 
     public void tryPerformingAction(byte action){
         try {
@@ -199,5 +196,13 @@ public class ExplorerAgent extends Agent{
             throw new Exception("action number not recognized");
         }
         return new int[]{newX, newY, angle};
+    }
+
+    public void setExplorationArea(double[] area){
+        this.explorationArea = area;
+    }
+
+    public double[] getExplorationArea() {
+        return explorationArea;
     }
 }

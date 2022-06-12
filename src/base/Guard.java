@@ -2,6 +2,10 @@ package base;
 
 import QLearning.*;
 
+import java.util.Arrays;
+
+import static base.GameController.agents;
+
 public class Guard extends ExplorerAgent {
 
     private boolean isFollowingAgent;
@@ -9,6 +13,8 @@ public class Guard extends ExplorerAgent {
     private Yell yell;
     private boolean yelling;
     private boolean isScatterMode;
+    private byte timer; // time guard spent chasing without seeing the intruder
+    private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
 
     private double[] explorationArea; // {ogX, ogY, height, width}
 
@@ -18,36 +24,48 @@ public class Guard extends ExplorerAgent {
         yelling = false;
         this.yell = new Yell(this);
         isScatterMode = true;
+        timer = 0;
     }
 
     public void makeMove(){
+
         yell.remove();
 
         checkVision();
 
-        if(isScatterMode())
+        if(timer == TIME_LIMIT){
+            isScatterMode = true;
+            timer = 0;
+        }
+
+        if(isScatterMode()) {
             makeExplorationMove();
+        }
         else {
             followIntruder();
         }
     }
 
     private void checkVision(){
+        boolean intruderIsSeen = false;
         this.visionT = this.getRayEngine().getVisibleTiles(this);
-            for(int[] tilePos : visionT){
-                for(Agent a : GameController.agents){
-                    if(a.getClass() == Intruder.class){
-                        int ax = a.getX(), ay = a.getY();
-                        if(ax == tilePos[0] && ay == tilePos[1]) {
-                            isFollowingAgent = true;
-                            intruderToCatch = (Intruder) a;
-                            yell.propagateYell();
-                            yelling = true;
-                            isScatterMode = false;
-                        }
+        for(int[] tilePos : visionT){
+            for(Agent a : GameController.agents){
+                if(a.getClass() == Intruder.class){
+                    int ax = a.getX(), ay = a.getY();
+                    if(ax == tilePos[0] && ay == tilePos[1]) {
+                        isFollowingAgent = true;
+                        intruderToCatch = (Intruder) a;
+                        yell.propagateYell();
+                        yelling = true;
+                        isScatterMode = false;
+                        intruderIsSeen = true;
                     }
                 }
             }
+        }
+        if(!intruderIsSeen)
+            timer++;
     }
 
     private void followIntruder(){
@@ -96,11 +114,4 @@ public class Guard extends ExplorerAgent {
         return isScatterMode;
     }
 
-    public void setExplorationArea(double[] area){
-        this.explorationArea = area;
-    }
-
-    public double[] getExplorationArea() {
-        return explorationArea;
-    }
 }
