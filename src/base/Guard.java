@@ -21,16 +21,14 @@ public class Guard extends ExplorerAgent {
     }
 
     public void makeMove(){
-        //remove guard's yell
-        //place yell if needed
         yell.remove();
-        while(isScatterMode()) {
-            checkVision();
-            if (isFollowingAgent || yelling) {
-                followIntruder();
-            } else {
-                isScatterMode = true;
-            }
+
+        checkVision();
+
+        if(isScatterMode())
+            makeExplorationMove();
+        else {
+            followIntruder();
         }
     }
 
