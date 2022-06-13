@@ -10,14 +10,14 @@ public class Guard extends ExplorerAgent {
 
     private boolean isFollowingAgent = false;
     private Intruder intruderToCatch = null;
-    private Yell yell = null;
+    private AudioObject audioObject = null;
 
     private int[] targetLocation;
 
     public Guard(int[] position) {
         super(position);
         isFollowingAgent = false;
-        this.yell = new Yell(this);
+        //this.yell = new Yell(this);
     }
 
     public void makeMove(){
@@ -27,8 +27,8 @@ public class Guard extends ExplorerAgent {
         checkVision();
         if(isFollowingAgent) {
             followIntruder();
-        }else if (this.yell != null){
-            followYell();
+        }else if (this.audioObject != null){
+            followAudio();
         }
         else {
             makeRandomMove();
@@ -117,39 +117,33 @@ public class Guard extends ExplorerAgent {
         return intruderToCatch;
     }
 
-    /*
-    public void startYelling(){
-        yell = new Yell(this);
-        yelling = true;
-        GameController.yells.add(yell);
-    }
-     */
+    public void setHeardAudio(AudioObject object){
+        if (object instanceof Yell){
+            this.audioObject = object;
+        }else if (object instanceof Footstep){
+            if (this.audioObject instanceof Yell){
 
-    public void endYelling(){
+            }else{
+                this.audioObject = object;
+            }
+        }
+    }
 
-    }
-    public void setYell(Yell yell){
-        this.yell = yell;
-    }
 
     public void doYell(){
         Yell yellObject = new Yell(this);
-        yellObject.doYell();
-        this.yell = yellObject;
+        yellObject.spreadAudio();
+        //this.audioObject = yellObject;
         GameController.yells.add(yellObject);
     }
 
 
 
-    public void hearingYell(){
-        if(!isFollowingAgent){
 
-        }
-    }
 
-    public void followYell()
+    public void followAudio()
     {
-        int[] yellPosition = this.yell.getYellPosition();
+        int[] yellPosition = this.audioObject.getPosition();
         byte action = getActionThatMinimizesDistance(yellPosition);
         tryPerformingAction(action);
     }

@@ -7,7 +7,7 @@ import QLearning.RewardTable;
 
 import java.util.ArrayList;
 
-public class Yell {
+public class Yell extends AudioObject {
     /**
      * after checking vision range of guard to check if intruder is present
      * if yes, set yell=true for that guard
@@ -16,97 +16,18 @@ public class Yell {
      * if within yelling radius, the guard moves towards the original guard
      *
      */
-    private Guard guard;
-    //private int timer;
-    private int yellRadius=20;
-    private int[] yellPosition;
+
 
     public ArrayList<int[]> yellPositions=new ArrayList<>();
 
-    public Yell(Agent agent){
-        guard = (Guard) agent;
-        //guard.startYelling();
-        yellPosition = guard.getPosition();
-        //timer = 4;
+    public Yell(Agent agent) {
+        super(agent, 20);
     }
 
-    public int[] getYellPosition() {
-        return yellPosition;
-    }
-
-    /**
-     * propagate yell around guard vision
-     */
-    public void propagateYell() {
-        //timer = 4;
-        int yellRange = Variables.GUARD_YELL_RANGE;
-        int
-                x = guard.getX(),
-                y = guard.getY();
-        int
-                yellStartX = x - yellRange,
-                yellEndX = x + yellRange;
-        int
-                yellStartY = y + yellRange,
-                yellEndY = y - yellRange;
-
-        for (int i = yellStartX; i < yellEndX; i++) {
-            for (int j = yellStartY; j < yellEndY; j++) {
-                if (Map.inMap(i, j)) {
-                    Tile tile = GameController.map.getTile(i, j);
-                    tile.setYell();
-                    yellPositions.add(new int[] {i,j});
-                }
-            }
-        }
-    }
 
     /**
      *
      */
-    public void doYell(){
-        for(Agent agent: GameController.agents){
-
-            if (agent instanceof Guard){
-                Guard other = (Guard) agent;
-                double distance = RewardTable.distanceBetweenPoints(guard.getX(), guard.getY(), other.getX(),other.getY());
-
-                if (distance <yellRadius){
-                    other.setYell(this);
-                    other.hearingYell();
-                }
-                //guard.yell();
-            }
-        }
-
-
-
-    }
-/*
-    public boolean CheckYell() {
-        int yellRange = Variables.GUARD_YELL_RANGE;
-        int
-                x = agent.getX(),
-                y = agent.getY();
-        int
-                yellStartX = x - yellRange,
-                yellEndX = x + yellRange;
-        int
-                yellStartY = y + yellRange,
-                yellEndY = y - yellRange;
-
-        for (int i = yellStartX; i < yellEndX; i++) {
-            for (int j = yellStartY; j < yellEndY; j++) {
-                if (Map.inMap(i, j)) {
-                    Tile tile = map.getTile(i, j);
-                    return tile.hasYell();
-                }
-            }
-        }
-        return false;
-    }
-
-    */
 
 
     public void remove(){
@@ -115,8 +36,6 @@ public class Yell {
         }
         yellPositions.clear();
     }
-
-    public int getYellRadius(){return yellRadius;}
 
 
 
