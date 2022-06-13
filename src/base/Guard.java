@@ -12,17 +12,17 @@ import java.util.Arrays;
 
 public class Guard extends ExplorerAgent {
 
-    private Intruder intruderToCatch;
+
+    private Intruder intruderToCatch = null;
     private boolean isScatterMode;
     private byte timer; // time guard spent chasing without seeing the intruder
     private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
-    private Yell yell = null;
 
-    private int[] targetLocation;
+    private AudioObject audioObject = null;
+
 
     public Guard(int[] position) {
         super(position);
-        this.yell = new Yell(this);
         isScatterMode = true;
         timer = 0;
     }
@@ -41,9 +41,8 @@ public class Guard extends ExplorerAgent {
 
         if(!isScatterMode) {
             followIntruder();
-        }
-        else if (this.yell != null){
-            // followYell();
+        }else if (this.audioObject != null){
+            followAudio();
         }
         else {
             makeExplorationMove();
@@ -59,9 +58,9 @@ public class Guard extends ExplorerAgent {
                     int ax = a.getX(), ay = a.getY();
                     if(ax == tilePos[0] && ay == tilePos[1]) {
                         intruderToCatch = (Intruder) a;
-                        yell.propagateYell();
                         isScatterMode = false;
                         intruderIsSeen = true;
+                        this.doYell();
                     }
                 }
             }
@@ -98,5 +97,36 @@ public class Guard extends ExplorerAgent {
 
     public Intruder getIntruderToCatch() {
         return intruderToCatch;
+    }
+
+    public void setHeardAudio(AudioObject object){
+        if (object instanceof Yell){
+            this.audioObject = object;
+        }else if (object instanceof Footstep){
+            if (this.audioObject instanceof Yell){
+
+            }else{
+                this.audioObject = object;
+            }
+        }
+    }
+
+
+    public void doYell(){
+        Yell yellObject = new Yell(this);
+        yellObject.spreadAudio();
+        //this.audioObject = yellObject;
+        GameController.yells.add(yellObject);
+    }
+
+
+
+
+
+    public void followAudio()
+    {
+        int[] yellPosition = this.audioObject.getPosition();
+        byte action = getActionThatMinimizesDistance(yellPosition);
+        tryPerformingAction(action);
     }
 }
