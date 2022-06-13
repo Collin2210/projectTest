@@ -54,7 +54,6 @@ public class Variables {
     private LinkedList<Line2D.Float> rayCastingWalls = new LinkedList<>();
 
 
-
     private Target target;
     private Spawn spawnAreaGuards;
     private Spawn spawnAreaIntruders;

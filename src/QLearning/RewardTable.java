@@ -55,6 +55,8 @@ public class RewardTable {
     }
 
     public void initialValueVector(){
+        //EXPERIMENT ON DISABLING THE GREEN TRACE: set the value of case 1 to 4 to ZERO!!!
+
         ValueVector[0] = 10; //#CASE 1 : (STRESS = GREEN) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)
         ValueVector[1] = -5; //#CASE 2 : (STRESS = GREEN) ; (TRACE = GUARD) ; (AGENT = GUARD)
 
@@ -67,6 +69,8 @@ public class RewardTable {
 
         ValueVector[6] = -20;//#CASE 7 : (STRESS = ORANGE) ; (TRACE = GUARD) ; (AGENT = INTRUDER)
         ValueVector[7] = +5;//#CASE 8 : (STRESS = ORANGE) ; (TRACE = INTRUDER) ; (AGENT = GUARD)
+
+        //EXPERIMENT ON DISABLING THE GREEN TRACE: set the value of case 1 to 4 to ZERO!!!
 
         //#LEVEL 2 STRESS : more than 1 opponents detected
         ValueVector[8] = -30; //#CASE 9 : (STRESS = RED) ; (TRACE = INTRUDER) ; (AGENT = INTRUDER)

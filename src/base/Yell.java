@@ -3,22 +3,35 @@ package base;
 import Controller.Map;
 import Controller.Tile;
 import Controller.Variables;
+import QLearning.RewardTable;
 
 import java.util.ArrayList;
 
 public class Yell {
     /**
-     * when guard comes to the position
-     * checks within vision range for intruder
-     * if intruder is there, se
+     * after checking vision range of guard to check if intruder is present
+     * if yes, set yell=true for that guard
+     * after doing it for all guards, go through the agent list
+     * if yell boolean is true for 1 of the agents, check the distance between other agents and that agent
+     * if within yelling radius, the guard moves towards the original guard
+     *
      */
     private Guard guard;
     //private int timer;
+    private int yellRadius=20;
+    private int[] yellPosition;
+
     public ArrayList<int[]> yellPositions=new ArrayList<>();
 
     public Yell(Agent agent){
         guard = (Guard) agent;
+        //guard.startYelling();
+        yellPosition = guard.getPosition();
         //timer = 4;
+    }
+
+    public int[] getYellPosition() {
+        return yellPosition;
     }
 
     /**
@@ -48,6 +61,27 @@ public class Yell {
         }
     }
 
+    /**
+     *
+     */
+    public void doYell(){
+        for(Agent agent: GameController.agents){
+
+            if (agent instanceof Guard){
+                Guard other = (Guard) agent;
+                double distance = RewardTable.distanceBetweenPoints(guard.getX(), guard.getY(), other.getX(),other.getY());
+
+                if (distance <yellRadius){
+                    other.setYell(this);
+                    other.hearingYell();
+                }
+                //guard.yell();
+            }
+        }
+
+
+
+    }
 /*
     public boolean CheckYell() {
         int yellRange = Variables.GUARD_YELL_RANGE;
@@ -81,5 +115,11 @@ public class Yell {
         }
         yellPositions.clear();
     }
+
+    public int getYellRadius(){return yellRadius;}
+
+
+
+
 
 }

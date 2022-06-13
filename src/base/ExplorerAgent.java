@@ -25,30 +25,28 @@ public class ExplorerAgent extends Agent{
         exploredTiles.add(new int[]{position[0], position[1]});
     }
 
-    public void makeExplorationMove(){
+    public void makeExplorationMove() {
 
         int[] nextPosition = this.getPosition();
 
-        if(!isInHisArea()) {
+        if (!isInHisArea()) {
             nextPosition = getTileClosestToArea();
-        }
-        else {
+        } else {
             boolean appropriateNeighbourIsFound = false;
-            for(int[] neighbour : getAllNeighbours()){
+            for (int[] neighbour : getAllNeighbours()) {
                 // get first one that is In Bounds, Not A Wall and has not been explored
-                if(isInHisArea(neighbour) && !isAlreadyExplored(neighbour) && !map.hasWall(neighbour)) {
+                if (isInHisArea(neighbour) && !isAlreadyExplored(neighbour) && !map.hasWall(neighbour)) {
                     nextPosition = neighbour;
                     appropriateNeighbourIsFound = true;
                     break;
                 }
             }
-            if(!appropriateNeighbourIsFound) {
+            if (!appropriateNeighbourIsFound) {
                 nextPosition = exploredTiles.get(exploredTiles.size() - 2);
                 exploredTiles.clear();
             }
         }
 
-        // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
         applyNextMove(nextPosition);
     }
 
@@ -119,7 +117,7 @@ public class ExplorerAgent extends Agent{
         boolean wentThroughTeleport = false;
 
         // check for teleport
-        for(int[] portalIn : portalEntrances){
+        for(int[] portalIn : GameController.portalEntrances){
             if(portalIn[0] == nextPosition[0] && portalIn[1] == nextPosition[1]){
                 wentThroughTeleport = true;
                 int index = portalEntrances.indexOf(portalIn);
@@ -179,4 +177,5 @@ public class ExplorerAgent extends Agent{
     public double[] getExplorationArea() {
         return explorationArea;
     }
+
 }

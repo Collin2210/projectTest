@@ -1,10 +1,8 @@
 package base;
 
-import Controller.FileParser;
-import Controller.Map;
-import Controller.Tile;
-import Controller.Variables;
+import Controller.*;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,6 +12,7 @@ public class GameController {
     public static Variables variables;
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
+    public static ArrayList<Yell> yells=new ArrayList<>();
 
     public static final ArrayList<int[]> portalEntrances = new ArrayList<>();
     public static final ArrayList<int[]> portalDestinations = new ArrayList<>();
@@ -183,8 +182,7 @@ public class GameController {
 
                 else if (tile.hasTrace()) {
                     System.out.print(ANSI_RED + " 0 " + ANSI_RESET);
-
-                    /*if (tile.getTrace().getStress() == 0) {
+                                    /*if (tile.getTrace().getStress() == 0) {
                         System.out.print(ANSI_GREEN + " . " + ANSI_RESET);
                     }
                     if (tile.getTrace().getStress() == 1) {
@@ -230,5 +228,3 @@ public class GameController {
 
         System.out.println(s);
     }
-
-}
