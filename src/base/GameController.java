@@ -46,14 +46,14 @@ public class GameController {
 //        a.learn();
 
         // testing guards only algo below
-//        for (int i = 0; i < 10; i++) {
-//            for(Agent g : agents){
-//                if (g.getClass() == Guard.class){
-//                    ((Guard) g).makeMove();
-//                }
-//            }
-//            GameController.print();
-//        }
+        for (int i = 0; i < 5; i++) {
+            for(Agent g : agents){
+                if (g.getClass() == Guard.class){
+                    ((Guard) g).makeMove();
+                }
+            }
+            GameController.print();
+        }
     }
 
     public void makeAgentsMoveSmartly(){
@@ -83,6 +83,14 @@ public class GameController {
             portalEntrances.addAll(t.getPointsIn());
             Collections.addAll(portalDestinations, t.getPointOut());
             portalDegrees.add(t.getDegreeOut());
+        }
+    }
+
+    public void addShadedAreas(){
+        ArrayList<int[]> shadedTiles = variables.getShadePoints();
+
+        for(int[] tile: shadedTiles){
+            map.getTile(tile[0] ,tile[1]).setShade();
         }
     }
 
@@ -154,26 +162,26 @@ public class GameController {
                             hasIntruder = true;
                     }
                 }
-                if((hasGuard || hasIntruder) && tile.isGoal()) {
-                    if(hasGuard)
+                if (tile.hasShade()) {
+                    System.out.print(ANSI_RED + " S " + ANSI_RESET);
+                } else if ((hasGuard || hasIntruder) && tile.isGoal()) {
+                    if (hasGuard)
                         System.out.print(ANSI_BLUE + " Y " + ANSI_RESET);
                     else System.out.print(ANSI_PURPLE + " Y " + ANSI_RESET);
-                }
-                else if(hasGuard || hasIntruder) {
-                    if(hasGuard)
+                } else if (hasGuard || hasIntruder) {
+                    if (hasGuard)
                         System.out.print(ANSI_BLUE + " A " + ANSI_RESET);
                     else System.out.print(ANSI_RED + " A " + ANSI_RESET);
-                }
-                else if (tile.isGoal())
+                } else if (tile.isGoal())
                     System.out.print(ANSI_YELLOW + " G " + ANSI_RESET);
-                else if(tile.hasWall())
+                else if (tile.hasWall())
                     System.out.print(ANSI_GREEN + " L " + ANSI_RESET);
-                else if(tile.hasTeleportIn())
+                else if (tile.hasTeleportIn())
                     System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
-                else if(tile.hasWall())
+                else if (tile.hasWall())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
 
-                else if(tile.hasTrace()) {
+                else if (tile.hasTrace()) {
                     System.out.print(ANSI_RED + " 0 " + ANSI_RESET);
 
                     /*if (tile.getTrace().getStress() == 0) {
@@ -185,21 +193,18 @@ public class GameController {
                     if (tile.getTrace().getStress() > 1) {
                         System.out.print(ANSI_RED + " . " + ANSI_RESET);
                     }*/
-                }
-
-                else {
+                } else {
                     boolean isSeen = false;
-                    for(Agent a : agents){
-                        for(int[] tilePos : a.visionT){
-                            if(tilePos[0] == tile.getPosition()[0]
+                    for (Agent a : agents) {
+                        for (int[] tilePos : a.visionT) {
+                            if (tilePos[0] == tile.getPosition()[0]
                                     && tilePos[1] == tile.getPosition()[1])
                                 isSeen = true;
                         }
                     }
-                    if(isSeen) {
+                    if (isSeen) {
                         System.out.print(ANSI_PURPLE + " O " + ANSI_RESET);
-                    }
-                    else System.out.print(" O ");
+                    } else System.out.print(" O ");
                 }
             }
             System.out.println();

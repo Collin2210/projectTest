@@ -3,6 +3,7 @@ package rayTracer;
 import Controller.Map;
 import Controller.Tile;
 import Controller.Variables;
+import QLearning.RewardTable;
 import base.*;
 
 import java.awt.*;
@@ -11,8 +12,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
-
-import static rayTracer.Driver.dist;
 
 public class RayCaster {
     int mapHeight, mapWidth;
@@ -77,7 +76,7 @@ public class RayCaster {
             float x = p0_x + (t * s1_x);
             float y = p0_y + (t * s1_y);
 
-            return dist(p0_x, p0_y, x, y);
+            return (float) RewardTable.distanceBetweenPoints((int) p0_x, (int) p0_y, (int) x, (int) y);
         }
 
         return -1; // No collision
@@ -147,7 +146,7 @@ public class RayCaster {
         for(int x = (int) (agentX-(visionRange+1)); x < agentX+visionRange+1; x++){
             for(int y = (int) (agentY - (visionRange + 1)); y < agentY + visionRange + 1; y++ ){
                 int[] position = {x,y};
-                if(Map.inMap(position)){
+                if(Map.inMap(position) && !map.getTile(x,y).hasShade()){
                     Tile tile2 = map.getTile(x,y);
                     if(contains(new Point(tile2.getPosition()[0], tile2.getPosition()[1]))){
                         listOfVisibleTiles.add(new int[]{tile2.getPosition()[0], tile2.getPosition()[1]});
@@ -157,6 +156,5 @@ public class RayCaster {
         }
 
         return listOfVisibleTiles;
-
     }
 }

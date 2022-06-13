@@ -7,6 +7,7 @@ import base.*;
 import java.util.Arrays;
 
 import static base.GameController.*;
+import static base.GameController.map;
 
 public class QLearning {
 
@@ -182,13 +183,23 @@ public class QLearning {
             }
         }
 
+        // check if is in shaded area
+        if(map.getTile(newPosition).hasShade()){
+            agent.setVisionRange(variables.getVisionRange()/10);
+        }
+        else agent.setVisionRange(variables.getVisionRange());
+
+        // update learning state
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
         agent.setPosition(newState[0], newState[1]);
         agent.getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
+
+        // vision update
         agent.visionT.clear();
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
+
         agent.updateTrace();
         agent.AgentStep();
     }

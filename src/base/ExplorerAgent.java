@@ -117,6 +117,8 @@ public class ExplorerAgent extends Agent{
 
     public void applyNextMove(int[] nextPosition){
         boolean wentThroughTeleport = false;
+
+        // check for teleport
         for(int[] portalIn : portalEntrances){
             if(portalIn[0] == nextPosition[0] && portalIn[1] == nextPosition[1]){
                 wentThroughTeleport = true;
@@ -130,6 +132,12 @@ public class ExplorerAgent extends Agent{
             updateAngle(nextPosition);
             applyMove(nextPosition);
         }
+
+        // check if is in shaded area
+        if(map.getTile(nextPosition).hasShade()){
+            this.setVisionRange(variables.getVisionRange()/10);
+        }
+        else this.setVisionRange(variables.getVisionRange());
 
         updateVisionArea();
     }

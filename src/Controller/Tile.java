@@ -97,6 +97,8 @@ public class Tile {
         return hasShade;
     }
 
+    public void setShade(){this.hasShade = true;}
+
     public  boolean hasTeleportIn(){
         return isTeleportIn;
     }

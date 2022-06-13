@@ -119,12 +119,10 @@ public class Agent {
     public void setVisionArea (ArrayList < int[]>visionArea){
         this.visionArea = visionArea;
     }
-    ;
 
     public int getID () {
         return agentId;
     }
-    ;
 
     public ArrayList<Trace> getTrace () {
         return trace;
@@ -172,6 +170,14 @@ public class Agent {
 
     public void setOnTower(boolean onTower) {
         isOnTower = onTower;
+    }
+
+    public int getVisionRange() {
+        return visionRange;
+    }
+
+    public void setVisionRange(int visionRange) {
+        this.visionRange = visionRange;
     }
 }
 
