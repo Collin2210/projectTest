@@ -48,8 +48,8 @@ public class GameEndChecker {
     private static boolean guardCatchesIntruder(){
         for(Agent a : GameController.agents){
             if(a.getClass() == Guard.class){
-                // find a guard that has been following an agent
-                if(((Guard) a).isFollowingAgent()){
+                // find a guard that has been chasing an agent
+                if(!((Guard) a).isScatterMode()){
                     Intruder intruder = ((Guard) a).getIntruderToCatch();
                     int
                             intruderX = intruder.getX(),

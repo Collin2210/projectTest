@@ -181,6 +181,7 @@ public class QLearning {
                 agent.setAngleDeg(portalDegrees.get(index));
             }
         }
+
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
         agent.setPosition(newState[0], newState[1]);

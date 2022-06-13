@@ -1,14 +1,16 @@
 package base;
 
+import Path.Move;
+import Path.Position;
 import QLearning.*;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static base.GameController.agents;
+import static base.GameController.*;
 
 public class Guard extends ExplorerAgent {
 
-    private boolean isFollowingAgent;
     private Intruder intruderToCatch;
     private Yell yell;
     private boolean yelling;
@@ -16,11 +18,8 @@ public class Guard extends ExplorerAgent {
     private byte timer; // time guard spent chasing without seeing the intruder
     private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
 
-    private double[] explorationArea; // {ogX, ogY, height, width}
-
     public Guard(int[] position) {
         super(position);
-        isFollowingAgent = false;
         yelling = false;
         this.yell = new Yell(this);
         isScatterMode = true;
@@ -31,10 +30,14 @@ public class Guard extends ExplorerAgent {
 
         yell.remove();
 
+        // check if intruder is in vision range
         checkVision();
 
+        // check if guard has been chasing intruder for long enough without seeing him to return to scatter
         if(timer == TIME_LIMIT){
             isScatterMode = true;
+            intruderToCatch = null;
+            yelling = false;
             timer = 0;
         }
 
@@ -54,7 +57,6 @@ public class Guard extends ExplorerAgent {
                 if(a.getClass() == Intruder.class){
                     int ax = a.getX(), ay = a.getY();
                     if(ax == tilePos[0] && ay == tilePos[1]) {
-                        isFollowingAgent = true;
                         intruderToCatch = (Intruder) a;
                         yell.propagateYell();
                         yelling = true;
@@ -64,46 +66,23 @@ public class Guard extends ExplorerAgent {
                 }
             }
         }
-        if(!intruderIsSeen)
+
+        if(!intruderIsSeen && !isScatterMode)
             timer++;
     }
 
     private void followIntruder(){
-        byte action = getActionThatMinimizesDistance();
-        tryPerformingAction(action);
-    }
+        // get path to intruder with a star
+        int[] intruderPosition = intruderToCatch.getPosition();
+        List<Position> pathToIntruder = Move.getPath(getPosition(), intruderPosition);
 
-    private byte getActionThatMinimizesDistance(){
-        byte action = 0;
-        double smallest_distance = Double.POSITIVE_INFINITY;
+        // get next position towards intruder
+        Position nextPos = pathToIntruder.get(1);
+        int[] nextPosition = {nextPos.getX(), nextPos.getY()};
 
-        for (int act = 0; act < QLearning.NUMBER_OF_POSSIBLE_ACTIONS; act++) {
-            int[] newPosition = tryToGetValidPosition(action);
-            double distance = RewardTable.distanceBetweenPoints(
-                    intruderToCatch.getX(), intruderToCatch.getY(),
-                    newPosition[0], newPosition[1]
-            );
+        // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
+        applyNextMove(nextPosition);
 
-            if(distance < smallest_distance){
-                smallest_distance = distance;
-                action = (byte) act;
-            }
-        }
-        return action;
-    }
-
-    private int[] tryToGetValidPosition(byte action){
-        int[] vp = {};
-        try {
-            vp = getValidPositionFromAction(action);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return vp;
-    }
-
-    public boolean isFollowingAgent() {
-        return isFollowingAgent;
     }
 
     public Intruder getIntruderToCatch() {

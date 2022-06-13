@@ -6,7 +6,6 @@ import Controller.Tile;
 import Controller.Variables;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class GameController {
@@ -43,8 +42,18 @@ public class GameController {
     }
 
     public void makeAgentsLearn(){
-        LearnerAgent a = (LearnerAgent) agents.get(0);
-        a.learn();
+//        LearnerAgent a = (LearnerAgent) agents.get(0);
+//        a.learn();
+
+        // testing guards only algo below
+//        for (int i = 0; i < 10; i++) {
+//            for(Agent g : agents){
+//                if (g.getClass() == Guard.class){
+//                    ((Guard) g).makeMove();
+//                }
+//            }
+//            GameController.print();
+//        }
     }
 
     public void makeAgentsMoveSmartly(){
@@ -102,6 +111,8 @@ public class GameController {
             agents.add(new Intruder(spawn.get(i)));
             pathOfAllAgents.add(new ArrayList<>());
         }
+
+        agents.add(new Intruder(new int[]{4, 6}));
     }
 
     public void addGuards(){

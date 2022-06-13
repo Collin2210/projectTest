@@ -48,10 +48,8 @@ public class ExplorerAgent extends Agent{
             }
         }
 
-        // apply move
-        this.setPosition(nextPosition[0], nextPosition[1]);
-        exploredTiles.add(new int[]{nextPosition[0], nextPosition[1]});
-
+        // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
+        applyNextMove(nextPosition);
     }
 
     private int[] getTileClosestToArea(){
@@ -117,85 +115,53 @@ public class ExplorerAgent extends Agent{
         return false;
     }
 
-    public void tryPerformingAction(byte action){
-        try {
-            performAction(action);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void performAction(byte action) throws Exception {
-        int[] currentState = this.getPosition();
-        this.setActionPerformed(action);
-
-        int[] newPosition = getValidPositionFromAction(action);
-
-        // check if action takes you to a teleport
+    public void applyNextMove(int[] nextPosition){
+        boolean wentThroughTeleport = false;
         for(int[] portalIn : portalEntrances){
-            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
+            if(portalIn[0] == nextPosition[0] && portalIn[1] == nextPosition[1]){
+                wentThroughTeleport = true;
                 int index = portalEntrances.indexOf(portalIn);
-                newPosition = portalDestinations.get(index);
+                nextPosition = portalDestinations.get(index);
                 this.setAngleDeg(portalDegrees.get(index));
             }
         }
-        int[] newState = new int[]{newPosition[0], newPosition[1]};
-        setPreviousState(new int[]{currentState[0],currentState[1]});
-        setPosition(newState[0], newState[1]);
-        getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
-        visionT.clear();
-        getRayEngine().calculate(this);
+
+        if(!wentThroughTeleport) {
+            updateAngle(nextPosition);
+            applyMove(nextPosition);
+        }
+
+        updateVisionArea();
+    }
+
+    public void updateAngle(int[] nextPosition){
+        int newX = nextPosition[0], newY = nextPosition[1];
+        double angle = this.getAngleDeg();
+
+        if(getX() != newX){
+            if(newX == getX()-1)
+                angle = 180;
+            else angle = 0;
+        }
+
+        if(getY() != newY){
+            if(newY == getY()-1)
+                angle = 270;
+            else angle = 90;
+        }
+
+        setAngleDeg(angle);
+    }
+
+    public void applyMove(int[] nextPosition){
+        this.setPosition(nextPosition[0], nextPosition[1]);
+        exploredTiles.add(new int[]{nextPosition[0], nextPosition[1]});
+    }
+
+    public void updateVisionArea(){
+        this.visionT.clear();
+        this.getRayEngine().calculate(this);
         this.visionT = this.getRayEngine().getVisibleTiles(this);
-        this.updateTrace();
-        this.AgentStep();
-    }
-
-    private boolean newPositionIsValid(int newX, int newY) {
-        return Map.inMap(newX, newY);
-    }
-
-    int[] getValidPositionFromAction(byte action) throws Exception {
-        int[] currentState = this.getPosition();
-        int[] newPositionData = getNewPositionFromAction(action, currentState);
-
-        if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
-            if(action == NUMBER_OF_POSSIBLE_ACTIONS-1){
-                return getValidPositionFromAction((byte) 0);
-            }
-            else {
-                action = getRandomAction();
-                return getValidPositionFromAction(action);
-            }
-        }
-        // set angle
-        this.setAngleDeg(newPositionData[2]);
-        return new int[]{newPositionData[0], newPositionData[1], (int) this.getAngleDeg()};
-    }
-
-    public static int[] getNewPositionFromAction(byte action, int[] currentState) throws Exception {
-        int angle;
-        int newX = currentState[0], newY = currentState[1];
-        if(action == MOVE_UP) {
-            newX -= 1;
-            angle = 180;
-        }
-        else if (action == MOVE_RIGHT){
-            newY += 1;
-            angle = 90;
-        }
-        else if (action == MOVE_DOWN){
-            newX += 1;
-            angle = 0;
-        }
-        else if (action == MOVE_LEFT) {
-            newY -= 1;
-            angle = 270;
-        }
-        else {
-            throw new Exception("action number not recognized");
-        }
-        return new int[]{newX, newY, angle};
     }
 
     public void setExplorationArea(double[] area){
