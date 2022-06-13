@@ -13,6 +13,7 @@ public class Agent {
     public Tile t;
     private final int[] position;
     private double angleDeg;
+    private int visionRange;
 
     private ArrayList<Trace> trace;
 
@@ -37,6 +38,7 @@ public class Agent {
         this.angleDeg = 180;
         this.rayEngine = new RayCaster(this);
         this.visionT = new ArrayList<>();
+        this.visionRange = GameController.variables.getVisionRange();
 
         spawnPosition = new int[] {position[0], position[1]};
         savedPath = new ArrayList<>();

@@ -143,6 +143,10 @@ public class Map {
         return this.map[x][y];
     }
 
+    public Tile getTile(int[] pos){
+        return this.map[pos[0]][pos[1]];
+    }
+
     public Tile[][] getTiles(){
         return this.map;
     }

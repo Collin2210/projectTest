@@ -7,3 +7,4 @@ spawnAreaGuards = 12 11 20 19
 spawnAreaIntruders = 5 0 10 1
 isGoal = 15 14 17 18
 visionRange = 10
+shade = 5 5 8 7
