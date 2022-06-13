@@ -1,13 +1,8 @@
 package base;
 
-import Controller.Map;
 import Path.Move;
 import Path.Position;
-import QLearning.*;
-
-import static base.GameController.*;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Guard extends ExplorerAgent {
@@ -42,6 +37,7 @@ public class Guard extends ExplorerAgent {
         if(!isScatterMode) {
             followIntruder();
         }else if (this.audioObject != null){
+            System.out.println("guard " + Arrays.toString(getPosition()) + " is following yell " + Arrays.toString(audioObject.getPosition()));
             followAudio();
         }
         else {
@@ -117,16 +113,29 @@ public class Guard extends ExplorerAgent {
         yellObject.spreadAudio();
         //this.audioObject = yellObject;
         GameController.yells.add(yellObject);
+        System.out.println("guard " + Arrays.toString(getPosition()) + " yells");
     }
-
-
-
-
 
     public void followAudio()
     {
-        int[] yellPosition = this.audioObject.getPosition();
-        byte action = getActionThatMinimizesDistance(yellPosition);
-        tryPerformingAction(action);
+        int[] audioPosition = this.audioObject.getPosition();
+
+        // get path to intruder with a star
+        List<Position> pathToIntruder = Move.getPath(getPosition(), audioPosition);
+
+        // check if guard got to yell
+        if(pathToIntruder.size() == 1){
+            this.audioObject = null;
+            isScatterMode = true;
+        }
+
+        // get next position towards intruder
+        Position nextPos = pathToIntruder.get(1);
+        int[] nextPosition = {nextPos.getX(), nextPos.getY()};
+
+        // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
+        applyNextMove(nextPosition);
     }
+
+    public boolean isScatterMode(){return isScatterMode;}
 }

@@ -12,7 +12,7 @@ public class GameController {
     public static Variables variables;
     public static final ArrayList<Agent> agents = new ArrayList<>();
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
-    public static ArrayList<Yell> yells=new ArrayList<>();
+    public static ArrayList<Yell> yells = new ArrayList<>();
 
     public static final ArrayList<int[]> portalEntrances = new ArrayList<>();
     public static final ArrayList<int[]> portalDestinations = new ArrayList<>();
@@ -23,12 +23,12 @@ public class GameController {
     public static int numOfGuardWins = 0;
     public static int numOfIntruderWins = 0;
 
-    public static final double TOWER_VISION_BONUS = 10 ;
+    public static final double TOWER_VISION_BONUS = 10;
 
-    public GameController(){
+    public GameController() {
     }
 
-    public void startGame(){
+    public void startGame() {
         String p = "recources/testmap2.txt";
         variables = FileParser.parser(p);
         map = new Map();
@@ -40,14 +40,14 @@ public class GameController {
         runRaycast();
     }
 
-    public void makeAgentsLearn(){
+    public void makeAgentsLearn() {
 //        LearnerAgent a = (LearnerAgent) agents.get(0);
 //        a.learn();
 
         // testing guards only algo below
         for (int i = 0; i < 5; i++) {
-            for(Agent g : agents){
-                if (g.getClass() == Guard.class){
+            for (Agent g : agents) {
+                if (g.getClass() == Guard.class) {
                     ((Guard) g).makeMove();
                 }
             }
@@ -55,15 +55,15 @@ public class GameController {
         }
     }
 
-    public void makeAgentsMoveSmartly(){
+    public void makeAgentsMoveSmartly() {
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.moveSmartly();
     }
 
-    public void moveAgentDumbly(){
-        for(int i = 0; i < 15; i++){
+    public void moveAgentDumbly() {
+        for (int i = 0; i < 15; i++) {
             Agent a = agents.get(0);
-            a.setPosition(a.getX()+1,a.getY());
+            a.setPosition(a.getX() + 1, a.getY());
             a.updateTrace();
             GameController.print();
         }
@@ -76,45 +76,45 @@ public class GameController {
         }
     }
 
-    public void addTeleports(){
+    public void addTeleports() {
         ArrayList<Controller.Teleport> portals = variables.getPortals();
-        for(Controller.Teleport t : portals){
+        for (Controller.Teleport t : portals) {
             portalEntrances.addAll(t.getPointsIn());
             Collections.addAll(portalDestinations, t.getPointOut());
             portalDegrees.add(t.getDegreeOut());
         }
     }
 
-    public void addShadedAreas(){
+    public void addShadedAreas() {
         ArrayList<int[]> shadedTiles = variables.getShadePoints();
 
-        for(int[] tile: shadedTiles){
-            map.getTile(tile[0] ,tile[1]).setShade();
+        for (int[] tile : shadedTiles) {
+            map.getTile(tile[0], tile[1]).setShade();
         }
     }
 
-    public void addGoal(){
+    public void addGoal() {
         ArrayList<int[]> goalTilesFromVariables = variables.getGoalPoints();
 
-        for(int[] c: goalTilesFromVariables){
+        for (int[] c : goalTilesFromVariables) {
             Tile goalTile = map.getTile(c[0], c[1]);
             goalTile.setGoal();
             goalTiles.add(goalTile);
         }
     }
 
-    public void addWalls(){
+    public void addWalls() {
         ArrayList<int[]> walls = map.getWallpoints();
-        for(int[] wall : walls){
+        for (int[] wall : walls) {
             Tile wallTile = map.getTile(wall[0], wall[1]);
             wallTile.placeWall();
         }
     }
 
-    public void addIntruder(){
+    public void addIntruder() {
         ArrayList<int[]> spawn = variables.getIntruderSpawnPoints();
         int nrOfIntruders = variables.getNumberOfIntruders();
-        for(int i = 0;i<nrOfIntruders;i++){
+        for (int i = 0; i < nrOfIntruders; i++) {
             agents.add(new Intruder(spawn.get(i)));
             pathOfAllAgents.add(new ArrayList<>());
         }
@@ -122,14 +122,14 @@ public class GameController {
         agents.add(new Intruder(new int[]{4, 6}));
     }
 
-    public void addGuards(){
+    public void addGuards() {
         ArrayList<int[]> spawn = variables.getGuardSpawnPoints();
         int nrOfIntruders = variables.getNumberOfGuards();
 
         // guard's exploration areas
         ArrayList<double[]> areas = GuardAlgo.getAreasForGuards();
 
-        for(int i = 0;i<nrOfIntruders;i++){
+        for (int i = 0; i < nrOfIntruders; i++) {
             Guard g = new Guard(spawn.get(i));
             g.setExplorationArea(areas.get(i));
             agents.add(g);
@@ -137,7 +137,7 @@ public class GameController {
         }
     }
 
-    public static void print(){
+    public static void print() {
 
         String
                 ANSI_RESET = "\u001B[0m",
@@ -149,13 +149,13 @@ public class GameController {
                 ANSI_GREEN = "\u001B[32m";
 
 
-        for(Tile[] row : map.getTiles()){
-            for(Tile tile : row){
+        for (Tile[] row : map.getTiles()) {
+            for (Tile tile : row) {
                 boolean hasIntruder = false, hasGuard = false;
-                for(Agent agent  : agents){
-                    if(agent.getX() == tile.getPosition()[0]
+                for (Agent agent : agents) {
+                    if (agent.getX() == tile.getPosition()[0]
                             && agent.getY() == tile.getPosition()[1]) {
-                        if(agent.getClass() == Guard.class)
+                        if (agent.getClass() == Guard.class)
                             hasGuard = true;
                         else if (agent.getClass() == Intruder.class)
                             hasIntruder = true;
@@ -210,21 +210,22 @@ public class GameController {
         System.out.println();
     }
 
-    private static void printRect(double[] rect){
+    private static void printRect(double[] rect) {
         double
                 height = rect[2], width = rect[3];
         double[]
-                og = {rect[0],  rect[1]},
+                og = {rect[0], rect[1]},
                 point1 = {rect[0], rect[1] + height},
-                point2 = {rect[0] + width, rect[1]+height},
+                point2 = {rect[0] + width, rect[1] + height},
                 point3 = {rect[0] + width, rect[1]};
 
         double[][] points = {og, point1, point2, point3};
 
         StringBuilder s = new StringBuilder("polygon(");
-        for(double[] p : points)
+        for (double[] p : points)
             s.append("(").append(p[0]).append(",").append(p[1]).append("),");
         s.append(")");
 
         System.out.println(s);
     }
+}
