@@ -2,7 +2,6 @@ package base;
 
 import java.util.ArrayList;
 
-import Controller.Map;
 import Controller.Tile;
 import Controller.Variables;
 import rayTracer.RayCaster;
@@ -14,8 +13,6 @@ public class Agent {
     private final int[] position;
     private double angleDeg;
     private int visionRange;
-
-    private ArrayList<Trace> trace;
 
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
@@ -45,43 +42,7 @@ public class Agent {
         savedPath.add(position);
         previousState = new int[2];
 
-        // initializing Trace
-        trace = new ArrayList<>();
-        Trace traceStep = new Trace(this);
-        trace.add(traceStep);
-
         isOnTower = false;
-    }
-
-    public void AgentStep(){ //create a brand new trace for the current step
-        Trace traceStep = new Trace(this);
-       // if(trace.size() < 10) {// debugging
-            trace.add(traceStep);
-       // }
-
-        Tile tile = GameController.map.getTile(position[0], position[1]);
-
-      //  if(trace.size() < 10) {// debugging
-            tile.placeTrace(traceStep);
-    //
-    }
-
-
-    public void updateTrace() {
-        int traceSize = trace.size();
-        for(int i = 0; i< traceSize; i++){
-            if(trace.get(i).getLifeTime() > 0){
-                trace.get(i).decreaseLifeTime();
-            }
-            else{
-                Trace t = trace.get(i);
-                trace.remove(t); // the first only ?!
-                Tile tile = GameController.map.getTile(trace.get(i).getX_co(),trace.get(i).getY_co());
-                tile.resetTrace();
-                i--;
-                traceSize--;
-            }
-        }
     }
 
     public void putBackOnSpawn() {
@@ -124,10 +85,6 @@ public class Agent {
 
     public int getID () {
         return agentId;
-    }
-
-    public ArrayList<Trace> getTrace () {
-        return trace;
     }
 
     public ArrayList<int[]> getVisionT () {
@@ -182,4 +139,3 @@ public class Agent {
         this.visionRange = visionRange;
     }
 }
-

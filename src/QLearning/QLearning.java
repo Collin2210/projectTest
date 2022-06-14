@@ -199,15 +199,12 @@ public class QLearning {
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
 
-        agent.updateTrace();
-        agent.AgentStep();
     }
 
 
     private void putAgentsBackOnSpawn(){
         for(Agent a : agents) {
             a.putBackOnSpawn();
-            a.getTrace().clear(); // reset the value of trace stored in the Agent Object
         }
         for(Tile[] row : map.getTiles()){// reset the value of trace stored in the Tile Object
             for(Tile t : row)

@@ -11,10 +11,6 @@ public class Intruder extends LearnerAgent{
         super(position);
     }
 
-
-
-
-
     private byte getActionThatMaximizesDistance(int[] position){
         byte action = 0;
         double biggest_distance = Double.NEGATIVE_INFINITY;

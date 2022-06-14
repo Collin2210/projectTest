@@ -126,7 +126,7 @@ public class RayCaster {
 
     public void calculate(Agent a){
 
-        rays = calcRays(lines, a.getX(), a.getY(), 180, GameController.variables.getVisionRange());
+        rays = calcRays(lines, a.getX(), a.getY(), 180, a.getVisionRange());
         p = createPolygon();
     }
 
@@ -135,7 +135,7 @@ public class RayCaster {
         float
                 agentX = agent.getX(),
                 agentY = agent.getY(),
-                visionRange = GameController.variables.getVisionRange(),
+                visionRange = agent.getVisionRange(),
                 angle = (float) agent.getAngleDeg();
 
         if(agent.isOnTower())

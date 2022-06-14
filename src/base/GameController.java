@@ -64,7 +64,6 @@ public class GameController {
         for (int i = 0; i < 15; i++) {
             Agent a = agents.get(0);
             a.setPosition(a.getX() + 1, a.getY());
-            a.updateTrace();
             GameController.print();
         }
     }
@@ -179,19 +178,7 @@ public class GameController {
                     System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
                 else if (tile.hasWall())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
-
-                else if (tile.hasTrace()) {
-                    System.out.print(ANSI_RED + " 0 " + ANSI_RESET);
-                                    /*if (tile.getTrace().getStress() == 0) {
-                        System.out.print(ANSI_GREEN + " . " + ANSI_RESET);
-                    }
-                    if (tile.getTrace().getStress() == 1) {
-                        System.out.print(ANSI_YELLOW + " . " + ANSI_RESET);
-                    }
-                    if (tile.getTrace().getStress() > 1) {
-                        System.out.print(ANSI_RED + " . " + ANSI_RESET);
-                    }*/
-                } else {
+                else {
                     boolean isSeen = false;
                     for (Agent a : agents) {
                         for (int[] tilePos : a.visionT) {
