@@ -37,7 +37,6 @@ public class Guard extends ExplorerAgent {
         if(!isScatterMode) {
             followIntruder();
         }else if (this.audioObject != null){
-            System.out.println("guard " + Arrays.toString(getPosition()) + " is following yell " + Arrays.toString(audioObject.getPosition()));
             followAudio();
         }
         else {
@@ -47,6 +46,8 @@ public class Guard extends ExplorerAgent {
 
     private void checkVision(){
         boolean intruderIsSeen = false;
+        byte numberOfIntrudersSeen = 0;
+
         this.visionT = this.getRayEngine().getVisibleTiles(this);
         for(int[] tilePos : visionT){
             for(Agent a : GameController.agents){
@@ -57,6 +58,7 @@ public class Guard extends ExplorerAgent {
                         isScatterMode = false;
                         intruderIsSeen = true;
                         this.doYell();
+                        numberOfIntrudersSeen++;
                     }
                 }
             }
@@ -64,6 +66,8 @@ public class Guard extends ExplorerAgent {
 
         if(!intruderIsSeen && !isScatterMode)
             timer++;
+
+        updateStressLevel(numberOfIntrudersSeen);
     }
 
     private boolean hasCaught(Intruder intruder){
@@ -113,7 +117,6 @@ public class Guard extends ExplorerAgent {
         yellObject.spreadAudio();
         //this.audioObject = yellObject;
         GameController.yells.add(yellObject);
-        System.out.println("guard " + Arrays.toString(getPosition()) + " yells");
     }
 
     public void followAudio()
@@ -135,6 +138,12 @@ public class Guard extends ExplorerAgent {
 
         // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
         applyNextMove(nextPosition);
+    }
+
+    public void resetParam(){
+        isScatterMode = true;
+        intruderToCatch = null;
+        clearExploredTiles();
     }
 
     public boolean isScatterMode(){return isScatterMode;}

@@ -1,6 +1,7 @@
 package QLearning;
 
 import Controller.Map;
+import Controller.Teleport;
 import Controller.Tile;
 import base.*;
 
@@ -73,7 +74,6 @@ public class QLearning {
                 }
                 moveCount++;
                 //GameController.print();
-
             }
             System.out.print("Game Number: " +cycleCount);
             System.out.println(" Move count: " + moveCount);
@@ -173,12 +173,14 @@ public class QLearning {
 
         int[] newPosition = getValidPositionFromAction(action);
 
-        // check if action takes you to a teleporter
-        for(int[] portalIn : portalEntrances){
-            if(portalIn[0] == newPosition[0] && portalIn[1] == newPosition[1]){
-                int index = portalEntrances.indexOf(portalIn);
-                newPosition = portalDestinations.get(index);
-                agent.setAngleDeg(portalDegrees.get(index));
+        // check teleport
+        for(Teleport tp : variables.getPortals()){
+            for(int[] p : tp.getPointsIn()){
+                if( p[0] == newPosition[0]  &&  p[1] == newPosition[1]){
+                    agent.getTrace().addToTrace(new int[]{agent.getX(), agent.getY()});
+                    newPosition = tp.getPointOut();
+                    agent.setAngleDeg(tp.getDegreeOut());
+                }
             }
         }
 
@@ -205,11 +207,6 @@ public class QLearning {
     private void putAgentsBackOnSpawn(){
         for(Agent a : agents) {
             a.putBackOnSpawn();
-        }
-        for(Tile[] row : map.getTiles()){// reset the value of trace stored in the Tile Object
-            for(Tile t : row)
-                if(t.hasTrace())
-                    t.resetTrace();
         }
     }
 

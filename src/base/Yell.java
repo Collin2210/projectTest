@@ -24,21 +24,4 @@ public class Yell extends AudioObject {
         super(agent, 20);
     }
 
-
-    /**
-     *
-     */
-
-
-    public void remove(){
-        for(int[] pos : yellPositions){
-            GameController.map.getTile(pos[0],pos[1]).removeYell();
-        }
-        yellPositions.clear();
-    }
-
-
-
-
-
 }

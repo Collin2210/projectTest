@@ -1,6 +1,7 @@
 package base;
 
 import Controller.Map;
+import Controller.Teleport;
 import QLearning.QLearning;
 
 import java.util.ArrayList;
@@ -117,16 +118,21 @@ public class ExplorerAgent extends Agent{
         boolean wentThroughTeleport = false;
 
         // check for teleport
-        for(int[] portalIn : GameController.portalEntrances){
-            if(portalIn[0] == nextPosition[0] && portalIn[1] == nextPosition[1]){
-                wentThroughTeleport = true;
-                int index = portalEntrances.indexOf(portalIn);
-                nextPosition = portalDestinations.get(index);
-                this.setAngleDeg(portalDegrees.get(index));
+        for(Teleport tp : variables.getPortals()){
+            for(int[] p : tp.getPointsIn()){
+                if( p[0] == nextPosition[0]  &&  p[1] == nextPosition[1]){
+                    wentThroughTeleport = true;
+                    getTrace().addToTrace(new int[]{getX(), getY()});
+                    nextPosition = tp.getPointOut();
+                    setAngleDeg(tp.getDegreeOut());
+                    applyMove(nextPosition);
+                }
             }
         }
 
+        // if no portal was used
         if(!wentThroughTeleport) {
+            getTrace().addToTrace(new int[]{getX(), getY()});
             updateAngle(nextPosition);
             applyMove(nextPosition);
         }
@@ -137,7 +143,9 @@ public class ExplorerAgent extends Agent{
         }
         else this.setVisionRange(variables.getVisionRange());
 
+        // update vision area
         updateVisionArea();
+
     }
 
     public void updateAngle(int[] nextPosition){
@@ -168,6 +176,10 @@ public class ExplorerAgent extends Agent{
         this.visionT.clear();
         this.getRayEngine().calculate(this);
         this.visionT = this.getRayEngine().getVisibleTiles(this);
+    }
+
+    public void clearExploredTiles(){
+        this.exploredTiles.clear();
     }
 
     public void setExplorationArea(double[] area){

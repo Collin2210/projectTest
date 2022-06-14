@@ -1,5 +1,6 @@
 package Controller;
 
+
 import base.Trace;
 
 public class Tile {
@@ -10,15 +11,13 @@ public class Tile {
             hasWall,
             isTeleportIn,
             isTeleportOut,
-            hasTrace,
-            isYell,
             isGoal,
             isTower;
 
-    public Trace AgentTrace;
-
     private int[] portalOut = new int[2];
     private double degreeOut;
+
+    private Trace trace;
 
     public Tile(int x, int y) {
         this.position = new int[]{x, y};
@@ -27,14 +26,10 @@ public class Tile {
         isTeleportIn = false;
         isTeleportOut = false;
         isGoal = false;
-        hasTrace = false;
         isTower = false;
+        trace = null;
     }
 
-    public void placeTrace(Trace trace ){
-        hasTrace = true;
-        AgentTrace = trace;
-    }
     public void placeWall(){
         hasWall = true;
     }
@@ -59,36 +54,24 @@ public class Tile {
                 && this.position[1] == position[1] );
     }
 
-    public void resetTrace(){
-        hasTrace = false;
-        AgentTrace = null;
+    public void addTrace(Trace trace){
+        this.trace = trace;
     }
 
-    public Trace getTrace(){return AgentTrace;};
+    public void removeTrace(){
+        trace = null;
+    }
 
     public void setGoal(){
         this.isGoal = true;
     }
 
-    public void setTrace() {this.hasTrace = true;}
-
-    public void setYell(){
-        this.isYell=true;
-    }
-
-    public void removeYell() { this.isYell = false;}
     public void placeTower(){this.isTower = true;}
     public boolean isGoal(){
         return isGoal;
     }
     public boolean hasTower(){return isTower;}
-    public boolean hasYell(){
-        return isYell;
-    }
 
-    public boolean hasTrace(){
-        return hasTrace;
-    }
     public boolean hasWall(){
         return hasWall;
     }
@@ -105,10 +88,6 @@ public class Tile {
 
     public  boolean hasTeleportOut(){
         return isTeleportOut;
-    }
-
-    public void addTrace(Trace trace){
-        this.AgentTrace = trace;
     }
 
     public double getDegreeOut(){return degreeOut;}

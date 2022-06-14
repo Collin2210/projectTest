@@ -17,15 +17,12 @@ public class Agent {
     RayCaster rayEngine;
     public ArrayList<int[]> visionT; //make a getter
 
-    private ArrayList<int[]> savedPath;
+    private final ArrayList<int[]> savedPath;
     private byte actionPerformed;
     private int[] previousState;
     private int[] spawnPosition;
 
-    private ArrayList<int[]> visionArea = new ArrayList<>();
-    private int agentId;
-    private final int footsteps=5;
-    private boolean[][] yellArray=new boolean[GameController.variables.getHeight()][GameController.variables.getWidth()];
+    private Trace trace;
 
     private boolean isOnTower;
 
@@ -42,12 +39,23 @@ public class Agent {
         savedPath.add(position);
         previousState = new int[2];
 
+        trace = new Trace();
+
         isOnTower = false;
     }
 
     public void putBackOnSpawn() {
+        // reset position
         setPosition(spawnPosition[0], spawnPosition[1]);
         previousState = new int[]{,};
+
+        // reset trace
+        trace.resetTrace();
+
+        // reset guard params
+        if(this.getClass() == Guard.class){
+            ((Guard) this).resetParam();
+        }
     }
 
     public int[] getPosition () {
@@ -77,14 +85,6 @@ public class Agent {
 
     public void setAngleDeg ( double a){
         this.angleDeg = a;
-    }
-
-    public void setVisionArea (ArrayList < int[]>visionArea){
-        this.visionArea = visionArea;
-    }
-
-    public int getID () {
-        return agentId;
     }
 
     public ArrayList<int[]> getVisionT () {
@@ -137,5 +137,21 @@ public class Agent {
 
     public void setVisionRange(int visionRange) {
         this.visionRange = visionRange;
+    }
+
+    public Trace getTrace() {
+        return trace;
+    }
+
+    public void setTrace(Trace trace) {
+        this.trace = trace;
+    }
+
+    public void updateStressLevel(byte numbOfOpponentsSeen){
+        if(numbOfOpponentsSeen == 0)
+            trace.setStressLevel(Trace.NO_STRESS);
+        else if(numbOfOpponentsSeen == 1)
+            trace.setStressLevel(Trace.MID_STRESS);
+        else trace.setStressLevel(Trace.HIGH_STRESS);
     }
 }

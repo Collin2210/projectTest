@@ -41,7 +41,7 @@ public class GameController {
     }
 
     public void makeAgentsLearn() {
-//        LearnerAgent a = (LearnerAgent) agents.get(0);
+        LearnerAgent a = (LearnerAgent) agents.get(0);
 //        a.learn();
 
         // testing guards only algo below
@@ -134,6 +134,16 @@ public class GameController {
             agents.add(g);
             pathOfAllAgents.add(new ArrayList<>());
         }
+    }
+
+    public ArrayList<int[]> getTraceTiles(){
+        ArrayList<int[]> traceTiles = new ArrayList<>();
+
+        for(Agent a : agents){
+            traceTiles.addAll(a.getTrace().getTraceTiles());
+        }
+
+        return traceTiles;
     }
 
     public static void print() {
