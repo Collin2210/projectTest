@@ -19,13 +19,10 @@ public class Guard extends ExplorerAgent {
 
     private boolean
             chasingIntruder,
-            seesTrace,
-            hearsYell;
+            seesTrace;
 
     private byte timer; // time guard spent chasing without seeing the intruder
     private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
-
-    private AudioObject audioObject = null;
 
     public Guard(int[] position) {
         super(position);
@@ -49,7 +46,7 @@ public class Guard extends ExplorerAgent {
         else if (seesTrace)
             followTrace();
 
-        else if (this.audioObject != null)
+        else if (hearsYell())
             followAudio();
 
         else
@@ -181,19 +178,6 @@ public class Guard extends ExplorerAgent {
         return intruderToCatch;
     }
 
-    public void setHeardAudio(AudioObject object){
-        if (object instanceof Yell){
-            this.audioObject = object;
-        }else if (object instanceof Footstep){
-            if (this.audioObject instanceof Yell){
-
-            }else{
-                this.audioObject = object;
-            }
-        }
-    }
-
-
     public void doYell(){
         Yell yellObject = new Yell(this);
         yellObject.spreadAudio();
@@ -203,14 +187,14 @@ public class Guard extends ExplorerAgent {
 
     public void followAudio()
     {
-        int[] audioPosition = this.audioObject.getPosition();
+        int[] audioPosition = getAudioObject().getPosition();
 
         // get path to intruder with a star
         List<Position> pathToIntruder = Move.getPath(getPosition(), audioPosition);
 
         // check if guard got to yell
         if(pathToIntruder.size() == 1){
-            this.audioObject = null;
+            removeYell();
             resetToScatterMode();
         }
 
@@ -229,16 +213,19 @@ public class Guard extends ExplorerAgent {
     }
 
     public boolean isScatterMode(){
-        return !seesTrace && !hearsYell && !chasingIntruder;
+        return !seesTrace && !hearsYell() && !chasingIntruder;
+    }
+
+    public boolean isChasingIntruder(){
+        return this.chasingIntruder;
     }
 
     public void resetToScatterMode(){
         seesTrace = false;
-        hearsYell = false;
         chasingIntruder = false;
         intruderToCatch = null;
         tileWithTraceToChase = null;
-        audioObject = null;
+        removeYell();
         timer = 0;
     }
 }

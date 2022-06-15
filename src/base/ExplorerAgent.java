@@ -73,19 +73,6 @@ public class ExplorerAgent extends Agent{
         return closestNeighbourToRegion;
     }
 
-    private int[][] getAllNeighbours(){
-        int
-                x = getX(),
-                y = getY();
-        int[]
-                right = {x+1, y},
-                left = {x-1, y},
-                up = {x, y+1},
-                down = {x, y-1};
-
-        return new int[][]{right, left, up, down};
-    }
-
     private boolean isInHisArea(){
         int
                 x = getX(), y = getY(),

@@ -2,7 +2,7 @@ package base;
 
 import java.util.ArrayList;
 
-import Controller.Tile;
+import Controller.Map;
 import Controller.Variables;
 import rayTracer.RayCaster;
 
@@ -23,8 +23,9 @@ public class Agent {
 
     private Trace trace;
 
-    private boolean isOnTower;
+    private AudioObject audioObject = null;
 
+    private boolean isOnTower;
 
     public Agent(int[] position) {
         this.position = position;
@@ -55,6 +56,39 @@ public class Agent {
         if(this.getClass() == Guard.class){
             ((Guard) this).resetParam();
         }
+
+        // reset audio object
+        audioObject = null;
+    }
+
+    public int[][] getAllNeighbours(){
+        ArrayList<int[]> validNeighbours = new ArrayList<>();
+
+        int
+                x = getX(),
+                y = getY();
+
+        int[]
+                right = {x+1, y},
+                left = {x-1, y},
+                up = {x, y+1},
+                down = {x, y-1};
+
+        if(Map.inMap(right))
+            validNeighbours.add(right);
+        if(Map.inMap(left))
+            validNeighbours.add(left);
+        if(Map.inMap(up))
+            validNeighbours.add(up);
+        if(Map.inMap(down))
+            validNeighbours.add(down);
+
+        int[][] neighbours = new int[validNeighbours.size()][2];
+
+        for (int i = 0; i < validNeighbours.size(); i++) {
+            neighbours[i] = validNeighbours.get(i);
+        }
+        return neighbours;
     }
 
     public int[] getPosition () {
@@ -152,5 +186,29 @@ public class Agent {
         else if(numbOfOpponentsSeen == 1)
             trace.setStressLevel(Trace.MID_STRESS);
         else trace.setStressLevel(Trace.HIGH_STRESS);
+    }
+
+    public boolean hearsYell(){
+        return this.audioObject != null;
+    }
+
+    public void setHeardAudio(AudioObject object){
+        if (object instanceof Yell){
+            this.audioObject = object;
+        }else if (object instanceof Footstep){
+            if (this.audioObject instanceof Yell){
+
+            }else{
+                this.audioObject = object;
+            }
+        }
+    }
+
+    public AudioObject getAudioObject() {
+        return audioObject;
+    }
+
+    public void removeYell(){
+        this.audioObject = null;
     }
 }

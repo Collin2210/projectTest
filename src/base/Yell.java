@@ -1,11 +1,8 @@
 package base;
 
-import Controller.Map;
-import Controller.Tile;
-import Controller.Variables;
-import QLearning.RewardTable;
-
 import java.util.ArrayList;
+
+import static base.GameController.YELL_RADIUS;
 
 public class Yell extends AudioObject {
     /**
@@ -17,11 +14,10 @@ public class Yell extends AudioObject {
      *
      */
 
-
     public ArrayList<int[]> yellPositions=new ArrayList<>();
 
     public Yell(Agent agent) {
-        super(agent, 20);
+        super(agent, YELL_RADIUS);
     }
 
 }

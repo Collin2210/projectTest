@@ -4,7 +4,6 @@ import QLearning.RewardTable;
 
 public abstract class AudioObject {
 
-
     Agent agent;
     int radius;
     int[] position;
@@ -28,7 +27,6 @@ public abstract class AudioObject {
         return position;
     }
 
-
     public void spreadAudio(){
         for(Agent agent: GameController.agents){
 
@@ -41,9 +39,6 @@ public abstract class AudioObject {
                 }
             }
         }
-
-
-
     }
 
 }

@@ -25,6 +25,8 @@ public class GameController {
 
     public static final double TOWER_VISION_BONUS = 10;
 
+    public static final int YELL_RADIUS = 20;
+
     public GameController() {
     }
 

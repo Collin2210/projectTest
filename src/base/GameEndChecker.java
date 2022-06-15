@@ -1,7 +1,6 @@
 package base;
 
 import Controller.Tile;
-import QLearning.RewardTable;
 
 public class GameEndChecker {
 
@@ -13,7 +12,7 @@ public class GameEndChecker {
     public static boolean isInTerminalState() {
         if (GameEndChecker.intruderInGoalFor3Sec())
             return true;
-        if(guardCatchesIntruder())
+        if(allIntrudersAreCaught())
             return true;
         return false;
     }
@@ -45,29 +44,14 @@ public class GameEndChecker {
         return false;
     }
 
-    private static boolean guardCatchesIntruder(){
+    /**
+     * @return true, if there are no more intruders in Gamecontroller.agents.
+     * Indeed, when a guard catches an intruder, said intruder is removed from arraylist.
+     */
+    private static boolean allIntrudersAreCaught(){
         for(Agent a : GameController.agents){
-            if(a.getClass() == Guard.class){
-                // find a guard that has been chasing an agent
-                if(!((Guard) a).isScatterMode()){
-                    Intruder intruder = ((Guard) a).getIntruderToCatch();
-                    int
-                            intruderX = intruder.getX(),
-                            intruderY = intruder.getY(),
-                            guardX = a.getX(),
-                            guardY = a.getY();
-
-                    // get distance between guard and intruder it is chasing
-                    double distance = RewardTable.distanceBetweenPoints(guardX,guardY,intruderX,intruderY);
-                    // if distance is small enough, end game
-                    if(distance <= 1) {
-                        System.out.println("guards win");
-                        GameController.numOfGuardWins++;
-                        guardsWin = true;
-                        return true;
-                    }
-                }
-            }
+            if(a.getClass() == Intruder.class)
+                return false;
         }
         return false;
     }

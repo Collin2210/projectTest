@@ -5,10 +5,9 @@ import Controller.Teleport;
 import Controller.Tile;
 import base.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import static base.GameController.*;
-import static base.GameController.map;
 
 public class QLearning {
 
@@ -35,11 +34,9 @@ public class QLearning {
 
     /**
      *
-     * TODO: make rewardtable static, rn it's dynamically changed.
-     * check the static reward table and sum it with occurances and
+     * TODO: make reward table static, rn it's dynamically changed.
+     * check the static reward table and sum it with occurrences and
      * thus reward values from it's sensors.
-     *
-     * Test: raycasting singleAgentMethod
      *
      */
 
@@ -52,17 +49,20 @@ public class QLearning {
     }
 
     public void learn(){
+        // initialize all QTables
         for(Agent a : agents){
             if(a.getClass().getSuperclass() == LearnerAgent.class){
                 ((LearnerAgent)a).getBrain().getQTable().initialize();
             }
         }
+
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
+            // while round has not ended yet
             while(!GameEndChecker.isInTerminalState()){
                 for(Agent a : agents) {
-                    if (a.getClass().getSuperclass() == LearnerAgent.class) {
-                        this.agent = (LearnerAgent) a;
+                    if (a.getClass() == Intruder.class) {
+                        this.agent = (Intruder) a;
                         this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
                         byte action = getNextAction();
                         tryPerformingAction(action);
@@ -106,7 +106,8 @@ public class QLearning {
         System.out.println("Move count: " + moveCount);
     }
 
-    /** performs random action x% of the time, and performs action with highest Q all other times
+    /**
+     * performs random action x% of the time, and performs action with highest Q all other times
      * */
     private byte getNextAction(){
         double rand = Math.random();
@@ -128,7 +129,8 @@ public class QLearning {
         return (byte) (Math.random() * (max - min) + min);
     }
 
-    /** updates q-value at previous state after action is performed
+    /**
+     * updates q-value at previous state after action is performed
      * */
     private void updateQValue(){
         int[] previousState = this.agent.getPreviousState();
@@ -166,12 +168,61 @@ public class QLearning {
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
     }
 
-
     private void performAction(byte action) throws Exception {
         int[] currentState = this.agent.getPosition();
-        agent.setActionPerformed(action);
 
-        int[] newPosition = getValidPositionFromAction(action);
+        int[] newPosition = {,};
+
+        ArrayList[] visionScanResults = visionScan();
+        ArrayList
+                guardsSeen = visionScanResults[0],
+                tracesSeen = visionScanResults[1];
+        boolean
+                seesGuard = guardsSeen.size() > 0,
+                seesTrace = tracesSeen.size() > 0;
+
+        // if they see guard
+        if(seesGuard){
+            newPosition = runAway(guardsSeen);
+            action = getActionFromNewPosition(newPosition);
+        }
+
+        // if they see trace
+        else if(seesTrace){
+            newPosition = runAway(tracesSeen);
+            action= getActionFromNewPosition(newPosition);
+        }
+
+        // if they hear yell
+        else if (agent.hearsYell()){
+
+            // if he still hears yell, go to furthest neighbour from yell source
+            int[] yellSource = agent.getAudioObject().getPosition();
+            double distanceFromYellSource = RewardTable.distanceBetweenPoints(agent.getX(), agent.getY(), yellSource[0], yellSource[1]);
+            if(distanceFromYellSource < YELL_RADIUS){
+                int[][] neighbours =  agent.getAllNeighbours();
+
+                double highestDistanceFromYell = Double.MIN_VALUE;
+                int[] furthestNeighbour = {,};
+
+                for(int[] neighbour : neighbours){
+                    double distance = RewardTable.distanceBetweenPoints(neighbour[0], neighbour[1], yellSource[0], yellSource[1]);
+                    if(distance > highestDistanceFromYell){
+                        highestDistanceFromYell = distance;
+                        furthestNeighbour = neighbour;
+                    }
+                }
+
+                newPosition = furthestNeighbour;
+                action = getActionFromNewPosition(newPosition);
+            }
+        }
+
+
+        else
+            newPosition = getValidPositionFromAction(action);
+
+        agent.setActionPerformed(action);
 
         // check teleport
         for(Teleport tp : variables.getPortals()){
@@ -200,7 +251,6 @@ public class QLearning {
         agent.visionT.clear();
         agent.getRayEngine().calculate(agent);
         agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
-
     }
 
 
@@ -220,10 +270,12 @@ public class QLearning {
 
         if(!newPositionIsValid(newPositionData[0], newPositionData[1])){
             if(action == NUMBER_OF_POSSIBLE_ACTIONS-1){
+                agent.setActionPerformed(action);
                 return getValidPositionFromAction((byte) 0);
             }
             else {
                 action = getRandomAction();
+                agent.setActionPerformed(action);
                 return getValidPositionFromAction(action);
             }
         }
@@ -259,6 +311,89 @@ public class QLearning {
             throw new Exception("action number not recognized");
         }
         return new int[]{newX, newY, angle};
+    }
+
+    public byte getActionFromNewPosition(int[] newPosition){
+        int x = agent.getX(), y = agent.getY();
+        int newX = newPosition[0], newY = newPosition[1];
+
+        if(x != newX){
+            if(newX == x+1)
+                return MOVE_DOWN;
+            else return MOVE_UP;
+        }
+        else {
+            if(newY == y+1)
+                return MOVE_RIGHT;
+            else return MOVE_LEFT;
+        }
+    }
+
+    /** this method scans the agents vision for guards and traces
+     * @return array of lists { guardsSeen, tracesSeen }
+     */
+    public ArrayList<int[]>[] visionScan() {
+        ArrayList<int[]>
+                guardsSeen = new ArrayList<>(),
+                tracesSeen = new ArrayList<>();
+
+        // update vision
+        agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
+
+        // for every tile in vision range
+        for (int[] tilePos : agent.visionT) {
+
+            // check for guards
+            for (Agent guard : agents) {
+                if (guard.getClass() == Guard.class) {
+                    if (guard.getX() == tilePos[0] && guard.getY() == tilePos[1]) {
+                        guardsSeen.add(new int[]{guard.getX(), guard.getY()});
+                    }
+                }
+            }
+
+            // check for trace: react only to guard's trace or stressed intruders
+            Tile tile = map.getTile(tilePos);
+            if (tile.hasTrace()) {
+                Trace trace = tile.getTrace();
+                boolean
+                        traceOwnerIsGuard = trace.getOwner().getClass() == Guard.class,
+                        traceOwnerIsStressed = trace.getStressLevel() > 0;
+
+                if (traceOwnerIsGuard || traceOwnerIsStressed) {
+                    tracesSeen.add(tile.getPosition());
+                }
+            }
+        }
+
+        ArrayList<int[]>[] results = new ArrayList[]{guardsSeen, tracesSeen};
+
+        return results;
+    }
+
+    /**
+     * @param tilesToRunAwayFrom or tracesSeen: guards or traces intruder wants to run away from
+     * @return neighbour that is furthest from all guards or traces
+     */
+    public int[] runAway(ArrayList<int[]> tilesToRunAwayFrom){
+        // get the furthest neighbour from all guards
+        int[][] neighbours = agent.getAllNeighbours();
+
+        double highestDistance = Double.MIN_VALUE;
+        int[] furthestNeighbour = {,};
+
+        for(int[] neighbour : neighbours){
+            double sumOfDistances = 0;
+            for(int[] guard : tilesToRunAwayFrom){
+                sumOfDistances += RewardTable.distanceBetweenPoints(neighbour[0], neighbour[1], guard[0], guard[1]);
+            }
+            if(sumOfDistances > highestDistance){
+                highestDistance = sumOfDistances;
+                furthestNeighbour = neighbour;
+            }
+        }
+
+        return furthestNeighbour;
     }
 
     public LearnerAgent getAgent() {
