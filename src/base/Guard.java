@@ -1,72 +1,141 @@
 package base;
 
+import Controller.Tile;
 import Path.Move;
 import Path.Position;
+import QLearning.RewardTable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
+import static base.GameController.agents;
+import static base.GameController.map;
+
 public class Guard extends ExplorerAgent {
 
+    private Intruder intruderToCatch;
+    private Tile tileWithTraceToChase;
 
-    private Intruder intruderToCatch = null;
-    private boolean isScatterMode;
+    private boolean
+            chasingIntruder,
+            seesTrace,
+            hearsYell;
+
     private byte timer; // time guard spent chasing without seeing the intruder
     private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
 
     private AudioObject audioObject = null;
 
-
     public Guard(int[] position) {
         super(position);
-        isScatterMode = true;
+        resetToScatterMode();
         timer = 0;
     }
 
     public void makeMove(){
-        //remove guard's yell
-        //place yell if needed
+
         checkVision();
 
         // check if guard has been chasing intruder for long enough without seeing him to return to scatter
         if(timer == TIME_LIMIT){
-            isScatterMode = true;
-            intruderToCatch = null;
-            timer = 0;
+            resetToScatterMode();
         }
 
-        if(!isScatterMode) {
+        // guard gives priority to seen Intruders, then Trace and finally yells
+        if(chasingIntruder)
             followIntruder();
-        }else if (this.audioObject != null){
+
+        else if (seesTrace)
+            followTrace();
+
+        else if (this.audioObject != null)
             followAudio();
-        }
-        else {
+
+        else
             makeExplorationMove();
-        }
     }
 
+    /**
+     * this method checks the agents' vision range and asserts if it sees an intruder or a trace
+     */
     private void checkVision(){
-        boolean intruderIsSeen = false;
         byte numberOfIntrudersSeen = 0;
+        ArrayList<Intruder> intrudersSeen = new ArrayList<>();
+        ArrayList<Tile> tilesWithTracesSeen = new ArrayList<>();
 
+        // update vision
         this.visionT = this.getRayEngine().getVisibleTiles(this);
+
+        // for every tile in vision range
         for(int[] tilePos : visionT){
-            for(Agent a : GameController.agents){
+
+            // check for intruders
+            for(Agent a : agents){
                 if(a.getClass() == Intruder.class){
-                    int ax = a.getX(), ay = a.getY();
-                    if(ax == tilePos[0] && ay == tilePos[1]) {
-                        intruderToCatch = (Intruder) a;
-                        isScatterMode = false;
-                        intruderIsSeen = true;
-                        this.doYell();
+                    if(a.getX() == tilePos[0] && a.getY() == tilePos[1]) {
+                        intrudersSeen.add((Intruder) a);
+                        chasingIntruder = true;
                         numberOfIntrudersSeen++;
                     }
                 }
             }
+
+            // check for trace: react only to intruder's trace or stressed guards
+            Tile tile = map.getTile(tilePos);
+            if(tile.hasTrace()){
+                Trace trace = tile.getTrace();
+                boolean
+                        traceOwnerIsIntruder = trace.getOwner().getClass() == Intruder.class,
+                        traceOwnerIsStressed = trace.getStressLevel() > 0;
+
+                if(traceOwnerIsIntruder || traceOwnerIsStressed) {
+                    seesTrace = true;
+                    tilesWithTracesSeen.add(tile);
+                }
+            }
         }
 
-        if(!intruderIsSeen && !isScatterMode)
+        // react to intruder seen
+        if(chasingIntruder){
+            // get the closest intruder
+            double smallestDistance = Double.MAX_VALUE;
+            Intruder closestIntruder = null;
+            for(Intruder intruder : intrudersSeen){
+                double distance = RewardTable.distanceBetweenPoints(getX(), getY(), closestIntruder.getX(), intruder.getY());
+                if(distance < smallestDistance){
+                    smallestDistance = distance;
+                    closestIntruder = intruder;
+                }
+            }
+
+            // chase the closest intruder
+            intruderToCatch = closestIntruder;
+            this.doYell();
+        }
+
+        // react to trace seen
+        if(seesTrace){
+            // get the furthest tile with a trace
+            double highestDistance = Double.MIN_VALUE;
+            Tile furthestTile = null;
+            for(Tile t : tilesWithTracesSeen){
+                double distance = RewardTable.distanceBetweenPoints(getX(),getY(),t.getXCoord(),t.getXCoord());
+                if(distance > highestDistance){
+                    highestDistance = distance;
+                    furthestTile = t;
+                }
+            }
+
+            // follow the furthest tile
+            tileWithTraceToChase = furthestTile;
+        }
+
+        // update chasing timer (the timer checks if guard has been chasing an agent it does not see anymore for long enough)
+        if(!chasingIntruder && !isScatterMode())
             timer++;
 
+        // update stress level based on the number of intruders seen
         updateStressLevel(numberOfIntrudersSeen);
     }
 
@@ -75,24 +144,37 @@ public class Guard extends ExplorerAgent {
         return Arrays.equals(this.getPosition(), intruder.getPosition());
     }
 
+    /**
+     * this method will generate path to a position using A*, then make 1 step towards said position
+     * @param position : can be position of intruder, trace, or source of yell
+     */
+    private void follow(int[] position){
+        // get path to position
+        List<Position> pathToPosition = Move.getPath(getPosition(), position);
 
-    private void followIntruder() {
-        // get path to intruder with a star
-        int[] intruderPosition = intruderToCatch.getPosition();
-        List<Position> pathToIntruder = Move.getPath(getPosition(), intruderPosition);
-
-        // get next position towards intruder
-        Position nextPos = pathToIntruder.get(1);
+        // get next step towards position
+        Position nextPos = pathToPosition.get(1);
         int[] nextPosition = {nextPos.getX(), nextPos.getY()};
 
         // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
         applyNextMove(nextPosition);
+    }
 
+    private void followIntruder() {
+        // get position of intruder and head there
+        follow(intruderToCatch.getPosition());
+
+        // check if guard has caught intruder
         if (this.hasCaught(this.intruderToCatch)){
-            // remove the agent from the map as well.
+            agents.remove(intruderToCatch);
             this.intruderToCatch = null;
-            this.isScatterMode = true;
+            resetToScatterMode();
         }
+    }
+
+    private void followTrace(){
+        // get position of trace tile and head there
+        follow(tileWithTraceToChase.getPosition());
     }
 
     public Intruder getIntruderToCatch() {
@@ -129,22 +211,34 @@ public class Guard extends ExplorerAgent {
         // check if guard got to yell
         if(pathToIntruder.size() == 1){
             this.audioObject = null;
-            isScatterMode = true;
+            resetToScatterMode();
         }
 
         // get next position towards intruder
         Position nextPos = pathToIntruder.get(1);
         int[] nextPosition = {nextPos.getX(), nextPos.getY()};
 
-        // do all the stuff when next position is found: check teleport, update angle, update exploredTiles, update vision
+        // do all the stuff when next position is found:
+        //              check teleport, update angle, update exploredTiles, update vision
         applyNextMove(nextPosition);
     }
 
     public void resetParam(){
-        isScatterMode = true;
-        intruderToCatch = null;
+        resetToScatterMode();
         clearExploredTiles();
     }
 
-    public boolean isScatterMode(){return isScatterMode;}
+    public boolean isScatterMode(){
+        return !seesTrace && !hearsYell && !chasingIntruder;
+    }
+
+    public void resetToScatterMode(){
+        seesTrace = false;
+        hearsYell = false;
+        chasingIntruder = false;
+        intruderToCatch = null;
+        tileWithTraceToChase = null;
+        audioObject = null;
+        timer = 0;
+    }
 }

@@ -9,7 +9,6 @@ import rayTracer.RayCaster;
 public class Agent {
 
     public Variables v=new Variables();
-    public Tile t;
     private final int[] position;
     private double angleDeg;
     private int visionRange;
@@ -39,7 +38,7 @@ public class Agent {
         savedPath.add(position);
         previousState = new int[2];
 
-        trace = new Trace();
+        trace = new Trace(this);
 
         isOnTower = false;
     }

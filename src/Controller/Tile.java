@@ -62,14 +62,24 @@ public class Tile {
         trace = null;
     }
 
+    public boolean hasTrace(){
+        return (trace != null);
+    }
+
+    public Trace getTrace() {
+        return trace;
+    }
+
     public void setGoal(){
         this.isGoal = true;
     }
 
     public void placeTower(){this.isTower = true;}
+
     public boolean isGoal(){
         return isGoal;
     }
+
     public boolean hasTower(){return isTower;}
 
     public boolean hasWall(){
