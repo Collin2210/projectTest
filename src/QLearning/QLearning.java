@@ -16,7 +16,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.5;
     public static final int
-            LEARNING_CYCLES = 1,
+            LEARNING_CYCLES = 100,
             MOVE_LIMIT = 100;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
@@ -59,8 +59,9 @@ public class QLearning {
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
             // while round has not ended yet
-            while(!GameEndChecker.isInTerminalState()){
-                for(Agent a : agents) {
+            while(!GameEndChecker.isInTerminalState() ){
+                for (int i = 0; i < agents.size(); i++){
+                    Agent a = agents.get(i);
                     if (a.getClass() == Intruder.class) {
                         this.agent = (Intruder) a;
                         this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
@@ -73,7 +74,6 @@ public class QLearning {
                     }
                 }
                 moveCount++;
-                //GameController.print();
             }
             System.out.print("Game Number: " +cycleCount);
             System.out.println(" Move count: " + moveCount);
@@ -83,27 +83,33 @@ public class QLearning {
 
     public void moveSmartly(){
         int moveCount = 0;
-        while(!GameEndChecker.isInTerminalState()){
-            for(Agent a : agents) {
-                if(a.getClass().getSuperclass() == LearnerAgent.class) {
-                    this.agent = (LearnerAgent) a;
+        // while round has not ended yet
+        while(!GameEndChecker.isInTerminalState() ){
+            for (int i = 0; i < agents.size(); i++){
+                Agent a = agents.get(i);
+                if (a.getClass() == Intruder.class) {
+                    this.agent = (Intruder) a;
                     this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
-                    byte action = getActionWithHighestQ();
+                    byte action = getNextAction();
                     tryPerformingAction(action);
                     updateQValue();
+
+                    // save for gui
                     int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
                     pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
                 else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
+
+                    // save for gui
                     int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
                     pathOfAllAgents.get(index).add(new int[]{newX,newY});
                 }
+                GameController.print();
             }
             moveCount++;
-            GameController.print();
         }
-        System.out.println("Move count: " + moveCount);
+        System.out.println(" Move count: " + moveCount);
     }
 
     /**
@@ -159,6 +165,7 @@ public class QLearning {
             performAction(action);
 
         } catch (Exception e) {
+            System.out.println("yeye");
             throw new RuntimeException(e);
         }
     }
@@ -181,8 +188,13 @@ public class QLearning {
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
 
+
+        seesGuard = false;
+        seesTrace = false;
+
         // if they see guard
         if(seesGuard){
+            System.out.println("intruder sees guard");
             newPosition = runAway(guardsSeen);
             action = getActionFromNewPosition(newPosition);
         }
@@ -244,6 +256,7 @@ public class QLearning {
         // update learning state
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
+        agent.getTrace().addToTrace(new int[]{agent.getX(), agent.getY()});
         agent.setPosition(newState[0], newState[1]);
         agent.getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
 
@@ -258,6 +271,14 @@ public class QLearning {
         for(Agent a : agents) {
             a.putBackOnSpawn();
         }
+
+        for(Agent i : intrudersCaught) {
+            i.putBackOnSpawn();
+            agents.add(i);
+        }
+
+        intrudersCaught.clear();
+
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
@@ -308,6 +329,7 @@ public class QLearning {
             angle = 270;
         }
         else {
+            System.out.println("action number " + action);
             throw new Exception("action number not recognized");
         }
         return new int[]{newX, newY, angle};
@@ -358,9 +380,10 @@ public class QLearning {
                 Trace trace = tile.getTrace();
                 boolean
                         traceOwnerIsGuard = trace.getOwner().getClass() == Guard.class,
-                        traceOwnerIsStressed = trace.getStressLevel() > 0;
+                        traceOwnerIsStressed = trace.getStressLevel() > 0,
+                        isNotOwnTrace = trace.getOwner() != this.agent;
 
-                if (traceOwnerIsGuard || traceOwnerIsStressed) {
+                if ((traceOwnerIsGuard || traceOwnerIsStressed) && isNotOwnTrace) {
                     tracesSeen.add(tile.getPosition());
                 }
             }

@@ -7,6 +7,7 @@ import QLearning.RewardTable;
 import static QLearning.QLearning.*;
 
 public class Intruder extends LearnerAgent{
+
     public Intruder(int[] position) {
         super(position);
     }
@@ -86,4 +87,8 @@ public class Intruder extends LearnerAgent{
         return new int[]{newX, newY, angle};
     }
 
+    public void getsCaught(){
+        GameController.intrudersCaught.add(this);
+        GameController.agents.remove(this);
+    }
 }

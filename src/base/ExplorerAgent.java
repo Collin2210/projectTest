@@ -109,7 +109,6 @@ public class ExplorerAgent extends Agent{
             for(int[] p : tp.getPointsIn()){
                 if( p[0] == nextPosition[0]  &&  p[1] == nextPosition[1]){
                     wentThroughTeleport = true;
-                    getTrace().addToTrace(new int[]{getX(), getY()});
                     nextPosition = tp.getPointOut();
                     setAngleDeg(tp.getDegreeOut());
                     applyMove(nextPosition);
@@ -119,7 +118,6 @@ public class ExplorerAgent extends Agent{
 
         // if no portal was used
         if(!wentThroughTeleport) {
-            getTrace().addToTrace(new int[]{getX(), getY()});
             updateAngle(nextPosition);
             applyMove(nextPosition);
         }
@@ -155,6 +153,7 @@ public class ExplorerAgent extends Agent{
     }
 
     public void applyMove(int[] nextPosition){
+        getTrace().addToTrace(new int[]{getX(), getY()});
         this.setPosition(nextPosition[0], nextPosition[1]);
         exploredTiles.add(new int[]{nextPosition[0], nextPosition[1]});
     }

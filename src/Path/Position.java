@@ -94,15 +94,14 @@ public class Position implements Comparable<Position> {
     public Collection<Position> getNeighbours(int[][] map){
 
         List<Position> neighbours = new ArrayList<>();
-        neighbours.add(new Position(this.x+1, this.y));
-        neighbours.add(new Position(this.x+1, this.y-1));
-        neighbours.add(new Position(this.x+1, this.y+1));
-        neighbours.add(new Position(this.x, this.y-1));
-
-        neighbours.add(new Position(this.x, this.y+1));
-        neighbours.add(new Position(this.x-1, this.y+1));
-        neighbours.add(new Position(this.x-1, this.y-1));
-        neighbours.add(new Position(this.x-1, this.y));
+        if(Map.inMap(this.x+1, this.y))
+            neighbours.add(new Position(this.x+1, this.y));
+        if(Map.inMap(this.x, this.y-1))
+            neighbours.add(new Position(this.x, this.y-1));
+        if(Map.inMap(this.x, this.y+1))
+            neighbours.add(new Position(this.x, this.y+1));
+        if(Map.inMap(this.x-1, this.y))
+            neighbours.add(new Position(this.x-1, this.y));
 
         List<Position> delete = new ArrayList<>();
         for(Position pos : neighbours){
@@ -120,8 +119,6 @@ public class Position implements Comparable<Position> {
                     }
                 }
             }
-
-
 
             // check if position has a wall or is outside the map.
             // remove from neighboours if so

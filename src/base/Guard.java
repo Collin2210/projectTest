@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
-import static base.GameController.agents;
-import static base.GameController.map;
+import static base.GameController.*;
 
 public class Guard extends ExplorerAgent {
 
@@ -19,7 +18,8 @@ public class Guard extends ExplorerAgent {
 
     private boolean
             chasingIntruder,
-            seesTrace;
+            seesTrace,
+            yelled;
 
     private byte timer; // time guard spent chasing without seeing the intruder
     private static final byte TIME_LIMIT = 2; // maximum time guard will spend chasing without seeing the intruder before scattering
@@ -74,6 +74,11 @@ public class Guard extends ExplorerAgent {
                         intrudersSeen.add((Intruder) a);
                         chasingIntruder = true;
                         numberOfIntrudersSeen++;
+                        // if he hasn't yelled for this intruder yet, yell
+                        if(!yelled){
+                            doYell();
+                            yelled = true;
+                        }
                     }
                 }
             }
@@ -84,9 +89,10 @@ public class Guard extends ExplorerAgent {
                 Trace trace = tile.getTrace();
                 boolean
                         traceOwnerIsIntruder = trace.getOwner().getClass() == Intruder.class,
-                        traceOwnerIsStressed = trace.getStressLevel() > 0;
+                        traceOwnerIsStressed = trace.getStressLevel() > 0,
+                        isNotOwnTrace = trace.getOwner() != this;
 
-                if(traceOwnerIsIntruder || traceOwnerIsStressed) {
+                if((traceOwnerIsIntruder || traceOwnerIsStressed) && isNotOwnTrace){
                     seesTrace = true;
                     tilesWithTracesSeen.add(tile);
                 }
@@ -95,20 +101,22 @@ public class Guard extends ExplorerAgent {
 
         // react to intruder seen
         if(chasingIntruder){
-            // get the closest intruder
-            double smallestDistance = Double.MAX_VALUE;
-            Intruder closestIntruder = null;
-            for(Intruder intruder : intrudersSeen){
-                double distance = RewardTable.distanceBetweenPoints(getX(), getY(), closestIntruder.getX(), intruder.getY());
-                if(distance < smallestDistance){
-                    smallestDistance = distance;
-                    closestIntruder = intruder;
+            // if intruder he still sees intruder
+            if(intrudersSeen.size() != 0){
+                // get the closest intruder
+                double smallestDistance = Double.MAX_VALUE;
+                Intruder closestIntruder = null;
+                for(Intruder intruder : intrudersSeen){
+                    double distance = RewardTable.distanceBetweenPoints(getX(), getY(), intruder.getX(), intruder.getY());
+                    if(distance < smallestDistance){
+                        smallestDistance = distance;
+                        closestIntruder = intruder;
+                    }
                 }
+                // chase the closest intruder
+                intruderToCatch = closestIntruder;
+                this.doYell();
             }
-
-            // chase the closest intruder
-            intruderToCatch = closestIntruder;
-            this.doYell();
         }
 
         // react to trace seen
@@ -138,7 +146,14 @@ public class Guard extends ExplorerAgent {
 
     private boolean hasCaught(Intruder intruder){
         // We have to make sure to remove the intruder from the map after it is caught.
-        return Arrays.equals(this.getPosition(), intruder.getPosition());
+        boolean hasCaughtIntruder = Arrays.equals(this.getPosition(), intruder.getPosition());
+
+        if(hasCaughtIntruder){
+            agents.remove(intruder);
+            intrudersCaught.add(intruder);
+        }
+
+        return hasCaughtIntruder;
     }
 
     /**
@@ -158,15 +173,16 @@ public class Guard extends ExplorerAgent {
     }
 
     private void followIntruder() {
-        // get position of intruder and head there
-        follow(intruderToCatch.getPosition());
 
         // check if guard has caught intruder
         if (this.hasCaught(this.intruderToCatch)){
             agents.remove(intruderToCatch);
             this.intruderToCatch = null;
             resetToScatterMode();
+            return;
         }
+        // get position of intruder and head there
+        follow(intruderToCatch.getPosition());
     }
 
     private void followTrace(){
@@ -226,6 +242,7 @@ public class Guard extends ExplorerAgent {
         intruderToCatch = null;
         tileWithTraceToChase = null;
         removeYell();
+        yelled = false;
         timer = 0;
     }
 }

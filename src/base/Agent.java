@@ -36,7 +36,7 @@ public class Agent {
 
         spawnPosition = new int[] {position[0], position[1]};
         savedPath = new ArrayList<>();
-        savedPath.add(position);
+        savedPath.add(new int[] {position[0], position[1]});
         previousState = new int[2];
 
         trace = new Trace(this);
@@ -47,6 +47,7 @@ public class Agent {
     public void putBackOnSpawn() {
         // reset position
         setPosition(spawnPosition[0], spawnPosition[1]);
+        savedPath.add(new int[] {spawnPosition[0], spawnPosition[1]});
         previousState = new int[]{,};
 
         // reset trace
@@ -74,13 +75,13 @@ public class Agent {
                 up = {x, y+1},
                 down = {x, y-1};
 
-        if(Map.inMap(right))
+        if(Map.inMap(right) && !GameController.map.hasWall(right))
             validNeighbours.add(right);
-        if(Map.inMap(left))
+        if(Map.inMap(left) && !GameController.map.hasWall(left))
             validNeighbours.add(left);
-        if(Map.inMap(up))
+        if(Map.inMap(up) && !GameController.map.hasWall(up))
             validNeighbours.add(up);
-        if(Map.inMap(down))
+        if(Map.inMap(down) && !GameController.map.hasWall(down))
             validNeighbours.add(down);
 
         int[][] neighbours = new int[validNeighbours.size()][2];

@@ -10,6 +10,11 @@ public class Tester {
         g.makeAgentsLearn();
 //        System.out.println("guards won " + GameController.numOfGuardWins);
 //        System.out.println("intruders won " + GameController.numOfIntruderWins);
-//        g.makeAgentsMoveSmartly();
+        g.makeAgentsMoveSmartly();
     }
 }
+
+
+/**
+ *  NOTE :  a* takes diagonal movement into account
+ * */

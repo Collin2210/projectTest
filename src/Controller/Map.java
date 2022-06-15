@@ -3,6 +3,8 @@ package Controller;
 import base.GameController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Map {
 
     private final Variables variables;

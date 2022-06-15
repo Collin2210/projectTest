@@ -4,6 +4,7 @@ import Controller.*;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class GameController {
@@ -11,6 +12,8 @@ public class GameController {
     public static Map map;
     public static Variables variables;
     public static final ArrayList<Agent> agents = new ArrayList<>();
+    public static final ArrayList<Agent> intrudersCaught = new ArrayList<>();
+
     public static final ArrayList<Tile> goalTiles = new ArrayList<>();
     public static ArrayList<Yell> yells = new ArrayList<>();
 
@@ -25,7 +28,7 @@ public class GameController {
 
     public static final double TOWER_VISION_BONUS = 10;
 
-    public static final int YELL_RADIUS = 20;
+    public static final int YELL_RADIUS = 0;
 
     public GameController() {
     }
@@ -44,17 +47,17 @@ public class GameController {
 
     public void makeAgentsLearn() {
         LearnerAgent a = (LearnerAgent) agents.get(0);
-//        a.learn();
+        a.learn();
 
-        // testing guards only algo below
-        for (int i = 0; i < 5; i++) {
-            for (Agent g : agents) {
-                if (g.getClass() == Guard.class) {
-                    ((Guard) g).makeMove();
-                }
-            }
-            GameController.print();
-        }
+//        // testing guards only algo below
+//        for (int i = 0; i < 20; i++) {
+//            for (int j = 0; j < agents.size(); j++) {
+//                if (agents.get(j).getClass() == Guard.class) {
+//                    ((Guard) agents.get(j)).makeMove();
+//                }
+//            }
+//            GameController.print();
+//        }
     }
 
     public void makeAgentsMoveSmartly() {
@@ -119,8 +122,6 @@ public class GameController {
             agents.add(new Intruder(spawn.get(i)));
             pathOfAllAgents.add(new ArrayList<>());
         }
-
-        agents.add(new Intruder(new int[]{4, 6}));
     }
 
     public void addGuards() {
@@ -172,8 +173,8 @@ public class GameController {
                             hasIntruder = true;
                     }
                 }
-                if (tile.hasShade()) {
-                    System.out.print(ANSI_RED + " S " + ANSI_RESET);
+                if (tile.hasTrace()) {
+                    System.out.print(ANSI_RED + " T " + ANSI_RESET);
                 } else if ((hasGuard || hasIntruder) && tile.isGoal()) {
                     if (hasGuard)
                         System.out.print(ANSI_BLUE + " Y " + ANSI_RESET);
@@ -207,6 +208,15 @@ public class GameController {
             System.out.println();
         }
         System.out.println();
+
+        for(Agent a : agents){
+            System.out.print("agent at " + Arrays.toString(a.getPosition()) + " has trace: ");
+            ArrayList<int[]> traceT = a.getTrace().getTraceTiles();
+            for(int[] t : traceT){
+                System.out.print(" " + Arrays.toString(t) + " ");
+            }
+            System.out.println();
+        }
     }
 
     private static void printRect(double[] rect) {

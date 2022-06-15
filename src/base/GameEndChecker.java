@@ -2,6 +2,8 @@ package base;
 
 import Controller.Tile;
 
+import java.util.Arrays;
+
 public class GameEndChecker {
 
     private static byte timeSpentInGoalByIntruders = 0;
@@ -50,9 +52,11 @@ public class GameEndChecker {
      */
     private static boolean allIntrudersAreCaught(){
         for(Agent a : GameController.agents){
-            if(a.getClass() == Intruder.class)
+            if(a.getClass() == Intruder.class) {
                 return false;
+            }
         }
-        return false;
+        System.out.println("guards win");
+        return true;
     }
 }

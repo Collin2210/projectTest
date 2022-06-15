@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Trace {
 
     public static final byte
-            MAX_LENGTH = 10,
+            MAX_LENGTH = 1,
             NO_STRESS = 0,
             MID_STRESS = 1,
             HIGH_STRESS = 2;
@@ -19,7 +19,7 @@ public class Trace {
     public Trace(Agent owner) {
         this.traceTiles = new ArrayList<>();
         this.owner = owner;
-        stressLevel = 0;
+        stressLevel = NO_STRESS;
     }
 
     public void addToTrace(int[] tilePos){
