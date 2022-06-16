@@ -2,8 +2,6 @@ package base;
 
 import java.util.ArrayList;
 
-import static base.GameController.YELL_RADIUS;
-
 public class Yell extends AudioObject {
     /**
      * after checking vision range of guard to check if intruder is present
@@ -13,6 +11,8 @@ public class Yell extends AudioObject {
      * if within yelling radius, the guard moves towards the original guard
      *
      */
+
+    public static int YELL_RADIUS = 20;
 
     public ArrayList<int[]> yellPositions=new ArrayList<>();
 
