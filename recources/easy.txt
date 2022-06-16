@@ -1,0 +1,14 @@
+height = 200
+width = 200
+numGuards = 1
+numIntruders = 1
+baseSpeedGuard = 5
+spawnAreaGuards = 5 5 15 15
+spawnAreaIntruders = 170 170 180 180
+wall = 10 100 50 100
+wall = 10 150 50 150
+wall = 10 60 10 150
+wall = 50 60 50 150
+isGoal = 15 14 17 18
+teleport = 170 70 170 75 30 120 0.0
+visionRange = 5

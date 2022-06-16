@@ -28,13 +28,11 @@ public class GameController {
 
     public static final double TOWER_VISION_BONUS = 10;
 
-    public static final int YELL_RADIUS = 0;
-
     public GameController() {
     }
 
     public void startGame() {
-        String p = "recources/testmap2.txt";
+        String p = "recources/easy.txt";
         variables = FileParser.parser(p);
         map = new Map();
         addGoal();
@@ -48,16 +46,6 @@ public class GameController {
     public void makeAgentsLearn() {
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.learn();
-
-//        // testing guards only algo below
-//        for (int i = 0; i < 20; i++) {
-//            for (int j = 0; j < agents.size(); j++) {
-//                if (agents.get(j).getClass() == Guard.class) {
-//                    ((Guard) agents.get(j)).makeMove();
-//                }
-//            }
-//            GameController.print();
-//        }
     }
 
     public void makeAgentsMoveSmartly() {

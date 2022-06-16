@@ -6,8 +6,10 @@ import Controller.Tile;
 import base.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static base.GameController.*;
+import static base.Yell.YELL_RADIUS;
 
 public class QLearning {
 
@@ -17,7 +19,7 @@ public class QLearning {
             RANDOMNESS_LEVEL = 0.5;
     public static final int
             LEARNING_CYCLES = 100,
-            MOVE_LIMIT = 100;
+            MOVE_LIMIT = 200 * 100 ;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -59,7 +61,7 @@ public class QLearning {
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
             // while round has not ended yet
-            while(!GameEndChecker.isInTerminalState() ){
+            while(!GameEndChecker.isInTerminalState()){
                 for (int i = 0; i < agents.size(); i++){
                     Agent a = agents.get(i);
                     if (a.getClass() == Intruder.class) {
@@ -75,8 +77,6 @@ public class QLearning {
                 }
                 moveCount++;
             }
-            System.out.print("Game Number: " +cycleCount);
-            System.out.println(" Move count: " + moveCount);
             putAgentsBackOnSpawn();
         }
     }
@@ -109,7 +109,6 @@ public class QLearning {
             }
             moveCount++;
         }
-        System.out.println(" Move count: " + moveCount);
     }
 
     /**
@@ -188,13 +187,8 @@ public class QLearning {
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
 
-
-        seesGuard = false;
-        seesTrace = false;
-
         // if they see guard
         if(seesGuard){
-            System.out.println("intruder sees guard");
             newPosition = runAway(guardsSeen);
             action = getActionFromNewPosition(newPosition);
         }
