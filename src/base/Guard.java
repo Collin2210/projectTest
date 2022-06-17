@@ -39,6 +39,10 @@ public class Guard extends ExplorerAgent {
             resetToScatterMode();
         }
 
+        // check if reached yell
+        if(getAudioObject() != null && getX() == getAudioObject().getPosition()[0] && getY() == getAudioObject().getPosition()[1])
+            setHeardAudio(null);
+
         // guard gives priority to seen Intruders, then Trace and finally yells
         if(chasingIntruder)
             followIntruder();
@@ -164,6 +168,11 @@ public class Guard extends ExplorerAgent {
         // get path to position
         List<Position> pathToPosition = Move.getPath(getPosition(), position);
 
+        if(pathToPosition == null){
+            System.out.println("from " + Arrays.toString(getPosition()) + " to " + Arrays.toString(position));
+            GameController.print();
+        }
+
         // get next step towards position
         Position nextPos = pathToPosition.get(1);
         int[] nextPosition = {nextPos.getX(), nextPos.getY()};
@@ -176,7 +185,9 @@ public class Guard extends ExplorerAgent {
 
         // check if guard has caught intruder
         if (this.hasCaught(this.intruderToCatch)){
-            agents.remove(intruderToCatch);
+//            System.out.println("111");
+            intruderToCatch.getsCaught();
+//            System.out.println("222");
             this.intruderToCatch = null;
             resetToScatterMode();
             return;

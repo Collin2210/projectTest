@@ -252,19 +252,19 @@ public class Main implements Runnable {
 		terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightMap", "grassnormal");
 		ArrayList<Entity> walls = createWallsFromFile();
 
-//
-//		for (int x = -1; x < GameController.variables.getHeight(); x++) {
-//			walls.add(new Entity(texturedModelWall, new Vector3f(x + L, 0, -1 + L), 0, 90, 0, 1, 1));
-//		}
-//		for (int x = -1; x < GameController.variables.getHeight(); x++) {
-//			walls.add(new Entity(texturedModelWall, new Vector3f(x + L, 0, GameController.variables.getWidth() + L), 0, 90, 0, 1, 1));
-//		}
-//		for (int y = -1; y < GameController.variables.getWidth(); y++) {
-//			walls.add(new Entity(texturedModelWall, new Vector3f(-1 + L, 0, y + L), 0, 90, 0, 1, 1));
-//		}
-//		for (int y = -1; y < GameController.variables.getWidth(); y++) {
-//			walls.add(new Entity(texturedModelWall, new Vector3f(GameController.variables.getHeight() + L, 0, y + L), 0, 90, 0, 1, 1));
-//		}
+
+		for (int x = -1; x < GameController.variables.getHeight(); x++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(x + L, terrain.getHeightOfTerrain(x+L, -1+L), -1 + L), 0, 90, 0, 1, 1));
+		}
+		for (int x = -1; x < GameController.variables.getHeight(); x++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(x + L, terrain.getHeightOfTerrain(x+L, GameController.variables.getWidth()+L), GameController.variables.getWidth() + L), 0, 90, 0, 1, 1));
+		}
+		for (int y = -1; y < GameController.variables.getWidth(); y++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(-1 + L, 0, y + L), 0, 90, 0, 1, 1));
+		}
+		for (int y = -1; y < GameController.variables.getWidth(); y++) {
+			walls.add(new Entity(texturedModelWall, new Vector3f(GameController.variables.getHeight() + L, 0, y + L), 0, 90, 0, 1, 1));
+		}
 
 
 
@@ -333,7 +333,7 @@ public class Main implements Runnable {
 		camPlayer = new Player(texturedModelIntruder, new Vector3f(L + 15, 0, L + 15), 0, 90, 0, 1, 1);
 
 
-//		entities.addAll(walls);
+		entities.addAll(walls);
 
 		//players.add(intruder);
 		//players.add(guard);
@@ -465,6 +465,8 @@ public class Main implements Runnable {
 
 
 
+
+
 		for (Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
@@ -502,24 +504,13 @@ public class Main implements Runnable {
 //		}
 //
 		for (Wall w : GameController.variables.getWalls()) {
-			if (w.x1 - w.x3 == 0) {
-				for (int[] tile : w.getPoints()) {
-					walls.add(new Entity(texturedModelWall, new Vector3f(tile[0] + L, terrain.getHeightOfTerrain(tile[0]+L, tile[1]+L), tile[1] + L), 0, 0, 0, 1, 1));
-					System.out.println("getttt");
-				}
+			for(int[] tile : w.getPoints()){
+				walls.add(new Entity(texturedModelWall, new Vector3f(tile[0]+L,0,tile[1]+L),0,90,0,1,1));
 			}
-			if (w.y3 - w.y1 == 0) {
-				for (int[] tile : w.getPoints()) {
-					walls.add(new Entity(texturedModelWall, new Vector3f(tile[0] + L, terrain.getHeightOfTerrain(tile[0]+L, tile[1]+L), tile[1] + L), 0, 90, 0, 1, 1));
-					System.out.println("555555");
-				}
-			}
+		}
 
 
-//					for(int[] tile : w.getPoints()){
-//						walls.add(new Entity(texturedModelWall, new Vector3f(tile[0]+L,0,tile[1]+L),0,90,0,1,1));
-//
-//					}
+
 
 //		walls.add(createWallFromParams(GameController.variables.getWalls().get(0), variables.getWall1().y, variables.getWall1().z, variables.getWall1().w));
 //		walls.add(createWallFromParams(variables.getWall2().x, variables.getWall2().y, variables.getWall2().z, variables.getWall2().w));
@@ -528,8 +519,6 @@ public class Main implements Runnable {
 //		walls.add(createWallFromParams(variables.getWall5().x, variables.getWall5().y, variables.getWall5().z, variables.getWall5().w));
 //
 //		System.out.println(variables.getWall5().w);
-			return walls;
-		}
 		return walls;
 	}
 

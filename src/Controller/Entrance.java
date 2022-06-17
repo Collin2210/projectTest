@@ -69,4 +69,19 @@ public abstract class Entrance extends MapObject {
         return degreeOut;
     }
 
+    public ArrayList<Integer> getCoordIn() {
+        return coordIn;
+    }
+
+    public void setCoordIn(ArrayList<Integer> coordIn) {
+        this.coordIn = coordIn;
+    }
+
+    public ArrayList<Integer> getCoordOut() {
+        return coordOut;
+    }
+
+    public void setCoordOut(ArrayList<Integer> coordOut) {
+        this.coordOut = coordOut;
+    }
 }

@@ -21,7 +21,11 @@ public class GameController {
     public static ArrayList<int[]> portalDestinations;
     public static ArrayList<Double> portalDegrees;
 
-    public static ArrayList<ArrayList<int[]>> pathOfAllAgents;
+    public static ArrayList<ArrayList<int[]>> pathOfAllGuards;
+    public static ArrayList<ArrayList<int[]>> pathOfAllIntruders;
+
+    public static ArrayList<Guard> Guards;
+    public static ArrayList<Intruder> Intruders;
 
     public static int numOfGuardWins;
     public static int numOfIntruderWins;
@@ -39,7 +43,11 @@ public class GameController {
         portalDestinations = new ArrayList<>();
         portalDegrees = new ArrayList<>();
 
-        pathOfAllAgents = new ArrayList<>();
+        pathOfAllGuards = new ArrayList<>();
+        pathOfAllIntruders = new ArrayList<>();
+
+        Guards = new ArrayList<>();
+        Intruders = new ArrayList<>();
 
         numOfGuardWins = 0;
         numOfIntruderWins = 0;
@@ -47,7 +55,7 @@ public class GameController {
     }
 
     public void startGame() {
-        String p = "recources/testmap.txt";
+        String p = "recources/testmap2.txt";
         variables = FileParser.parser(p);
         map = new Map();
         addGoal();
@@ -121,15 +129,18 @@ public class GameController {
         ArrayList<int[]> spawn = variables.getIntruderSpawnPoints();
         int nrOfIntruders = variables.getNumberOfIntruders();
         for (int i = 0; i < nrOfIntruders; i++) {
-            agents.add(new Intruder(spawn.get(i)));
-            pathOfAllAgents.add(new ArrayList<>());
+            Intruder in = new Intruder(spawn.get(i));
+            agents.add(in);
+            Intruders.add(in);
+            pathOfAllIntruders.add(new ArrayList<>());
+//            pathOfAllIntruders.get(i).add(spawn.get(i));
+            System.out.println("intruder added at " + Arrays.toString(spawn.get(i)));
         }
     }
 
     public void addGuards() {
         ArrayList<int[]> spawn = variables.getGuardSpawnPoints();
         int nrOfIntruders = variables.getNumberOfGuards();
-
         // guard's exploration areas
         ArrayList<double[]> areas = GuardAlgo.getAreasForGuards();
 
@@ -137,7 +148,9 @@ public class GameController {
             Guard g = new Guard(spawn.get(i));
             g.setExplorationArea(areas.get(i));
             agents.add(g);
-            pathOfAllAgents.add(new ArrayList<>());
+            Guards.add(g);
+            pathOfAllGuards.add(new ArrayList<>());
+//            pathOfAllGuards.get(i).add(spawn.get(i));
         }
     }
 

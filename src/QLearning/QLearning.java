@@ -19,7 +19,7 @@ public class QLearning {
             RANDOMNESS_LEVEL = 0.5;
     public static final int
             LEARNING_CYCLES = 1,
-            MOVE_LIMIT = 10000 ;
+            MOVE_LIMIT = 100 ;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -59,7 +59,6 @@ public class QLearning {
 
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
-            System.out.println("START");
             // while round has not ended yet
             while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT){
                 for (int i = 0; i < agents.size(); i++){
@@ -75,9 +74,7 @@ public class QLearning {
                         ((Guard) a).makeMove();
                     }
                 }
-                GameController.print();
                 moveCount++;
-                System.out.println(moveCount);
             }
             putAgentsBackOnSpawn();
         }
@@ -86,7 +83,7 @@ public class QLearning {
     public void moveSmartly(){
         int moveCount = 0;
         // while round has not ended yet
-        while(!GameEndChecker.isInTerminalState(moveCount) ){
+        while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT ){
             for (int i = 0; i < agents.size(); i++){
                 Agent a = agents.get(i);
                 if (a.getClass() == Intruder.class) {
@@ -104,10 +101,9 @@ public class QLearning {
                     ((Guard) a).makeMove();
 
                     // save for gui
-                    int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
-                    pathOfAllAgents.get(index).add(new int[]{newX,newY});
+                    int newX = a.getX(), newY = a.getY(), index = Guards.indexOf(a);
+                    pathOfAllGuards.get(index).add(new int[]{newX,newY, (int) a.getAngleDeg()});
                 }
-                GameController.print();
             }
             moveCount++;
         }
@@ -277,7 +273,7 @@ public class QLearning {
     }
 
     private boolean newPositionIsValid(int newX, int newY) {
-        return Map.inMap(newX, newY);
+        return Map.inMap(newX, newY) && !map.hasWall(newX, newY);
     }
 
     private int[] getValidPositionFromAction(byte action) throws Exception {

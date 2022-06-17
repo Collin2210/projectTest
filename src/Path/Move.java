@@ -220,7 +220,6 @@ public class Move {
             }
         }
         if (!current.samePos(targetPos)){
-            System.out.println("Could not reach");
             return null;
             //Could not reach.
         }
