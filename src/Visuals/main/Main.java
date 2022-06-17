@@ -28,6 +28,7 @@ import base.GameEndChecker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
+import org.lwjglx.test.spaceinvaders.Game;
 import org.lwjglx.util.vector.Vector2f;
 import org.lwjglx.util.vector.Vector3f;
 import org.lwjglx.util.vector.Vector4f;
@@ -139,7 +140,8 @@ public class Main implements Runnable {
 
 	public boolean mainMenuBoolean = false;
 
-	public ArrayList<ArrayList<int[]>> listOfMovesEveryAgent;
+	public ArrayList<ArrayList<int[]>> listOfMovesAllGuard;
+	public ArrayList<ArrayList<int[]>> listOfMovesAllIntruder;
 
 	ParticleGenerator particleGen;
 
@@ -248,7 +250,9 @@ public class Main implements Runnable {
 		System.out.println("guards won " + GameController.numOfGuardWins);
 		System.out.println("intruders won " + GameController.numOfIntruderWins);
 		g.makeAgentsMoveSmartly();
-		listOfMovesEveryAgent = GameController.pathOfAllAgents;
+		listOfMovesAllGuard = GameController.pathOfAllGuards;
+		listOfMovesAllIntruder = GameController.pathOfAllIntruders;
+
 		terrain = new Terrain(0, 0, loader, texturePack, blendMap, "heightMap", "grassnormal");
 		ArrayList<Entity> walls = createWallsFromFile();
 
@@ -315,17 +319,18 @@ public class Main implements Runnable {
 		// generate players
 		// * step 4: Generate entities or players.
 
-		for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
-			if (i < GameController.variables.getNumberOfIntruders()) {
-				ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
-				players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0] + L, terrain.getHeightOfTerrain(pathIntruder.get(0)[0] + L, pathIntruder.get(0)[1] + L), pathIntruder.get(0)[1] + L), 0, 90, 0, 1, i));
-//				System.out.println("added intruder at: " + pathIntruder.get(0)[0]+ ", "+ pathIntruder.get(0)[1]) ;
-			} else if (i >= GameController.variables.getNumberOfIntruders()) {
-				ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
-				players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0] + L, terrain.getHeightOfTerrain(pathGuard.get(0)[0] + L, pathGuard.get(0)[1] + L), pathGuard.get(0)[1] + L), 0, 90, 0, 1, i));
-//				System.out.println("added guard at: " + pathGuard.get(0)[0]+ ", "+ pathGuard.get(0)[1]) ;
-			}
+
+		for (int j = 0; j < GameController.variables.getNumberOfIntruders(); j++) {
+			ArrayList<int[]> pathIntruder = GameController.pathOfAllIntruders.get(i);
+			players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0] + L, terrain.getHeightOfTerrain(pathIntruder.get(0)[0] + L, pathIntruder.get(0)[1] + L), pathIntruder.get(0)[1] + L), 0, 90, 0, 1, i));
+
 		}
+		for (int j = 0; j < GameController.variables.getNumberOfGuards(); j++) {
+			ArrayList<int[]> pathGuard = GameController.pathOfAllGuards.get(i);
+			players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0] + L, terrain.getHeightOfTerrain(pathGuard.get(0)[0] + L, pathGuard.get(0)[1] + L), pathGuard.get(0)[1] + L), 0, 90, 0, 1, i));
+
+		}
+
 
 
 		//intruder = new Player(texturedModelGuard, new Vector3f(L,0,L),0,90,0,1,1);  //portal
@@ -380,23 +385,23 @@ public class Main implements Runnable {
 //				new Particle( new Vector3f(players.get(0).getPosition()), new Vector3f(0,30,0),1,4,0,1);
 //			}
 
-			if (Input.isKeyDown(GLFW.GLFW_KEY_M) && moveIndex < GameController.pathOfAllAgents.get(0).size()) {
+			if (Input.isKeyDown(GLFW.GLFW_KEY_M) && moveIndex < GameController.pathOfAllGuards.get(0).size()) {
 
 
 				long currTime = System.currentTimeMillis();
 
 				if (currTime - lastClick > 100) {
 
-					for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
+					for (int i = 0; i < GameController.pathOfAllIntruders.size(); i++) {
 						if (i < GameController.variables.getNumberOfIntruders()) {
-							ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
+							ArrayList<int[]> pathIntruder = GameController.pathOfAllIntruders.get(i);
 							players.get(i).move(new Vector2f(pathIntruder.get(moveIndex)[0] + L, pathIntruder.get(moveIndex)[1] + L), 0);
 
 //						players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0]+L,0,pathIntruder.get(0)[1]+L),0,90,0,1,i));
 //							System.out.println("added intruder at: " + pathIntruder.get(0)[0] + ", " + pathIntruder.get(0)[1]);
 							lastClick = currTime;
 						} else if (i >= GameController.variables.getNumberOfIntruders()) {
-							ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
+							ArrayList<int[]> pathGuard = GameController.pathOfAllGuards.get(i);
 							players.get(i).move(new Vector2f(pathGuard.get(moveIndex)[0] + L, pathGuard.get(moveIndex)[1] + L), 0);
 //						players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0]+L,0,pathGuard.get(0)[1]+L),0,90,0,1,i));
 //							System.out.println("added guard at: " + pathGuard.get(0)[0] + ", " + pathGuard.get(0)[1]);
@@ -414,16 +419,16 @@ public class Main implements Runnable {
 
 				if (currTime - lastClick > 100) {
 
-					for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
+					for (int i = 0; i < GameController.pathOfAllIntruders.size(); i++) {
 						if (i < GameController.variables.getNumberOfIntruders()) {
-							ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
+							ArrayList<int[]> pathIntruder = GameController.pathOfAllIntruders.get(i);
 							players.get(i).move(new Vector2f(pathIntruder.get(moveIndex - 1)[0] + L, pathIntruder.get(moveIndex - 1)[1] + L), pathIntruder.get(moveIndex)[2] - 90);
 
 //						players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0]+L,0,pathIntruder.get(0)[1]+L),0,90,0,1,i));
 //							System.out.println("added intruder at: " + pathIntruder.get(0)[0] + ", " + pathIntruder.get(0)[1]);
 							lastClick = currTime;
 						} else if (i >= GameController.variables.getNumberOfIntruders()) {
-							ArrayList<int[]> pathGuard = GameController.pathOfAllAgents.get(i);
+							ArrayList<int[]> pathGuard = GameController.pathOfAllGuards.get(i);
 							players.get(i).move(new Vector2f(pathGuard.get(moveIndex - 1)[0] + L, pathGuard.get(moveIndex - 1)[1] + L), pathGuard.get(moveIndex)[2] - 90);
 //						players.add(new Player(texturedModelGuard, new Vector3f(pathGuard.get(0)[0]+L,0,pathGuard.get(0)[1]+L),0,90,0,1,i));
 //							System.out.println("added guard at: " + pathGuard.get(0)[0] + ", " + pathGuard.get(0)[1]);

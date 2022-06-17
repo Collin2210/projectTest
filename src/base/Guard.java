@@ -189,11 +189,15 @@ public class Guard extends ExplorerAgent {
             intruderToCatch.getsCaught();
 //            System.out.println("222");
             this.intruderToCatch = null;
+//            System.out.println("333");
             resetToScatterMode();
+//            System.out.println("444");
             return;
         }
+//        System.out.println("555");
         // get position of intruder and head there
         follow(intruderToCatch.getPosition());
+//        System.out.println("666");
     }
 
     private void followTrace(){

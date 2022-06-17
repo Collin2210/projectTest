@@ -94,8 +94,8 @@ public class QLearning {
                     updateQValue();
 
                     // save for gui
-                    int newX = this.agent.getX(), newY = this.agent.getY(), index = agents.indexOf(a);
-                    pathOfAllAgents.get(index).add(new int[]{newX,newY});
+                    int newX = this.agent.getX(), newY = this.agent.getY(), index = Intruders.indexOf(a);
+                    pathOfAllIntruders.get(index).add(new int[]{newX,newY, (int) this.agent.getAngleDeg()});
                 }
                 else if(a.getClass() == Guard.class){
                     ((Guard) a).makeMove();
