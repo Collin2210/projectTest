@@ -107,12 +107,10 @@ public class GameController {
             goalTile.setGoal();
             goalTiles.add(goalTile);
         }
-        System.out.println();
     }
 
     public void addWalls() {
         ArrayList<int[]> walls = map.getWallpoints();
-        System.out.println();
         for (int[] wall : walls) {
             Tile wallTile = map.getTile(wall[0], wall[1]);
             wallTile.placeWall();

@@ -46,7 +46,7 @@ public class GameEndChecker {
         else timeSpentInGoalByIntruders = 0;
 
         // if agents have spent 3 seconds in goal, end game
-        if(timeSpentInGoalByIntruders == 1) {
+        if(timeSpentInGoalByIntruders == 3) {
             intrudersWin = true;
             System.out.println("intruders win");
             GameController.numOfIntruderWins++;

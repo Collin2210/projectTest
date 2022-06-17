@@ -37,8 +37,10 @@ public class Trace {
     }
 
     public void resetTrace(){
-        for(int[] tile : traceTiles)
-            GameController.map.getTile(tile).removeTrace();
+        for(int[] tile : traceTiles) {
+            if(GameController.map.getTile(tile).getTrace().getOwner() == this.getOwner())
+                GameController.map.getTile(tile).removeTrace();
+        }
         traceTiles.clear();
         stressLevel = NO_STRESS;
     }

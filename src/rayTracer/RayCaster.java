@@ -125,7 +125,6 @@ public class RayCaster {
 
 
     public void calculate(Agent a){
-
         rays = calcRays(lines, a.getX(), a.getY(), 180, a.getVisionRange());
         p = createPolygon();
     }

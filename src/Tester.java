@@ -8,6 +8,5 @@ public class Tester {
         GameController.print();
         g.makeAgentsLearn();
 //        g.makeAgentsMoveSmartly();
-
     }
 }

@@ -171,11 +171,6 @@ public class QLearning {
         }
     }
 
-    public void runRayCastSingleAgent(){
-        agent.getRayEngine().calculate(agent);
-        agent.visionT = agent.getRayEngine().getVisibleTiles(agent);
-    }
-
     private void performAction(byte action) throws Exception {
         int[] currentState = this.agent.getPosition();
 
@@ -188,7 +183,6 @@ public class QLearning {
         boolean
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
-
 
         // if they see guard
         if(seesGuard){
@@ -253,7 +247,11 @@ public class QLearning {
         // update learning state
         int[] newState = new int[]{newPosition[0], newPosition[1]};
         agent.setPreviousState(new int[]{currentState[0],currentState[1]});
+
+        // update stress
         agent.getTrace().addToTrace(new int[]{agent.getX(), agent.getY()});
+
+        // set position
         agent.setPosition(newState[0], newState[1]);
         agent.getSavedPath().add(new int[]{newPosition[0], newPosition[1]});
 

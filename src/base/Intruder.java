@@ -90,6 +90,9 @@ public class Intruder extends LearnerAgent{
     public void getsCaught(){
         GameController.intrudersCaught.add(this);
         GameController.agents.remove(this);
+
+        // reset trace
+        getTrace().resetTrace();
     }
 
     public boolean isCaught(){
