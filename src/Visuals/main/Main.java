@@ -212,8 +212,8 @@ public class Main implements Runnable {
 		texturedModelGrass = new TexturedModel(grassModel, new ModelTexture(loader.loadTexture("green_alpha_tall_grass")));
 
 
-		TexturedModel vulcanNormalModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("vulcan", loader), new ModelTexture(loader.loadTexture("vulcantext")));
-		vulcanNormalModel.getTexture().setNormalMap(loader.loadTexture("vulcannormal"));
+//		TexturedModel vulcanNormalModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("vulcan", loader), new ModelTexture(loader.loadTexture("vulcantext")));
+//		vulcanNormalModel.getTexture().setNormalMap(loader.loadTexture("vulcannormal"));
 
 		//normalMappedEntities.add(new Entity(vulcanNormalModel, new Vector3f(L+15,0,L+15),0,0,0,1.0f, 1));
 
@@ -318,7 +318,6 @@ public class Main implements Runnable {
 		for (int i = 0; i < GameController.pathOfAllAgents.size(); i++) {
 			if (i < GameController.variables.getNumberOfIntruders()) {
 				ArrayList<int[]> pathIntruder = GameController.pathOfAllAgents.get(i);
-
 				players.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder.get(0)[0] + L, terrain.getHeightOfTerrain(pathIntruder.get(0)[0] + L, pathIntruder.get(0)[1] + L), pathIntruder.get(0)[1] + L), 0, 90, 0, 1, i));
 //				System.out.println("added intruder at: " + pathIntruder.get(0)[0]+ ", "+ pathIntruder.get(0)[1]) ;
 			} else if (i >= GameController.variables.getNumberOfIntruders()) {
