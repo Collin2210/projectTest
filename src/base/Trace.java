@@ -16,17 +16,23 @@ public class Trace {
 
     private ArrayList<int[]> traceTiles;
 
+
     private byte stressLevel;
+
+    private double angle;
 
     public Trace(Agent owner) {
         this.traceTiles = new ArrayList<>();
         this.owner = owner;
         stressLevel = NO_STRESS;
+        angle = owner.getAngleDeg();
     }
 
     public void addToTrace(int[] tilePos){
+        int[] data = {tilePos[0], tilePos[1], (int) owner.getAngleDeg()};
+
         // add trace to tile
-        traceTiles.add(tilePos);
+        traceTiles.add(data);
         GameController.map.getTile(tilePos).addTrace(this);
 
         // remove last trace tile
@@ -63,5 +69,13 @@ public class Trace {
 
     public Agent getOwner() {
         return owner;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 }
