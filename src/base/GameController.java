@@ -23,6 +23,10 @@ public class GameController {
 
     public static ArrayList<ArrayList<int[]>> pathOfAllGuards;
     public static ArrayList<ArrayList<int[]>> pathOfAllIntruders;
+    public static ArrayList<int[]> intruderSpawnPoints;
+    public static ArrayList<int[]> guardSpawnPoints;
+
+    public static int gameTotalNumMoves;
 
     public static ArrayList<Guard> Guards;
     public static ArrayList<Intruder> Intruders;
@@ -45,6 +49,8 @@ public class GameController {
 
         pathOfAllGuards = new ArrayList<>();
         pathOfAllIntruders = new ArrayList<>();
+        intruderSpawnPoints = new ArrayList<>();
+        guardSpawnPoints = new ArrayList<>();
 
         Guards = new ArrayList<>();
         Intruders = new ArrayList<>();
@@ -134,6 +140,7 @@ public class GameController {
             Intruders.add(in);
             pathOfAllIntruders.add(new ArrayList<>());
 //            pathOfAllIntruders.get(i).add(spawn.get(i));
+            intruderSpawnPoints.add(spawn.get(i));
             System.out.println("intruder added at " + Arrays.toString(spawn.get(i)));
         }
     }
@@ -150,6 +157,7 @@ public class GameController {
             agents.add(g);
             Guards.add(g);
             pathOfAllGuards.add(new ArrayList<>());
+            guardSpawnPoints.add(spawn.get(i));
 //            pathOfAllGuards.get(i).add(spawn.get(i));
         }
     }

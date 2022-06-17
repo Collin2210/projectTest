@@ -82,6 +82,7 @@ public class QLearning {
 
     public void moveSmartly() {
         int moveCount = 0;
+
         // while round has not ended yet
         while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT ){
             for (int i = 0; i < agents.size(); i++){
@@ -102,9 +103,11 @@ public class QLearning {
                     // save for gui
                     int newX = a.getX(), newY = a.getY(), index = Guards.indexOf(a);
                     pathOfAllGuards.get(index).add(new int[]{newX, newY, (int) a.getAngleDeg()});
+
                 }
             }
             moveCount++;
+            gameTotalNumMoves = moveCount;
         }
         for (ArrayList<int[]> pp : pathOfAllGuards){
             for (int[] p : pp) {
