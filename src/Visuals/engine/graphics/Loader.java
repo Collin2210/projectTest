@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.matthiasmann.twl.utils.PNGDecoder.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.newdawn.slick.opengl.renderer.SGL.*;
 
 public class Loader {
 
@@ -34,6 +37,18 @@ public class Loader {
         return new RawModel(vaoID,indices.length);
     }
 
+    public RawModel loadToVAO(float[] positions, float[] textureCoords,float [] normals,float[] tangents, int[] indices){
+        int vaoID = createVAO();
+        bindIndicesBuffer(indices);
+        storeDataInAttributeList(0,3, positions);
+        storeDataInAttributeList(1,2, textureCoords);
+        storeDataInAttributeList(2,3, normals);
+        storeDataInAttributeList(3,3, tangents);
+
+        unbindVAO();
+        return new RawModel(vaoID,indices.length);
+    }
+
     public RawModel loadToVAO(float[] positions, int dimensions){
         int vaoID = createVAO();
         this.storeDataInAttributeList(0,dimensions,positions);
@@ -45,15 +60,40 @@ public class Loader {
     public int loadTexture(String fileName) throws IOException {
         Texture texture = null;
         try{
+
             texture = TextureLoader.getTexture("png", new FileInputStream("res/3D/" + fileName + ".png"));
             GL46.glGenerateMipmap(GL46.GL_TEXTURE_2D);
             GL46.glTextureParameteri(GL46.GL_TEXTURE_2D,GL46.GL_TEXTURE_MIN_FILTER, GL46.GL_LINEAR_MIPMAP_LINEAR);
-            GL46.glTextureParameterf(GL46.GL_TEXTURE_2D,GL46.GL_MAX_TEXTURE_LOD_BIAS,-1);
+            GL46.glTextureParameterf(GL46.GL_TEXTURE_2D,GL46.GL_MAX_TEXTURE_LOD_BIAS,-2.4f);
+
         } catch (IOException e){
             e.printStackTrace();
         }
         int textureID = texture.getTextureID();
         textures.add(textureID);
+        return textureID;
+    }
+
+    public int loadTextureTransparent(String fileName) throws IOException {
+        Texture texture = null;
+
+        try{
+            glDepthMask(false);
+            texture = TextureLoader.getTexture("png", new FileInputStream("res/3D/" + fileName + ".png"));
+
+            GL46.glGenerateMipmap(GL46.GL_TEXTURE_2D);
+
+            GL46.glTextureParameteri(GL46.GL_TEXTURE_2D,GL46.GL_TEXTURE_MIN_FILTER, GL46.GL_LINEAR_MIPMAP_LINEAR);
+            GL46.glTextureParameterf(GL46.GL_TEXTURE_2D,GL46.GL_MAX_TEXTURE_LOD_BIAS,-2.4f);
+            glDepthMask(true);
+
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        int textureID = texture.getTextureID();
+        textures.add(textureID);
+
         return textureID;
     }
 

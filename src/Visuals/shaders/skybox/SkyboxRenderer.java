@@ -73,7 +73,7 @@ public class SkyboxRenderer {
 
         cube = loader.loadToVAO(VERTICES, 3);
         texture = loader.loadCubeMap(TEXTURE_FILES);
-        nightTexture = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+        //nightTexture = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
         shader = new SkyboxShader();
         shader.start();
         shader.connectTextureUnits();

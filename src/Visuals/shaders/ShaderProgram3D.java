@@ -37,7 +37,6 @@ public abstract class ShaderProgram3D {
 
     protected abstract void getAllUniformLocation();
 
-
     protected int getUniformLocation(String uniformName){
         return GL46.glGetUniformLocation(programID,uniformName);
     }

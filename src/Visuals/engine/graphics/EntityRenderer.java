@@ -47,6 +47,7 @@ public class EntityRenderer {
 		GL20.glEnableVertexAttribArray(2);
 		ModelTexture texture = model1.getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
+		GL46.glEnable(GL11.GL_BLEND);
 		if (texture.isHasTransparency()){
 			MasterRenderer.disableCulling();
 		}
@@ -54,6 +55,7 @@ public class EntityRenderer {
 		shader.loadShineVariables(texture.getShineDamper(),texture.getReflectivity());
 		GL46.glActiveTexture(GL46.GL_TEXTURE0);
 		GL46.glBindTexture(GL46.GL_TEXTURE_2D, model1.getTexture().getID());
+
 	}
 
 	private void unbindTexturedModel(){

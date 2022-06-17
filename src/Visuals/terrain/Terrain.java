@@ -12,10 +12,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class Terrain {
 
-    public static final float SIZE = 600;
+    public static final float SIZE = 300;
     private static final float MAX_HEIGHT = 1;
     private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
@@ -25,20 +26,27 @@ public class Terrain {
     private TerrainTexturePack texturePack;
     private TerrainTexture blendMap;
     private float[][] heights;
+    HeightGenerator heightGenerator;
 
-    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap){
+    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightmap, String normalMap){
         this.texturePack = texturePack;
         this.blendMap = blendMap;
         this.x = gridX*SIZE;
         this.z = gridZ*SIZE;
-        this.model = generateTerrainMap(loader,heightmap);
+        this.model = generateTerrainMap(loader,heightmap, normalMap);
+        heightGenerator = new HeightGenerator(gridX,gridZ, 256, new Random().nextInt(100000000));
     }
 
-    private RawModel generateTerrainMap(Loader loader, String heightMap){
+    private RawModel generateTerrainMap(Loader loader, String heightMap, String normalMap){
+
+        HeightGenerator heigtGen = new HeightGenerator();
+
 
         BufferedImage image = null;
+        BufferedImage normalMap2 = null;
         try {
             image = ImageIO.read(new File("res/3D/" +heightMap + ".png"));
+            normalMap2 = ImageIO.read(new File("res/3D/" +normalMap + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,11 +66,11 @@ public class Terrain {
         for(int i=0;i<VERTEX_COUNT;i++){
             for(int j=0;j<VERTEX_COUNT;j++){
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
-                float height = getHeight(j,i,image);
+                float height = getHeight(j,i,image, heigtGen);
                 heights[j][i] = height;
                 vertices[vertexPointer*3+1] = height;
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
-                Vector3f normal = calculateNormalMap(j,i,image);
+                Vector3f normal = calculateNormalMap(j,i,normalMap2, heigtGen);
                 normals[vertexPointer*3] = normal.x;
                 normals[vertexPointer*3+1] = normal.y;
                 normals[vertexPointer*3+2] = normal.z;
@@ -91,26 +99,28 @@ public class Terrain {
     }
 
 
-    private Vector3f calculateNormalMap(int x, int z, BufferedImage image){
-        float heightL = getHeight(x-1,z, image);
-        float heightR = getHeight(x+1, z, image);
-        float heightD = getHeight(x,z-1, image);
-        float heightU = getHeight(x, z+1, image);
+    private Vector3f calculateNormalMap(int x, int z, BufferedImage image, HeightGenerator generator){
+        float heightL = getHeight(x-1,z, image,generator);
+        float heightR = getHeight(x+1, z, image,generator);
+        float heightD = getHeight(x,z-1, image,generator);
+        float heightU = getHeight(x, z+1, image,generator);
         Vector3f normal = new Vector3f(heightL-heightR, 2f, heightD - heightU);
         normal.normalise();
         return normal;
     }
 
 
-    private float getHeight(int x, int y, BufferedImage image){
-        if(x<0 || x>=image.getHeight() || y<0 || y>=image.getHeight()){
-            return 0;
-        }
-        float height = image.getRGB(x, y);
-        height += MAX_PIXEL_COLOUR/2f;
-        height /= MAX_PIXEL_COLOUR/2f;
-        height *= MAX_HEIGHT;
-        return height;
+    private float getHeight(int x, int y, BufferedImage image, HeightGenerator generator){
+//        if(x<0 || x>=image.getHeight() || y<0 || y>=image.getHeight()){
+//            return 0;
+//        }
+//        float height = image.getRGB(x, y);
+//        height += MAX_PIXEL_COLOUR/2f;
+//        height /= MAX_PIXEL_COLOUR/2f;
+//        height *= MAX_HEIGHT;
+//        return height;
+
+        return generator.generateHeight(x,y);
 
     }
 
