@@ -80,7 +80,7 @@ public class QLearning {
         }
     }
 
-    public void moveSmartly(){
+    public void moveSmartly() {
         int moveCount = 0;
         // while round has not ended yet
         while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT ){
@@ -88,24 +88,29 @@ public class QLearning {
                 Agent a = agents.get(i);
                 if (a.getClass() == Intruder.class) {
                     this.agent = (Intruder) a;
-                    this.agent.getBrain().getEmTable().updateEMtable(moveCount,this.agent.getPosition());
+                    this.agent.getBrain().getEmTable().updateEMtable(moveCount, this.agent.getPosition());
                     byte action = getNextAction();
                     tryPerformingAction(action);
                     updateQValue();
 
                     // save for gui
                     int newX = this.agent.getX(), newY = this.agent.getY(), index = Intruders.indexOf(a);
-                    pathOfAllIntruders.get(index).add(new int[]{newX,newY, (int) this.agent.getAngleDeg()});
-                }
-                else if(a.getClass() == Guard.class){
+                    pathOfAllIntruders.get(index).add(new int[]{newX, newY, (int) this.agent.getAngleDeg()});
+                } else if (a.getClass() == Guard.class) {
                     ((Guard) a).makeMove();
 
                     // save for gui
                     int newX = a.getX(), newY = a.getY(), index = Guards.indexOf(a);
-                    pathOfAllGuards.get(index).add(new int[]{newX,newY, (int) a.getAngleDeg()});
+                    pathOfAllGuards.get(index).add(new int[]{newX, newY, (int) a.getAngleDeg()});
                 }
             }
             moveCount++;
+        }
+        for (ArrayList<int[]> pp : pathOfAllGuards){
+            for (int[] p : pp) {
+                System.out.print(Arrays.toString(p) + " ");
+            }
+            System.out.println();
         }
     }
 
