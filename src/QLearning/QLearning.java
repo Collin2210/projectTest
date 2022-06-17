@@ -18,8 +18,8 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.1,
             RANDOMNESS_LEVEL = 0.5;
     public static final int
-            LEARNING_CYCLES = 100,
-            MOVE_LIMIT = 200 * 100 ;
+            LEARNING_CYCLES = 1,
+            MOVE_LIMIT = 10000 ;
     public static final byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
     public static final byte
@@ -36,7 +36,6 @@ public class QLearning {
 
     /**
      *
-     * TODO: make reward table static, rn it's dynamically changed.
      * check the static reward table and sum it with occurrences and
      * thus reward values from it's sensors.
      *
@@ -60,8 +59,9 @@ public class QLearning {
 
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             int moveCount = 0;
+            System.out.println("START");
             // while round has not ended yet
-            while(!GameEndChecker.isInTerminalState()){
+            while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT){
                 for (int i = 0; i < agents.size(); i++){
                     Agent a = agents.get(i);
                     if (a.getClass() == Intruder.class) {
@@ -75,7 +75,9 @@ public class QLearning {
                         ((Guard) a).makeMove();
                     }
                 }
+                GameController.print();
                 moveCount++;
+                System.out.println(moveCount);
             }
             putAgentsBackOnSpawn();
         }
@@ -84,7 +86,7 @@ public class QLearning {
     public void moveSmartly(){
         int moveCount = 0;
         // while round has not ended yet
-        while(!GameEndChecker.isInTerminalState() ){
+        while(!GameEndChecker.isInTerminalState(moveCount) ){
             for (int i = 0; i < agents.size(); i++){
                 Agent a = agents.get(i);
                 if (a.getClass() == Intruder.class) {
@@ -186,6 +188,7 @@ public class QLearning {
         boolean
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
+
 
         // if they see guard
         if(seesGuard){
@@ -389,7 +392,7 @@ public class QLearning {
     }
 
     /**
-     * @param tilesToRunAwayFrom or tracesSeen: guards or traces intruder wants to run away from
+     * @param tilesToRunAwayFrom: tiles with guards or traces intruder wants to run away from
      * @return neighbour that is furthest from all guards or traces
      */
     public int[] runAway(ArrayList<int[]> tilesToRunAwayFrom){

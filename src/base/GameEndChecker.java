@@ -11,11 +11,20 @@ public class GameEndChecker {
     private static boolean intrudersWin = false;
     private static boolean guardsWin = false;
 
-    public static boolean isInTerminalState() {
-        if (GameEndChecker.intruderInGoalFor3Sec())
+    public static boolean isInTerminalState(int moveCount) {
+
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_RESET = "\u001B[0m";
+
+        if (GameEndChecker.intruderInGoalFor3Sec()){
+            System.out.println(ANSI_GREEN + moveCount + ANSI_RESET);
             return true;
-        if(allIntrudersAreCaught())
+        }
+        if(allIntrudersAreCaught()) {
+            System.out.println(ANSI_RED + moveCount + ANSI_RESET);
             return true;
+        }
         return false;
     }
 
@@ -37,7 +46,7 @@ public class GameEndChecker {
         else timeSpentInGoalByIntruders = 0;
 
         // if agents have spent 3 seconds in goal, end game
-        if(timeSpentInGoalByIntruders == 3) {
+        if(timeSpentInGoalByIntruders == 1) {
             intrudersWin = true;
             System.out.println("intruders win");
             GameController.numOfIntruderWins++;

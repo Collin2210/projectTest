@@ -11,28 +11,43 @@ public class GameController {
 
     public static Map map;
     public static Variables variables;
-    public static final ArrayList<Agent> agents = new ArrayList<>();
-    public static final ArrayList<Agent> intrudersCaught = new ArrayList<>();
+    public static ArrayList<Agent> agents;
+    public static ArrayList<Agent> intrudersCaught;
 
-    public static final ArrayList<Tile> goalTiles = new ArrayList<>();
-    public static ArrayList<Yell> yells = new ArrayList<>();
+    public static ArrayList<Tile> goalTiles;
+    public static ArrayList<Yell> yells;
 
-    public static final ArrayList<int[]> portalEntrances = new ArrayList<>();
-    public static final ArrayList<int[]> portalDestinations = new ArrayList<>();
-    public static final ArrayList<Double> portalDegrees = new ArrayList<>();
+    public static ArrayList<int[]> portalEntrances;
+    public static ArrayList<int[]> portalDestinations;
+    public static ArrayList<Double> portalDegrees;
 
-    public static final ArrayList<ArrayList<int[]>> pathOfAllAgents = new ArrayList<>();
+    public static ArrayList<ArrayList<int[]>> pathOfAllAgents;
 
-    public static int numOfGuardWins = 0;
-    public static int numOfIntruderWins = 0;
+    public static int numOfGuardWins;
+    public static int numOfIntruderWins;
 
     public static final double TOWER_VISION_BONUS = 10;
 
     public GameController() {
+        agents = new ArrayList<>();
+        intrudersCaught = new ArrayList<>();
+
+        goalTiles = new ArrayList<>();
+        yells = new ArrayList<>();;
+
+        portalEntrances = new ArrayList<>();
+        portalDestinations = new ArrayList<>();
+        portalDegrees = new ArrayList<>();
+
+        pathOfAllAgents = new ArrayList<>();
+
+        numOfGuardWins = 0;
+        numOfIntruderWins = 0;
+
     }
 
     public void startGame() {
-        String p = "recources/easy.txt";
+        String p = "recources/testmap.txt";
         variables = FileParser.parser(p);
         map = new Map();
         addGoal();
@@ -87,16 +102,17 @@ public class GameController {
 
     public void addGoal() {
         ArrayList<int[]> goalTilesFromVariables = variables.getGoalPoints();
-
         for (int[] c : goalTilesFromVariables) {
             Tile goalTile = map.getTile(c[0], c[1]);
             goalTile.setGoal();
             goalTiles.add(goalTile);
         }
+        System.out.println();
     }
 
     public void addWalls() {
         ArrayList<int[]> walls = map.getWallpoints();
+        System.out.println();
         for (int[] wall : walls) {
             Tile wallTile = map.getTile(wall[0], wall[1]);
             wallTile.placeWall();
@@ -169,14 +185,16 @@ public class GameController {
                     else System.out.print(ANSI_PURPLE + " Y " + ANSI_RESET);
                 } else if (hasGuard || hasIntruder) {
                     if (hasGuard)
-                        System.out.print(ANSI_BLUE + " A " + ANSI_RESET);
-                    else System.out.print(ANSI_RED + " A " + ANSI_RESET);
+                        System.out.print(ANSI_BLUE + " A " + ANSI_RESET); // guard
+                    else System.out.print(ANSI_RED + " A " + ANSI_RESET); // intruder
                 } else if (tile.isGoal())
                     System.out.print(ANSI_YELLOW + " G " + ANSI_RESET);
                 else if (tile.hasWall())
                     System.out.print(ANSI_GREEN + " L " + ANSI_RESET);
                 else if (tile.hasTeleportIn())
                     System.out.print(ANSI_CYAN + " T " + ANSI_RESET);
+                else if (tile.hasTeleportOut())
+                    System.out.print(ANSI_CYAN + " % " + ANSI_RESET);
                 else if (tile.hasWall())
                     System.out.print(ANSI_CYAN + " Z " + ANSI_RESET);
                 else {

@@ -91,4 +91,8 @@ public class Intruder extends LearnerAgent{
         GameController.intrudersCaught.add(this);
         GameController.agents.remove(this);
     }
+
+    public boolean isCaught(){
+        return (GameController.intrudersCaught.contains(this));
+    }
 }
