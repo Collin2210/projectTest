@@ -22,8 +22,6 @@ public class RayCaster {
     private static Random r = new Random(100);
     LinkedList<Line2D.Float> rays;
     Agent a;
-    private ArrayList<int[]> visionArea = new ArrayList<>();
-
 
     public RayCaster(Agent a){
         this.map = GameController.map;

@@ -13,16 +13,16 @@ import static base.Yell.YELL_RADIUS;
 
 public class QLearning {
 
-    public static final double
-            LEARNING_RATE = 0.5,
-            DISCOUNT_FACTOR = 0.1,
-            RANDOMNESS_LEVEL = 0.5;
-    public static final int
+    public static double
+            LEARNING_RATE = 0.3,
+            DISCOUNT_FACTOR = 0.7,
+            RANDOMNESS_LEVEL = 0.1;
+    public static int
             LEARNING_CYCLES = 1,
-            MOVE_LIMIT = 100 ;
-    public static final byte
+            MOVE_LIMIT = 1000;
+    public static byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
-    public static final byte
+    public static byte
             MOVE_UP = 0,
             MOVE_RIGHT = 1,
             MOVE_DOWN = 2,
@@ -57,10 +57,12 @@ public class QLearning {
             }
         }
 
+        int moveCount = -5;
+
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
-            int moveCount = 0;
+            moveCount = 0;
             // while round has not ended yet
-            while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT){
+            while(!GameEndChecker.isInLearningTerminalState()){
                 for (int i = 0; i < agents.size(); i++){
                     Agent a = agents.get(i);
                     if (a.getClass() == Intruder.class) {
@@ -70,23 +72,28 @@ public class QLearning {
                         tryPerformingAction(action);
                         updateQValue();
                     }
-                    else if(a.getClass() == Guard.class){
-                        ((Guard) a).makeMove();
-                    }
                 }
                 moveCount++;
             }
             putAgentsBackOnSpawn();
         }
+//        System.out.println(moveCount);
     }
 
     public void moveSmartly() {
         int moveCount = 0;
+
         // while round has not ended yet
-        while(!GameEndChecker.isInTerminalState(moveCount) && moveCount < MOVE_LIMIT ){
-            for (int i = 0; i < agents.size(); i++){
+        while (!GameEndChecker.isInTerminalState()) {
+
+            // for every agent
+            for (int i = 0; i < agents.size(); i++) {
                 Agent a = agents.get(i);
+
+                // if it's an intruder
                 if (a.getClass() == Intruder.class) {
+
+                    // move agent
                     this.agent = (Intruder) a;
                     this.agent.getBrain().getEmTable().updateEMtable(moveCount, this.agent.getPosition());
                     byte action = getNextAction();
@@ -96,7 +103,12 @@ public class QLearning {
                     // save for gui
                     int newX = this.agent.getX(), newY = this.agent.getY(), index = Intruders.indexOf(a);
                     pathOfAllIntruders.get(index).add(new int[]{newX, newY, (int) this.agent.getAngleDeg()});
-                } else if (a.getClass() == Guard.class) {
+                }
+
+                // if it's a guard
+                else if (a.getClass() == Guard.class) {
+
+                    // move guard
                     ((Guard) a).makeMove();
 
                     // save for gui
@@ -104,14 +116,12 @@ public class QLearning {
                     pathOfAllGuards.get(index).add(new int[]{newX, newY, (int) a.getAngleDeg()});
                 }
             }
+            // increment move count
             moveCount++;
         }
-        for (ArrayList<int[]> pp : pathOfAllGuards){
-            for (int[] p : pp) {
-                System.out.print(Arrays.toString(p) + " ");
-            }
-            System.out.println();
-        }
+
+        // print move count
+        System.out.println(moveCount);
     }
 
     /**
@@ -133,7 +143,7 @@ public class QLearning {
     }
 
     public static byte getRandomAction(){
-        byte min = 0, max = NUMBER_OF_POSSIBLE_ACTIONS-1;
+        byte min = 0, max = (byte) (NUMBER_OF_POSSIBLE_ACTIONS-1);
         return (byte) (Math.random() * (max - min) + min);
     }
 
@@ -167,7 +177,6 @@ public class QLearning {
             performAction(action);
 
         } catch (Exception e) {
-            System.out.println("yeye");
             throw new RuntimeException(e);
         }
     }
@@ -184,6 +193,15 @@ public class QLearning {
         boolean
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
+
+        if(!includeGuards) {
+            seesGuard = false;
+            seesTrace = false;
+        }
+        else {
+            seesTrace = true;
+            seesGuard = true;
+        }
 
         // if they see guard
         if(seesGuard){

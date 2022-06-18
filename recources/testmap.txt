@@ -1,7 +1,7 @@
 height = 50
 width = 50
 numGuards = 1
-numIntruders = 1
+numIntruders = 4
 spawnAreaGuards = 46 48 49 49
 spawnAreaIntruders = 1 48 4 49
 wall = 10 10 10 49

@@ -67,11 +67,15 @@ public class GameController {
     }
 
     public void makeAgentsLearn() {
+        includeGuards = false;
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.learn();
     }
 
+    public static boolean includeGuards;
+
     public void makeAgentsMoveSmartly() {
+        includeGuards = true;
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.moveSmartly();
     }
@@ -134,7 +138,6 @@ public class GameController {
             Intruders.add(in);
             pathOfAllIntruders.add(new ArrayList<>());
 //            pathOfAllIntruders.get(i).add(spawn.get(i));
-            System.out.println("intruder added at " + Arrays.toString(spawn.get(i)));
         }
     }
 

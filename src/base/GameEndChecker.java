@@ -1,6 +1,9 @@
 package base;
 
 import Controller.Tile;
+import QLearning.QLearning;
+import org.lwjglx.Sys;
+import org.lwjglx.test.spaceinvaders.Game;
 
 import java.util.Arrays;
 
@@ -11,18 +14,26 @@ public class GameEndChecker {
     private static boolean intrudersWin = false;
     private static boolean guardsWin = false;
 
-    public static boolean isInTerminalState(int moveCount) {
+    public static boolean isInLearningTerminalState(){
+        // for every agent
+        for(Agent a : GameController.agents){
+            // if agent is an intruder
+            if(a.getClass() == Intruder.class){
+                // return true if intruder is on a goal tile
+                Tile t = GameController.map.getTile(a.getPosition());
+                if(GameController.goalTiles.contains(t)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        String ANSI_RED = "\u001B[31m";
-        String ANSI_GREEN = "\u001B[32m";
-        String ANSI_RESET = "\u001B[0m";
-
+    public static boolean isInTerminalState() {
         if (GameEndChecker.intruderInGoalFor3Sec()){
-            System.out.println(ANSI_GREEN + moveCount + ANSI_RESET);
             return true;
         }
         if(allIntrudersAreCaught()) {
-            System.out.println(ANSI_RED + moveCount + ANSI_RESET);
             return true;
         }
         return false;
@@ -48,7 +59,6 @@ public class GameEndChecker {
         // if agents have spent 3 seconds in goal, end game
         if(timeSpentInGoalByIntruders == 3) {
             intrudersWin = true;
-            System.out.println("intruders win");
             GameController.numOfIntruderWins++;
             return true;
         }
@@ -65,7 +75,6 @@ public class GameEndChecker {
                 return false;
             }
         }
-        System.out.println("guards win");
         return true;
     }
 }
