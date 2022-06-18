@@ -24,6 +24,9 @@ public class GameController {
     public static ArrayList<ArrayList<int[]>> pathOfAllGuards;
     public static ArrayList<ArrayList<int[]>> pathOfAllIntruders;
 
+    public static ArrayList<int[]> intruderSpawnPoints;
+    public static ArrayList<int[]> guardSpawnPoints;
+
     public static ArrayList<Guard> Guards;
     public static ArrayList<Intruder> Intruders;
 
@@ -45,13 +48,14 @@ public class GameController {
 
         pathOfAllGuards = new ArrayList<>();
         pathOfAllIntruders = new ArrayList<>();
+        intruderSpawnPoints = new ArrayList<>();
+        guardSpawnPoints = new ArrayList<>();
 
         Guards = new ArrayList<>();
         Intruders = new ArrayList<>();
 
         numOfGuardWins = 0;
         numOfIntruderWins = 0;
-
     }
 
     public void startGame() {
@@ -134,6 +138,7 @@ public class GameController {
         int nrOfIntruders = variables.getNumberOfIntruders();
         for (int i = 0; i < nrOfIntruders; i++) {
             Intruder in = new Intruder(spawn.get(i));
+            intruderSpawnPoints.add(spawn.get(i));
             agents.add(in);
             Intruders.add(in);
             pathOfAllIntruders.add(new ArrayList<>());
@@ -153,6 +158,7 @@ public class GameController {
             agents.add(g);
             Guards.add(g);
             pathOfAllGuards.add(new ArrayList<>());
+            guardSpawnPoints.add(spawn.get(i));
 //            pathOfAllGuards.get(i).add(spawn.get(i));
         }
     }
@@ -191,16 +197,16 @@ public class GameController {
                             hasIntruder = true;
                     }
                 }
-                if (tile.hasTrace()) {
-                    System.out.print(ANSI_RED + " T " + ANSI_RESET);
+                if (hasGuard || hasIntruder) {
+                    if (hasGuard)
+                            System.out.print(ANSI_BLUE + " A " + ANSI_RESET); // guard
+                    else System.out.print(ANSI_RED + " A " + ANSI_RESET);
                 } else if ((hasGuard || hasIntruder) && tile.isGoal()) {
                     if (hasGuard)
                         System.out.print(ANSI_BLUE + " Y " + ANSI_RESET);
                     else System.out.print(ANSI_PURPLE + " Y " + ANSI_RESET);
-                } else if (hasGuard || hasIntruder) {
-                    if (hasGuard)
-                        System.out.print(ANSI_BLUE + " A " + ANSI_RESET); // guard
-                    else System.out.print(ANSI_RED + " A " + ANSI_RESET); // intruder
+                } else if (tile.hasTrace()) {
+                    System.out.print(ANSI_RED + " T " + ANSI_RESET);
                 } else if (tile.isGoal())
                     System.out.print(ANSI_YELLOW + " G " + ANSI_RESET);
                 else if (tile.hasWall())
@@ -230,10 +236,19 @@ public class GameController {
         System.out.println();
 
         for(Agent a : agents){
-            System.out.print("agent at " + Arrays.toString(a.getPosition()) + " has trace: ");
-            ArrayList<int[]> traceT = a.getTrace().getTraceTiles();
-            for(int[] t : traceT){
-                System.out.print(" " + Arrays.toString(t) + " ");
+            if(a instanceof Intruder){
+                System.out.println("intruder at " + Arrays.toString(a.getPosition()));
+            }
+            if(a instanceof Guard){
+                System.out.println("guard at " + Arrays.toString(a.getPosition()));
+                if(((Guard) a).seesTrace)
+                    System.out.println("guard sees trace");
+                if(((Guard) a).chasingIntruder)
+                    System.out.println("guard is chasing intruder " + Arrays.toString(((Guard) a).getIntruderToCatch().getPosition()));
+                if(((Guard) a).getIntruderToCatch() != null)
+                    System.out.println("intruder to catch is not null");
+                if(a.hearsYell())
+                    System.out.println("guard hear yell from "+ Arrays.toString(a.getAudioObject().getPosition()));
             }
             System.out.println();
         }

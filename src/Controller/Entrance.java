@@ -6,6 +6,10 @@ public abstract class Entrance extends MapObject {
 
     private ArrayList<Integer> coordIn = new ArrayList<Integer>();
 
+    public ArrayList<Integer> getCoordIn() {
+        return coordIn;
+    }
+
     private ArrayList<Integer> coordOut = new ArrayList<Integer>();
 
     private ArrayList<int[]> pointsIn = new ArrayList<>();
@@ -69,19 +73,4 @@ public abstract class Entrance extends MapObject {
         return degreeOut;
     }
 
-    public ArrayList<Integer> getCoordIn() {
-        return coordIn;
-    }
-
-    public void setCoordIn(ArrayList<Integer> coordIn) {
-        this.coordIn = coordIn;
-    }
-
-    public ArrayList<Integer> getCoordOut() {
-        return coordOut;
-    }
-
-    public void setCoordOut(ArrayList<Integer> coordOut) {
-        this.coordOut = coordOut;
-    }
 }

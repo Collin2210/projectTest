@@ -5,11 +5,13 @@ public class Tester {
 
     public static void main(String[] args) {
         // change lc and print move count
+
         for (int i = 1; i < 100; i++){
             System.out.println("start for learning cycle " + i);
             QLearning.LEARNING_CYCLES = i;
             GameController g = new GameController();
             g.startGame();
+
             // no guards
             g.makeAgentsLearn();
 

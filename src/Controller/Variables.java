@@ -27,7 +27,7 @@ public class Variables {
     private float sprintingSpeedIntruder;
     private float timeStep;
     private int visionRange;
-    public static final double FIELD_OF_VIEW = 150.0;
+    public static final double FIELD_OF_VIEW = 360.0;
     public static final int GUARD_YELL_RANGE = 10;
 
     private Teleport teleport1;

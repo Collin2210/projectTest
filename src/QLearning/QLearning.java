@@ -74,10 +74,10 @@ public class QLearning {
                     }
                 }
                 moveCount++;
+                GameController.print();
             }
-            putAgentsBackOnSpawn();
         }
-//        System.out.println(moveCount);
+
     }
 
     public void moveSmartly() {
@@ -85,7 +85,7 @@ public class QLearning {
         int moveCount = 0;
 
         // while round has not ended yet
-        while (!GameEndChecker.isInTerminalState()) {
+        while (!GameEndChecker.isInTerminalState()&& moveCount<(variables.getWidth()* variables.getHeight())) {
 
             // for every agent
             for (int i = 0; i < agents.size(); i++) {
@@ -123,7 +123,9 @@ public class QLearning {
         }
 
         // print move count
-        System.out.println(moveCount);
+        if(moveCount < 4)
+            //GameController.print();
+        System.out.println("move count: " + moveCount);
     }
 
     /**
@@ -199,10 +201,6 @@ public class QLearning {
         if(!includeGuards) {
             seesGuard = false;
             seesTrace = false;
-        }
-        else {
-            seesTrace = true;
-            seesGuard = true;
         }
 
         // if they see guard

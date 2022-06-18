@@ -16,7 +16,7 @@ public class Guard extends ExplorerAgent {
     private Intruder intruderToCatch;
     private Tile tileWithTraceToChase;
 
-    private boolean
+    public boolean
             chasingIntruder,
             seesTrace,
             yelled;
@@ -153,15 +153,7 @@ public class Guard extends ExplorerAgent {
     }
 
     private boolean hasCaught(Intruder intruder){
-        // We have to make sure to remove the intruder from the map after it is caught.
-        boolean hasCaughtIntruder = Arrays.equals(this.getPosition(), intruder.getPosition());
-
-        if(hasCaughtIntruder){
-            agents.remove(intruder);
-            intrudersCaught.add(intruder);
-        }
-
-        return hasCaughtIntruder;
+        return manhattanDist(getPosition(), intruder.getPosition()) <= 1;
     }
 
     /**
