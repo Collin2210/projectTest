@@ -81,6 +81,7 @@ public class QLearning {
     }
 
     public void moveSmartly() {
+        System.out.println("move smartly called ");
         int moveCount = 0;
 
         // while round has not ended yet
@@ -118,6 +119,7 @@ public class QLearning {
             }
             // increment move count
             moveCount++;
+            GameController.print();
         }
 
         // print move count

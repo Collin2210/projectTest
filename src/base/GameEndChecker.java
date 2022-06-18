@@ -2,9 +2,6 @@ package base;
 
 import Controller.Tile;
 import QLearning.QLearning;
-import org.lwjglx.Sys;
-import org.lwjglx.test.spaceinvaders.Game;
-
 import java.util.Arrays;
 
 public class GameEndChecker {
@@ -70,10 +67,9 @@ public class GameEndChecker {
      * Indeed, when a guard catches an intruder, said intruder is removed from arraylist.
      */
     private static boolean allIntrudersAreCaught(){
-        for(Agent a : GameController.agents){
-            if(a.getClass() == Intruder.class) {
+        for(Intruder i : GameController.Intruders){
+            if(!i.isCaught())
                 return false;
-            }
         }
         return true;
     }

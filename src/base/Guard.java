@@ -65,15 +65,20 @@ public class Guard extends ExplorerAgent {
         ArrayList<Intruder> intrudersSeen = new ArrayList<>();
         ArrayList<Tile> tilesWithTracesSeen = new ArrayList<>();
 
+        // initialize booleans
+        seesTrace = false;
+        chasingIntruder = false;
+
         // update vision
         this.visionT = this.getRayEngine().getVisibleTiles(this);
 
         // for every tile in vision range
         for(int[] tilePos : visionT){
-
             // check for intruders
             for(Agent a : agents){
                 if(a.getClass() == Intruder.class){
+
+                    // if intruder is on a tile in vision
                     if(a.getX() == tilePos[0] && a.getY() == tilePos[1]) {
                         intrudersSeen.add((Intruder) a);
                         chasingIntruder = true;
@@ -105,7 +110,7 @@ public class Guard extends ExplorerAgent {
 
         // react to intruder seen
         if(chasingIntruder){
-            // if intruder he still sees intruder
+            // if he still sees intruder
             if(intrudersSeen.size() != 0){
                 // get the closest intruder
                 double smallestDistance = Double.MAX_VALUE;
@@ -119,7 +124,6 @@ public class Guard extends ExplorerAgent {
                 }
                 // chase the closest intruder
                 intruderToCatch = closestIntruder;
-                this.doYell();
             }
         }
 
@@ -185,22 +189,40 @@ public class Guard extends ExplorerAgent {
 
         // check if guard has caught intruder
         if (this.hasCaught(this.intruderToCatch)){
-//            System.out.println("111");
+            System.out.println("intruder position = " + Arrays.toString(intruderToCatch.getPosition()));
+            System.out.println("guard pos = " + Arrays.toString(getPosition()));
             intruderToCatch.getsCaught();
-//            System.out.println("222");
             this.intruderToCatch = null;
-//            System.out.println("333");
             resetToScatterMode();
-//            System.out.println("444");
             return;
         }
-//        System.out.println("555");
+
         // get position of intruder and head there
         follow(intruderToCatch.getPosition());
-//        System.out.println("666");
     }
 
     private void followTrace(){
+        // check if reached trace
+
+        int[] tracePosition;
+
+        try {
+            tracePosition = tileWithTraceToChase.getPosition();
+        } catch (Exception e) {
+            GameController.print();
+            throw new RuntimeException(e);
+        }
+
+        if(Arrays.equals(getPosition(), tracePosition)){
+            seesTrace = false;
+            chasingIntruder = false;
+            intruderToCatch = null;
+            tileWithTraceToChase = null;
+            timer = 0;
+            makeExplorationMove();
+            return;
+        }
+
         // get position of trace tile and head there
         follow(tileWithTraceToChase.getPosition());
     }
@@ -219,6 +241,13 @@ public class Guard extends ExplorerAgent {
     public void followAudio()
     {
         int[] audioPosition = getAudioObject().getPosition();
+
+        // check if it has reached audio
+        if(Arrays.equals(getPosition(), audioPosition)){
+            resetToScatterMode();
+            makeExplorationMove();
+            return;
+        }
 
         // get path to intruder with a star
         List<Position> pathToIntruder = Move.getPath(getPosition(), audioPosition);
@@ -260,4 +289,12 @@ public class Guard extends ExplorerAgent {
         yelled = false;
         timer = 0;
     }
+
+    public static double manhattanDist(int[] a, int[] b){
+        int xA = a[0], yA = a[1];
+        int xB = b[0], yB = b[1];
+
+        return Math.abs(xB - xA) + Math.abs(yB -yA);
+    }
+
 }

@@ -61,7 +61,7 @@ public class GameController {
         addGoal();
         addWalls();
         addIntruder();
-        addGuards();
+        //addGuards();
         addTeleports();
         runRaycast();
     }
