@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Trace {
 
     public static final byte
-            MAX_LENGTH = 10;
+            MAX_LENGTH = 3;
 
     public static final byte
             NO_STRESS = 0,

@@ -1,5 +1,7 @@
 package Visuals.engine.graphics.textures.objConverter;
 
+import Visuals.engine.graphics.Loader;
+import Visuals.engine.graphics.models.RawModel;
 import org.lwjglx.util.vector.Vector2f;
 import org.lwjglx.util.vector.Vector3f;
 
@@ -15,7 +17,7 @@ public class OBJFileLoader {
 
     private static final String RES_LOC = "res/3D/";
 
-    public static ModelData loadOBJ(String objFileName) {
+    public static RawModel loadOBJ(String objFileName, Loader loader) {
         FileReader read = null;
         File objFile = new File(RES_LOC + objFileName + ".obj");
         try {
@@ -72,9 +74,8 @@ public class OBJFileLoader {
         float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
                 texturesArray, normalsArray);
         int[] indicesArray = convertIndicesListToArray(indices);
-        ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
-                furthest);
-        return data;
+
+        return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
     }
 
     private static void processVertex(String [] vertex, List<Vertex> vertices, List<Integer> indices) {
