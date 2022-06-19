@@ -58,26 +58,23 @@ public class RayCaster {
         return rays;
     }
 
-    public static float getRayCast(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y) {
-        float s1_x, s1_y, s2_x, s2_y;
-        s1_x = p1_x - p0_x;
-        s1_y = p1_y - p0_y;
-        s2_x = p3_x - p2_x;
-        s2_y = p3_y - p2_y;
+    public static float getRayCast(float firstPointX, float firstPointY, float secondPointX, float secondPointY, float thirdPointX, float thirdPointY, float fourthPointX, float fourthPointY) {
 
-        float s, t;
-        s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-        t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+        float rayPointOneX = secondPointX - firstPointX;
+        float rayPointOneY = secondPointY - firstPointY;
+        float rayPointTwoX = fourthPointX - thirdPointX;
+        float rayPointTwoY = fourthPointY - thirdPointY;
 
-        if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
-            // Collision detected
-            float x = p0_x + (t * s1_x);
-            float y = p0_y + (t * s1_y);
+        float start = (-rayPointOneY * (firstPointX - thirdPointX) + rayPointOneX * (firstPointY - thirdPointY)) / (-rayPointTwoX * rayPointOneY + rayPointOneX * rayPointTwoY);
+        float end = (rayPointTwoX * (firstPointY - thirdPointY) - rayPointTwoY * (firstPointX - thirdPointX)) / (-rayPointTwoX * rayPointOneY + rayPointOneX * rayPointTwoY);
 
-            return (float) RewardTable.distanceBetweenPoints((int) p0_x, (int) p0_y, (int) x, (int) y);
+        if (start >= 0 && start <= 1 && end >= 0 && end <= 1) {
+            float x = firstPointX + (end * rayPointOneX);
+            float y = firstPointY + (end * rayPointOneY);
+            return (float) RewardTable.distanceBetweenPoints((int) firstPointX, (int) firstPointY, (int) x, (int) y);
         }
 
-        return -1; // No collision
+        return -1;
     }
 
     public Polygon createPolygon(){

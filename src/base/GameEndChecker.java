@@ -29,12 +29,10 @@ public class GameEndChecker {
     public static boolean isInTerminalState() {
         if (GameEndChecker.intruderInGoalFor3Sec()){
             Tester.numOfGamesWonIntruder++;
-            System.out.println("intruders won");
             return true;
         }
         if(allIntrudersAreCaught()) {
             Tester.numOfGamesWonGuard++;
-            System.out.println("Guards won");
             return true;
         }
         return false;
