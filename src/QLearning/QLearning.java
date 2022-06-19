@@ -74,14 +74,13 @@ public class QLearning {
                     }
                 }
                 moveCount++;
-                GameController.print();
             }
+            putAgentsBackOnSpawn();
         }
 
     }
 
     public void moveSmartly() {
-        System.out.println("move smartly called ");
         int moveCount = 0;
 
         // while round has not ended yet
@@ -119,13 +118,9 @@ public class QLearning {
             }
             // increment move count
             moveCount++;
-            GameController.print();
         }
 
         // print move count
-        if(moveCount < 4)
-            //GameController.print();
-        System.out.println("move count: " + moveCount);
     }
 
     /**
@@ -197,11 +192,6 @@ public class QLearning {
         boolean
                 seesGuard = guardsSeen.size() > 0,
                 seesTrace = tracesSeen.size() > 0;
-
-        if(!includeGuards) {
-            seesGuard = false;
-            seesTrace = false;
-        }
 
         // if they see guard
         if(seesGuard){

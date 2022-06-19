@@ -241,15 +241,13 @@ public class Main implements Runnable {
 			intruders.add(new Player(texturedModelIntruder, new Vector3f(pathIntruder[0] + L, terrain.getHeightOfTerrain(pathIntruder[0] + L, pathIntruder[1] + L), pathIntruder[1] + L), 0, 90, 0, 1, j));
 
 		}
-		for (int j = 0; j < GameController.variables.getNumberOfGuards(); j++) {
-			if(GameController.includeGuards){
-				int[] pathGuard = GameController.guardSpawnPoints.get(j);
-				//players.add(new Player(texturedModelGuard, new Vector3f(pathGuard[0] + L, terrain.getHeightOfTerrain(pathGuard[0] + L, pathGuard[1] + L), pathGuard[1] + L), 0, 90, 0, 1, j));
-				guards.add(new Player(texturedModelGuard, new Vector3f(pathGuard[0] + L, terrain.getHeightOfTerrain(pathGuard[0] + L, pathGuard[1] + L), pathGuard[1] + L), 0, 90, 0, 1, j));
-
-			}
-
-		}
+//		for (int j = 0; j < GameController.variables.getNumberOfGuards(); j++) {
+//			if(GameController.includeGuards){
+//				int[] pathGuard = GameController.guardSpawnPoints.get(j);
+//				//players.add(new Player(texturedModelGuard, new Vector3f(pathGuard[0] + L, terrain.getHeightOfTerrain(pathGuard[0] + L, pathGuard[1] + L), pathGuard[1] + L), 0, 90, 0, 1, j));
+//				guards.add(new Player(texturedModelGuard, new Vector3f(pathGuard[0] + L, terrain.getHeightOfTerrain(pathGuard[0] + L, pathGuard[1] + L), pathGuard[1] + L), 0, 90, 0, 1, j));
+//			}
+//		}
 
 
 

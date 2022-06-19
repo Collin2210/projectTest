@@ -9,4 +9,4 @@ Our code is structured into 3 packages:
 <b>Path:</b> contains the A* algorithm as well as essential Move method to update the agent positions.
 
 ## How to run the code: ##
-run from Tester 
+run from base.Tester 

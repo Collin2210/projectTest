@@ -71,15 +71,11 @@ public class GameController {
     }
 
     public void makeAgentsLearn() {
-        includeGuards = false;
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.learn();
     }
 
-    public static boolean includeGuards;
-
     public void makeAgentsMoveSmartly() {
-        includeGuards = true;
         LearnerAgent a = (LearnerAgent) agents.get(0);
         a.moveSmartly();
     }
@@ -234,24 +230,6 @@ public class GameController {
             System.out.println();
         }
         System.out.println();
-
-        for(Agent a : agents){
-            if(a instanceof Intruder){
-                System.out.println("intruder at " + Arrays.toString(a.getPosition()));
-            }
-            if(a instanceof Guard){
-                System.out.println("guard at " + Arrays.toString(a.getPosition()));
-                if(((Guard) a).seesTrace)
-                    System.out.println("guard sees trace");
-                if(((Guard) a).chasingIntruder)
-                    System.out.println("guard is chasing intruder " + Arrays.toString(((Guard) a).getIntruderToCatch().getPosition()));
-                if(((Guard) a).getIntruderToCatch() != null)
-                    System.out.println("intruder to catch is not null");
-                if(a.hearsYell())
-                    System.out.println("guard hear yell from "+ Arrays.toString(a.getAudioObject().getPosition()));
-            }
-            System.out.println();
-        }
     }
 
     private static void printRect(double[] rect) {

@@ -5,6 +5,7 @@ import QLearning.QLearning;
 import QLearning.RewardTable;
 
 import static QLearning.QLearning.*;
+import static base.GameController.agents;
 
 public class Intruder extends LearnerAgent{
 
@@ -89,7 +90,18 @@ public class Intruder extends LearnerAgent{
 
     public void getsCaught(){
         GameController.intrudersCaught.add(this);
-        GameController.agents.remove(this);
+        agents.remove(this);
+
+        // reset all guards that were chasing him
+        for(Agent a : agents){
+            if (a instanceof Guard){
+                // if guard is chasing this intruder
+                if(((Guard) a).getIntruderToCatch() == this){
+                    // reset to scatter
+                    ((Guard) a).resetToScatterMode();
+                }
+            }
+        }
 
         // reset trace
         getTrace().resetTrace();

@@ -74,6 +74,7 @@ public class Guard extends ExplorerAgent {
 
         // for every tile in vision range
         for(int[] tilePos : visionT){
+
             // check for intruders
             for(Agent a : agents){
                 if(a.getClass() == Intruder.class){
@@ -153,14 +154,31 @@ public class Guard extends ExplorerAgent {
     }
 
     private boolean hasCaught(Intruder intruder){
-        return manhattanDist(getPosition(), intruder.getPosition()) <= 1;
+        return manhattanDist(getPosition(), intruder.getPosition()) <= 2;
+    }
+
+    private void followWithEucli(int[] position){
+
+        double smallest_distance = Double.MAX_VALUE;
+        int[] closest_neighbour = {,};
+
+        // get closest neighbour
+        for(int[] n : getAllNeighbours()){
+            double distance = RewardTable.distanceBetweenPoints(n[0], n[1], position[0], position[1]);
+            if(distance <= smallest_distance){
+                smallest_distance = distance;
+                closest_neighbour = n;
+            }
+        }
+
+        applyNextMove(closest_neighbour);
     }
 
     /**
      * this method will generate path to a position using A*, then make 1 step towards said position
      * @param position : can be position of intruder, trace, or source of yell
      */
-    private void follow(int[] position){
+    private void followWithAStart(int[] position){
         // get path to position
         List<Position> pathToPosition = Move.getPath(getPosition(), position);
 
@@ -181,8 +199,6 @@ public class Guard extends ExplorerAgent {
 
         // check if guard has caught intruder
         if (this.hasCaught(this.intruderToCatch)){
-            System.out.println("intruder position = " + Arrays.toString(intruderToCatch.getPosition()));
-            System.out.println("guard pos = " + Arrays.toString(getPosition()));
             intruderToCatch.getsCaught();
             this.intruderToCatch = null;
             resetToScatterMode();
@@ -190,7 +206,7 @@ public class Guard extends ExplorerAgent {
         }
 
         // get position of intruder and head there
-        follow(intruderToCatch.getPosition());
+        followWithEucli(intruderToCatch.getPosition());
     }
 
     private void followTrace(){
@@ -216,7 +232,7 @@ public class Guard extends ExplorerAgent {
         }
 
         // get position of trace tile and head there
-        follow(tileWithTraceToChase.getPosition());
+        followWithEucli(tileWithTraceToChase.getPosition());
     }
 
     public Intruder getIntruderToCatch() {
@@ -288,5 +304,4 @@ public class Guard extends ExplorerAgent {
 
         return Math.abs(xB - xA) + Math.abs(yB -yA);
     }
-
 }

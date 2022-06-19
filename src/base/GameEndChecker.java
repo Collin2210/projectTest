@@ -28,6 +28,7 @@ public class GameEndChecker {
 
     public static boolean isInTerminalState() {
         if (GameEndChecker.intruderInGoalFor3Sec()){
+            Tester.numOfGamesWonIntruder++;
             return true;
         }
         if(allIntrudersAreCaught()) {

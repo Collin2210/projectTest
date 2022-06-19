@@ -1,10 +1,11 @@
 height = 50
 width = 50
-numGuards = 1
+numGuards = 4
 numIntruders = 4
 spawnAreaGuards = 46 48 49 49
 spawnAreaIntruders = 1 48 4 49
 wall = 10 10 10 49
+wall =
 wall = 20 40 20 49
 isGoal = 45 0 49 2
 visionRange = 5
