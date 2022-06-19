@@ -72,7 +72,7 @@ public class QLearning {
         for (int cycleCount = 0; cycleCount < LEARNING_CYCLES; cycleCount++) {
             moveCount = 0;
             // while round has not ended yet
-            while(!GameEndChecker.isInLearningTerminalState()){
+            while(!GameEndChecker.isInTerminalState()){
                 for (int i = 0; i < agents.size(); i++){
                     Agent a = agents.get(i);
                     if (a.getClass() == Intruder.class) {
@@ -136,8 +136,8 @@ public class QLearning {
             // increment move count
             moveCount++;
         }
-
         putAgentsBackOnSpawn();
+
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 public class Tester {
 
     public static int numOfGamesWonIntruder;
+    public static int numOfGamesWonGuard;
     public static ArrayList<String> gamesWon = new ArrayList<>();
 
     public static void main(String[] args) {
