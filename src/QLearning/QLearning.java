@@ -29,6 +29,8 @@ public class QLearning {
             MOVE_DOWN = 2,
             MOVE_LEFT = 3;
 
+    public static int VISION_RANGE = 0;
+
     public final Map map;
     public LearnerAgent agent;
     public QTable qTable;
@@ -53,8 +55,13 @@ public class QLearning {
     public static ArrayList<Integer> moveCounts = new ArrayList<>();
 
     public void learn(){
+        VISION_RANGE = 0;
+
         // initialize all QTables
         for(Agent a : agents){
+            // change vision range to make it learn faster
+            a.setVisionRange(VISION_RANGE);
+
             if(a.getClass().getSuperclass() == LearnerAgent.class){
                 ((LearnerAgent)a).getBrain().getQTable().initialize();
             }
@@ -82,10 +89,16 @@ public class QLearning {
             System.out.println( (cycleCount+1) + "," + moveCount );
             putAgentsBackOnSpawn();
         }
+
+        VISION_RANGE = variables.getVisionRange();
     }
 
     public void moveSmartly() {
         int moveCount = 0;
+
+        for(Agent a : agents) {
+            a.setVisionRange(variables.getVisionRange());
+        }
 
         // while round has not ended yet
         while (!GameEndChecker.isInTerminalState()&& moveCount<(variables.getWidth()* variables.getHeight())) {
@@ -253,9 +266,9 @@ public class QLearning {
 
         // check if is in shaded area
         if(map.getTile(newPosition).hasShade()){
-            agent.setVisionRange(variables.getVisionRange()/10);
+            agent.setVisionRange(VISION_RANGE/10);
         }
-        else agent.setVisionRange(variables.getVisionRange());
+        else agent.setVisionRange(VISION_RANGE);
 
         // update learning state
         int[] newState = new int[]{newPosition[0], newPosition[1]};
@@ -276,15 +289,20 @@ public class QLearning {
 
 
     private void putAgentsBackOnSpawn(){
-        for(Agent a : agents) {
-            a.putBackOnSpawn();
-        }
+        ArrayList<Agent> newAgents = new ArrayList<>();
 
         for(Agent i : intrudersCaught) {
             i.putBackOnSpawn();
             agents.add(i);
+            newAgents.add(i);
         }
 
+        for(Agent a : agents) {
+            a.putBackOnSpawn();
+            newAgents.add(a);
+        }
+
+        agents = newAgents;
         intrudersCaught.clear();
 
     }
