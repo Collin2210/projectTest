@@ -18,7 +18,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.7,
             RANDOMNESS_LEVEL = 0.1;
     public static int
-            LEARNING_CYCLES = 1,
+            LEARNING_CYCLES = 500,
             MOVE_LIMIT = 1000;
     public static byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
@@ -48,6 +48,8 @@ public class QLearning {
         rewardTable = new RewardTable(agent);
         emTable = new EMTable(agent.getPosition());
     }
+    
+    public static ArrayList<Integer> moveCounts = new ArrayList<>();
 
     public void learn(){
         // initialize all QTables
@@ -75,9 +77,10 @@ public class QLearning {
                 }
                 moveCount++;
             }
+            moveCounts.add(moveCount);
+            System.out.println("for learning cycles = " + cycleCount+ " move count = " + moveCount);
             putAgentsBackOnSpawn();
         }
-
     }
 
     public void moveSmartly() {

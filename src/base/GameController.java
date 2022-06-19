@@ -68,6 +68,7 @@ public class GameController {
         //addGuards();
         addTeleports();
         runRaycast();
+        print();
     }
 
     public void makeAgentsLearn() {

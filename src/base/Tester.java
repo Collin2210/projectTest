@@ -18,32 +18,16 @@ public class Tester {
     public static void main(String[] args) {
 
         // change lc and print move count
-        for (int i = 1; i < 101; i+=10){
+        GameController g = new GameController();
+        g.startGame();
 
-            System.out.println("start for learning cycle " + i);
-            QLearning.LEARNING_CYCLES = i;
+        // no guards
+        g.makeAgentsLearn();
 
-            numOfGamesWonIntruder = 0;
-
-            for (int j = 0; j < 10; j++) {
-                GameController g = new GameController();
-                g.startGame();
-
-                // no guards
-                g.makeAgentsLearn();
-
-                // with guards
-                g.addGuards();
-                g.runRaycast();
-                g.makeAgentsMoveSmartly();
-            }
-            String s = String.valueOf(numOfGamesWonIntruder);
-            gamesWon.add(s);
-
-            System.out.println("number of games won for lC = " + i +" :" + numOfGamesWonIntruder);
-
-            String[] a = gamesWon.toArray(new String[0]);
-        }
+        // with guards
+//        g.addGuards();
+//        g.runRaycast();
+//        g.makeAgentsMoveSmartly();
     }
 }
 
