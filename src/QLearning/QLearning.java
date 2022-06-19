@@ -19,7 +19,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.7,
             RANDOMNESS_LEVEL = 0.1;
     public static int
-            LEARNING_CYCLES = 250,
+            LEARNING_CYCLES = 1000,
             MOVE_LIMIT = 1000;
     public static byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;

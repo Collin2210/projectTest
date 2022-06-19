@@ -28,7 +28,7 @@ public class Tester {
         g.addGuards();
         g.runRaycast();
 
-        for (byte traceLength = 0; traceLength < 25; traceLength += 5) {
+        for (byte traceLength = 0; traceLength < 201; traceLength += 5) {
             Trace.MAX_LENGTH = traceLength;
             numOfGamesWonIntruder = 0;
             for (int i = 0; i < 100; i++) {
