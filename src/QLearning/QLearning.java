@@ -78,7 +78,7 @@ public class QLearning {
                 moveCount++;
             }
             moveCounts.add(moveCount);
-            System.out.println("for learning cycles = " + cycleCount+ " move count = " + moveCount);
+            System.out.println( (cycleCount+1) + "," + moveCount );
             putAgentsBackOnSpawn();
         }
     }
@@ -122,8 +122,6 @@ public class QLearning {
             // increment move count
             moveCount++;
         }
-
-        // print move count
     }
 
     /**

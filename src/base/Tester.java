@@ -25,9 +25,9 @@ public class Tester {
         g.makeAgentsLearn();
 
         // with guards
-//        g.addGuards();
-//        g.runRaycast();
-//        g.makeAgentsMoveSmartly();
+        g.addGuards();
+        g.runRaycast();
+        g.makeAgentsMoveSmartly();
     }
 }
 
