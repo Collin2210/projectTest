@@ -47,7 +47,7 @@ public class Guard extends ExplorerAgent {
         if(chasingIntruder)
             followIntruder();
 
-        else if (seesTrace)
+        else if (tileWithTraceToChase != null)
             followTrace();
 
         else if (hearsYell())

@@ -50,7 +50,7 @@ public class Tester {
 // 1) experiments on learning cycle:  change learning cycles and check moveCount during learning phase1
 
 
-// 2) change learning cycles and check win% for 100 games
+// 2) change learning cycles and check win% for 10 games
 
 
 // 3) change trace length // yell range and check win%
