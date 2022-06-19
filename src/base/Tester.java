@@ -27,17 +27,27 @@ public class Tester {
         // with guards
         g.addGuards();
         g.runRaycast();
-        g.makeAgentsMoveSmartly();
+
+        for (byte traceLength = 0; traceLength < 25; traceLength += 5) {
+            Trace.MAX_LENGTH = traceLength;
+            numOfGamesWonIntruder = 0;
+            for (int i = 0; i < 100; i++) {
+                // for each game, change trace length,
+                g.makeAgentsMoveSmartly();
+            }
+            System.out.println(traceLength +"," +  numOfGamesWonIntruder);
+        }
     }
 }
 
-// 1) experiments on learning cycle:  change learning cycles and check moveCount during learning phase1
+// 1) experiments on learning cycle:  change learning cycles and check moveCount during learning phase1 DONEE
 
 
 // 2) change learning cycles and check win% for 10 games
 
 
 // 3) change trace length // yell range and check win%
+    // change learning cycles and print win percentage
 
 
 // 4)

@@ -59,7 +59,7 @@ public class GameController {
     }
 
     public void startGame() {
-        String p = "recources/testmap2.txt";
+        String p = "recources/testmap.txt";
         variables = FileParser.parser(p);
         map = new Map();
         addGoal();

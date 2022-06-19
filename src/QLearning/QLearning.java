@@ -4,6 +4,7 @@ import Controller.Map;
 import Controller.Teleport;
 import Controller.Tile;
 import base.*;
+import org.lwjglx.test.spaceinvaders.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class QLearning {
             DISCOUNT_FACTOR = 0.7,
             RANDOMNESS_LEVEL = 0.1;
     public static int
-            LEARNING_CYCLES = 500,
+            LEARNING_CYCLES = 250,
             MOVE_LIMIT = 1000;
     public static byte
             NUMBER_OF_POSSIBLE_ACTIONS = 4;
@@ -122,6 +123,8 @@ public class QLearning {
             // increment move count
             moveCount++;
         }
+
+        putAgentsBackOnSpawn();
     }
 
     /**

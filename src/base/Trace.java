@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Trace {
 
-    public static final byte
+    public static byte
             MAX_LENGTH = 3;
 
     public static final byte
@@ -15,7 +15,6 @@ public class Trace {
     private final Agent owner;
 
     private ArrayList<int[]> traceTiles;
-
 
     private byte stressLevel;
 
